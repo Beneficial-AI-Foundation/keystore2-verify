@@ -93,20 +93,20 @@ pub trait r#IKeystoreMetrics: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IKeystoreMetrics + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreMetrics") } }
-pub struct r#BnIKeystoreMetrics(());
-impl r#BnIKeystoreMetrics {
+pub struct r#BnKeystoreMetrics(());
+impl r#BnKeystoreMetrics {
   pub fn new_binder<T: r#IKeystoreMetrics + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreMetrics> { unimplemented!("stand-in") }
 }
-pub struct r#BpIKeystoreMetrics { _binder: binder::SpIBinder }
-impl r#BpIKeystoreMetrics {
+pub struct r#BpKeystoreMetrics { _binder: binder::SpIBinder }
+impl r#BpKeystoreMetrics {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IKeystoreMetrics>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIKeystoreMetrics {}
-impl r#IKeystoreMetrics for r#BpIKeystoreMetrics {
+impl binder::Interface for r#BpKeystoreMetrics {}
+impl r#IKeystoreMetrics for r#BpKeystoreMetrics {
   fn r#pullMetrics(&self, _arg_atomID: crate::aidl::r#android::r#security::r#metrics::r#AtomID::r#AtomID) -> binder::Result<alloc::vec::Vec<crate::aidl::r#android::r#security::r#metrics::r#KeystoreAtom::r#KeystoreAtom>> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IKeystoreMetrics {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IKeystoreMetrics>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IKeystoreMetrics>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#KeyCreationPerUid {

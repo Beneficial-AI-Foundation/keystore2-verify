@@ -96,23 +96,23 @@ pub trait r#IKeystoreOperation: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IKeystoreOperation + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreOperation") } }
-pub struct r#BnIKeystoreOperation(());
-impl r#BnIKeystoreOperation {
+pub struct r#BnKeystoreOperation(());
+impl r#BnKeystoreOperation {
   pub fn new_binder<T: r#IKeystoreOperation + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreOperation> { unimplemented!("stand-in") }
 }
-pub struct r#BpIKeystoreOperation { _binder: binder::SpIBinder }
-impl r#BpIKeystoreOperation {
+pub struct r#BpKeystoreOperation { _binder: binder::SpIBinder }
+impl r#BpKeystoreOperation {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IKeystoreOperation>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIKeystoreOperation {}
-impl r#IKeystoreOperation for r#BpIKeystoreOperation {
+impl binder::Interface for r#BpKeystoreOperation {}
+impl r#IKeystoreOperation for r#BpKeystoreOperation {
   fn r#updateAad(&self, _arg_aadInput: &[u8]) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#update(&self, _arg_input: &[u8]) -> binder::Result<Option<alloc::vec::Vec<u8>>> { unimplemented!("stand-in") }
   fn r#finish(&self, _arg_input: Option<&[u8]>, _arg_signature: Option<&[u8]>) -> binder::Result<Option<alloc::vec::Vec<u8>>> { unimplemented!("stand-in") }
   fn r#abort(&self) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IKeystoreOperation {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IKeystoreOperation>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IKeystoreOperation>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#IKeystoreSecurityLevel {
@@ -129,16 +129,16 @@ pub trait r#IKeystoreSecurityLevel: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IKeystoreSecurityLevel + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreSecurityLevel") } }
-pub struct r#BnIKeystoreSecurityLevel(());
-impl r#BnIKeystoreSecurityLevel {
+pub struct r#BnKeystoreSecurityLevel(());
+impl r#BnKeystoreSecurityLevel {
   pub fn new_binder<T: r#IKeystoreSecurityLevel + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreSecurityLevel> { unimplemented!("stand-in") }
 }
-pub struct r#BpIKeystoreSecurityLevel { _binder: binder::SpIBinder }
-impl r#BpIKeystoreSecurityLevel {
+pub struct r#BpKeystoreSecurityLevel { _binder: binder::SpIBinder }
+impl r#BpKeystoreSecurityLevel {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IKeystoreSecurityLevel>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIKeystoreSecurityLevel {}
-impl r#IKeystoreSecurityLevel for r#BpIKeystoreSecurityLevel {
+impl binder::Interface for r#BpKeystoreSecurityLevel {}
+impl r#IKeystoreSecurityLevel for r#BpKeystoreSecurityLevel {
   fn r#createOperation(&self, _arg_key: &crate::aidl::r#android::r#system::r#keystore2::r#KeyDescriptor::r#KeyDescriptor, _arg_operationParameters: &[android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#KeyParameter::r#KeyParameter], _arg_forced: bool) -> binder::Result<crate::aidl::r#android::r#system::r#keystore2::r#CreateOperationResponse::r#CreateOperationResponse> { unimplemented!("stand-in") }
   fn r#generateKey(&self, _arg_key: &crate::aidl::r#android::r#system::r#keystore2::r#KeyDescriptor::r#KeyDescriptor, _arg_attestationKey: Option<&crate::aidl::r#android::r#system::r#keystore2::r#KeyDescriptor::r#KeyDescriptor>, _arg_params: &[android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#KeyParameter::r#KeyParameter], _arg_flags: i32, _arg_entropy: &[u8]) -> binder::Result<crate::aidl::r#android::r#system::r#keystore2::r#KeyMetadata::r#KeyMetadata> { unimplemented!("stand-in") }
   fn r#importKey(&self, _arg_key: &crate::aidl::r#android::r#system::r#keystore2::r#KeyDescriptor::r#KeyDescriptor, _arg_attestationKey: Option<&crate::aidl::r#android::r#system::r#keystore2::r#KeyDescriptor::r#KeyDescriptor>, _arg_params: &[android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#KeyParameter::r#KeyParameter], _arg_flags: i32, _arg_keyData: &[u8]) -> binder::Result<crate::aidl::r#android::r#system::r#keystore2::r#KeyMetadata::r#KeyMetadata> { unimplemented!("stand-in") }
@@ -147,7 +147,7 @@ impl r#IKeystoreSecurityLevel for r#BpIKeystoreSecurityLevel {
   fn r#deleteKey(&self, _arg_key: &crate::aidl::r#android::r#system::r#keystore2::r#KeyDescriptor::r#KeyDescriptor) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IKeystoreSecurityLevel {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IKeystoreSecurityLevel>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IKeystoreSecurityLevel>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#IKeystoreService {
@@ -167,16 +167,16 @@ pub trait r#IKeystoreService: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IKeystoreService + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreService") } }
-pub struct r#BnIKeystoreService(());
-impl r#BnIKeystoreService {
+pub struct r#BnKeystoreService(());
+impl r#BnKeystoreService {
   pub fn new_binder<T: r#IKeystoreService + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreService> { unimplemented!("stand-in") }
 }
-pub struct r#BpIKeystoreService { _binder: binder::SpIBinder }
-impl r#BpIKeystoreService {
+pub struct r#BpKeystoreService { _binder: binder::SpIBinder }
+impl r#BpKeystoreService {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IKeystoreService>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIKeystoreService {}
-impl r#IKeystoreService for r#BpIKeystoreService {
+impl binder::Interface for r#BpKeystoreService {}
+impl r#IKeystoreService for r#BpKeystoreService {
   fn r#getSecurityLevel(&self, _arg_securityLevel: android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#SecurityLevel::r#SecurityLevel) -> binder::Result<binder::Strong<dyn crate::aidl::r#android::r#system::r#keystore2::r#IKeystoreSecurityLevel::r#IKeystoreSecurityLevel>> { unimplemented!("stand-in") }
   fn r#getKeyEntry(&self, _arg_key: &crate::aidl::r#android::r#system::r#keystore2::r#KeyDescriptor::r#KeyDescriptor) -> binder::Result<crate::aidl::r#android::r#system::r#keystore2::r#KeyEntryResponse::r#KeyEntryResponse> { unimplemented!("stand-in") }
   fn r#updateSubcomponent(&self, _arg_key: &crate::aidl::r#android::r#system::r#keystore2::r#KeyDescriptor::r#KeyDescriptor, _arg_publicCert: Option<&[u8]>, _arg_certificateChain: Option<&[u8]>) -> binder::Result<()> { unimplemented!("stand-in") }
@@ -189,7 +189,7 @@ impl r#IKeystoreService for r#BpIKeystoreService {
   fn r#getSupplementaryAttestationInfo(&self, _arg_tag: android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#Tag::r#Tag) -> binder::Result<alloc::vec::Vec<u8>> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IKeystoreService {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IKeystoreService>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IKeystoreService>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#KeyDescriptor {

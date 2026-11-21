@@ -17,20 +17,20 @@ pub trait r#IConfirmationCallback: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IConfirmationCallback + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IConfirmationCallback") } }
-pub struct r#BnIConfirmationCallback(());
-impl r#BnIConfirmationCallback {
+pub struct r#BnConfirmationCallback(());
+impl r#BnConfirmationCallback {
   pub fn new_binder<T: r#IConfirmationCallback + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IConfirmationCallback> { unimplemented!("stand-in") }
 }
-pub struct r#BpIConfirmationCallback { _binder: binder::SpIBinder }
-impl r#BpIConfirmationCallback {
+pub struct r#BpConfirmationCallback { _binder: binder::SpIBinder }
+impl r#BpConfirmationCallback {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IConfirmationCallback>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIConfirmationCallback {}
-impl r#IConfirmationCallback for r#BpIConfirmationCallback {
+impl binder::Interface for r#BpConfirmationCallback {}
+impl r#IConfirmationCallback for r#BpConfirmationCallback {
   fn r#onCompleted(&self, _arg_result: crate::aidl::r#android::r#security::r#apc::r#ResponseCode::r#ResponseCode, _arg_dataConfirmed: Option<&[u8]>) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IConfirmationCallback {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IConfirmationCallback>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IConfirmationCallback>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#IProtectedConfirmation {
@@ -45,22 +45,22 @@ pub trait r#IProtectedConfirmation: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IProtectedConfirmation + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IProtectedConfirmation") } }
-pub struct r#BnIProtectedConfirmation(());
-impl r#BnIProtectedConfirmation {
+pub struct r#BnProtectedConfirmation(());
+impl r#BnProtectedConfirmation {
   pub fn new_binder<T: r#IProtectedConfirmation + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IProtectedConfirmation> { unimplemented!("stand-in") }
 }
-pub struct r#BpIProtectedConfirmation { _binder: binder::SpIBinder }
-impl r#BpIProtectedConfirmation {
+pub struct r#BpProtectedConfirmation { _binder: binder::SpIBinder }
+impl r#BpProtectedConfirmation {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IProtectedConfirmation>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIProtectedConfirmation {}
-impl r#IProtectedConfirmation for r#BpIProtectedConfirmation {
+impl binder::Interface for r#BpProtectedConfirmation {}
+impl r#IProtectedConfirmation for r#BpProtectedConfirmation {
   fn r#presentPrompt(&self, _arg_listener: &binder::Strong<dyn crate::aidl::r#android::r#security::r#apc::r#IConfirmationCallback::r#IConfirmationCallback>, _arg_promptText: &str, _arg_extraData: &[u8], _arg_locale: &str, _arg_uiOptionFlags: i32) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#cancelPrompt(&self, _arg_listener: &binder::Strong<dyn crate::aidl::r#android::r#security::r#apc::r#IConfirmationCallback::r#IConfirmationCallback>) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#isSupported(&self) -> binder::Result<bool> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IProtectedConfirmation {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IProtectedConfirmation>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IProtectedConfirmation>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#ResponseCode {

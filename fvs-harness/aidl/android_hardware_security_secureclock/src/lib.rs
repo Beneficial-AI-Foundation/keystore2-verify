@@ -19,20 +19,20 @@ pub trait r#ISecureClock: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#ISecureClock + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#ISecureClock") } }
-pub struct r#BnISecureClock(());
-impl r#BnISecureClock {
+pub struct r#BnSecureClock(());
+impl r#BnSecureClock {
   pub fn new_binder<T: r#ISecureClock + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#ISecureClock> { unimplemented!("stand-in") }
 }
-pub struct r#BpISecureClock { _binder: binder::SpIBinder }
-impl r#BpISecureClock {
+pub struct r#BpSecureClock { _binder: binder::SpIBinder }
+impl r#BpSecureClock {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#ISecureClock>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpISecureClock {}
-impl r#ISecureClock for r#BpISecureClock {
+impl binder::Interface for r#BpSecureClock {}
+impl r#ISecureClock for r#BpSecureClock {
   fn r#generateTimeStamp(&self, _arg_challenge: i64) -> binder::Result<crate::aidl::r#android::r#hardware::r#security::r#secureclock::r#TimeStampToken::r#TimeStampToken> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#ISecureClock {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#ISecureClock>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#ISecureClock>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#TimeStampToken {

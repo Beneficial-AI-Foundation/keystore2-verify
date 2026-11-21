@@ -19,22 +19,22 @@ pub trait r#IGetKeyCallback: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IGetKeyCallback + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IGetKeyCallback") } }
-pub struct r#BnIGetKeyCallback(());
-impl r#BnIGetKeyCallback {
+pub struct r#BnGetKeyCallback(());
+impl r#BnGetKeyCallback {
   pub fn new_binder<T: r#IGetKeyCallback + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IGetKeyCallback> { unimplemented!("stand-in") }
 }
-pub struct r#BpIGetKeyCallback { _binder: binder::SpIBinder }
-impl r#BpIGetKeyCallback {
+pub struct r#BpGetKeyCallback { _binder: binder::SpIBinder }
+impl r#BpGetKeyCallback {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IGetKeyCallback>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIGetKeyCallback {}
-impl r#IGetKeyCallback for r#BpIGetKeyCallback {
+impl binder::Interface for r#BpGetKeyCallback {}
+impl r#IGetKeyCallback for r#BpGetKeyCallback {
   fn r#onSuccess(&self, _arg_key: &crate::aidl::r#android::r#security::r#rkp::r#RemotelyProvisionedKey::r#RemotelyProvisionedKey) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#onCancel(&self) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#onError(&self, _arg_error: crate::aidl::r#android::r#security::r#rkp::r#IGetKeyCallback::r#ErrorCode::r#ErrorCode, _arg_description: &str) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IGetKeyCallback {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IGetKeyCallback>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IGetKeyCallback>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 pub mod r#ErrorCode {
 use binder::declare_binder_enum;
@@ -58,22 +58,22 @@ pub trait r#IGetRegistrationCallback: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IGetRegistrationCallback + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IGetRegistrationCallback") } }
-pub struct r#BnIGetRegistrationCallback(());
-impl r#BnIGetRegistrationCallback {
+pub struct r#BnGetRegistrationCallback(());
+impl r#BnGetRegistrationCallback {
   pub fn new_binder<T: r#IGetRegistrationCallback + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IGetRegistrationCallback> { unimplemented!("stand-in") }
 }
-pub struct r#BpIGetRegistrationCallback { _binder: binder::SpIBinder }
-impl r#BpIGetRegistrationCallback {
+pub struct r#BpGetRegistrationCallback { _binder: binder::SpIBinder }
+impl r#BpGetRegistrationCallback {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IGetRegistrationCallback>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIGetRegistrationCallback {}
-impl r#IGetRegistrationCallback for r#BpIGetRegistrationCallback {
+impl binder::Interface for r#BpGetRegistrationCallback {}
+impl r#IGetRegistrationCallback for r#BpGetRegistrationCallback {
   fn r#onSuccess(&self, _arg_registration: &binder::Strong<dyn crate::aidl::r#android::r#security::r#rkp::r#IRegistration::r#IRegistration>) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#onCancel(&self) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#onError(&self, _arg_error: &str) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IGetRegistrationCallback {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IGetRegistrationCallback>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IGetRegistrationCallback>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#IRegistration {
@@ -86,22 +86,22 @@ pub trait r#IRegistration: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IRegistration + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IRegistration") } }
-pub struct r#BnIRegistration(());
-impl r#BnIRegistration {
+pub struct r#BnRegistration(());
+impl r#BnRegistration {
   pub fn new_binder<T: r#IRegistration + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IRegistration> { unimplemented!("stand-in") }
 }
-pub struct r#BpIRegistration { _binder: binder::SpIBinder }
-impl r#BpIRegistration {
+pub struct r#BpRegistration { _binder: binder::SpIBinder }
+impl r#BpRegistration {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IRegistration>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIRegistration {}
-impl r#IRegistration for r#BpIRegistration {
+impl binder::Interface for r#BpRegistration {}
+impl r#IRegistration for r#BpRegistration {
   fn r#getKey(&self, _arg_keyId: i32, _arg_callback: &binder::Strong<dyn crate::aidl::r#android::r#security::r#rkp::r#IGetKeyCallback::r#IGetKeyCallback>) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#cancelGetKey(&self, _arg_callback: &binder::Strong<dyn crate::aidl::r#android::r#security::r#rkp::r#IGetKeyCallback::r#IGetKeyCallback>) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#storeUpgradedKeyAsync(&self, _arg_oldKeyBlob: &[u8], _arg_newKeyBlob: &[u8], _arg_callback: &binder::Strong<dyn crate::aidl::r#android::r#security::r#rkp::r#IStoreUpgradedKeyCallback::r#IStoreUpgradedKeyCallback>) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IRegistration {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IRegistration>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IRegistration>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#IRemoteProvisioning {
@@ -112,20 +112,20 @@ pub trait r#IRemoteProvisioning: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IRemoteProvisioning + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IRemoteProvisioning") } }
-pub struct r#BnIRemoteProvisioning(());
-impl r#BnIRemoteProvisioning {
+pub struct r#BnRemoteProvisioning(());
+impl r#BnRemoteProvisioning {
   pub fn new_binder<T: r#IRemoteProvisioning + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IRemoteProvisioning> { unimplemented!("stand-in") }
 }
-pub struct r#BpIRemoteProvisioning { _binder: binder::SpIBinder }
-impl r#BpIRemoteProvisioning {
+pub struct r#BpRemoteProvisioning { _binder: binder::SpIBinder }
+impl r#BpRemoteProvisioning {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IRemoteProvisioning>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIRemoteProvisioning {}
-impl r#IRemoteProvisioning for r#BpIRemoteProvisioning {
+impl binder::Interface for r#BpRemoteProvisioning {}
+impl r#IRemoteProvisioning for r#BpRemoteProvisioning {
   fn r#getRegistration(&self, _arg_irpcName: &str, _arg_callback: &binder::Strong<dyn crate::aidl::r#android::r#security::r#rkp::r#IGetRegistrationCallback::r#IGetRegistrationCallback>) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IRemoteProvisioning {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IRemoteProvisioning>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IRemoteProvisioning>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#IStoreUpgradedKeyCallback {
@@ -137,21 +137,21 @@ pub trait r#IStoreUpgradedKeyCallback: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IStoreUpgradedKeyCallback + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IStoreUpgradedKeyCallback") } }
-pub struct r#BnIStoreUpgradedKeyCallback(());
-impl r#BnIStoreUpgradedKeyCallback {
+pub struct r#BnStoreUpgradedKeyCallback(());
+impl r#BnStoreUpgradedKeyCallback {
   pub fn new_binder<T: r#IStoreUpgradedKeyCallback + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IStoreUpgradedKeyCallback> { unimplemented!("stand-in") }
 }
-pub struct r#BpIStoreUpgradedKeyCallback { _binder: binder::SpIBinder }
-impl r#BpIStoreUpgradedKeyCallback {
+pub struct r#BpStoreUpgradedKeyCallback { _binder: binder::SpIBinder }
+impl r#BpStoreUpgradedKeyCallback {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IStoreUpgradedKeyCallback>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIStoreUpgradedKeyCallback {}
-impl r#IStoreUpgradedKeyCallback for r#BpIStoreUpgradedKeyCallback {
+impl binder::Interface for r#BpStoreUpgradedKeyCallback {}
+impl r#IStoreUpgradedKeyCallback for r#BpStoreUpgradedKeyCallback {
   fn r#onSuccess(&self) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#onError(&self, _arg_error: &str) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IStoreUpgradedKeyCallback {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IStoreUpgradedKeyCallback>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IStoreUpgradedKeyCallback>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#RemotelyProvisionedKey {

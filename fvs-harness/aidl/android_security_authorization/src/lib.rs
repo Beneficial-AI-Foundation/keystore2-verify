@@ -39,16 +39,16 @@ pub trait r#IKeystoreAuthorization: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IKeystoreAuthorization + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreAuthorization") } }
-pub struct r#BnIKeystoreAuthorization(());
-impl r#BnIKeystoreAuthorization {
+pub struct r#BnKeystoreAuthorization(());
+impl r#BnKeystoreAuthorization {
   pub fn new_binder<T: r#IKeystoreAuthorization + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreAuthorization> { unimplemented!("stand-in") }
 }
-pub struct r#BpIKeystoreAuthorization { _binder: binder::SpIBinder }
-impl r#BpIKeystoreAuthorization {
+pub struct r#BpKeystoreAuthorization { _binder: binder::SpIBinder }
+impl r#BpKeystoreAuthorization {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IKeystoreAuthorization>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIKeystoreAuthorization {}
-impl r#IKeystoreAuthorization for r#BpIKeystoreAuthorization {
+impl binder::Interface for r#BpKeystoreAuthorization {}
+impl r#IKeystoreAuthorization for r#BpKeystoreAuthorization {
   fn r#addAuthToken(&self, _arg_authToken: &android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#HardwareAuthToken::r#HardwareAuthToken) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#onDeviceUnlocked(&self, _arg_userId: i32, _arg_password: Option<&[u8]>) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#onDeviceLocked(&self, _arg_userId: i32, _arg_unlockingSids: &[i64], _arg_weakUnlockEnabled: bool) -> binder::Result<()> { unimplemented!("stand-in") }
@@ -59,7 +59,7 @@ impl r#IKeystoreAuthorization for r#BpIKeystoreAuthorization {
   fn r#getLastAuthTime(&self, _arg_secureUserId: i64, _arg_authTypes: &[android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#HardwareAuthenticatorType::r#HardwareAuthenticatorType]) -> binder::Result<i64> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IKeystoreAuthorization {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IKeystoreAuthorization>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IKeystoreAuthorization>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#ResponseCode {

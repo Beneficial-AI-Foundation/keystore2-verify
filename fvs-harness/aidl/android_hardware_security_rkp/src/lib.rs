@@ -40,23 +40,23 @@ pub trait r#IRemotelyProvisionedComponent: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IRemotelyProvisionedComponent + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IRemotelyProvisionedComponent") } }
-pub struct r#BnIRemotelyProvisionedComponent(());
-impl r#BnIRemotelyProvisionedComponent {
+pub struct r#BnRemotelyProvisionedComponent(());
+impl r#BnRemotelyProvisionedComponent {
   pub fn new_binder<T: r#IRemotelyProvisionedComponent + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IRemotelyProvisionedComponent> { unimplemented!("stand-in") }
 }
-pub struct r#BpIRemotelyProvisionedComponent { _binder: binder::SpIBinder }
-impl r#BpIRemotelyProvisionedComponent {
+pub struct r#BpRemotelyProvisionedComponent { _binder: binder::SpIBinder }
+impl r#BpRemotelyProvisionedComponent {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IRemotelyProvisionedComponent>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIRemotelyProvisionedComponent {}
-impl r#IRemotelyProvisionedComponent for r#BpIRemotelyProvisionedComponent {
+impl binder::Interface for r#BpRemotelyProvisionedComponent {}
+impl r#IRemotelyProvisionedComponent for r#BpRemotelyProvisionedComponent {
   fn r#getHardwareInfo(&self) -> binder::Result<crate::aidl::r#android::r#hardware::r#security::r#keymint::r#RpcHardwareInfo::r#RpcHardwareInfo> { unimplemented!("stand-in") }
   fn r#generateEcdsaP256KeyPair(&self, _arg_testMode: bool, _arg_macedPublicKey: &mut crate::aidl::r#android::r#hardware::r#security::r#keymint::r#MacedPublicKey::r#MacedPublicKey) -> binder::Result<alloc::vec::Vec<u8>> { unimplemented!("stand-in") }
   fn r#generateCertificateRequest(&self, _arg_testMode: bool, _arg_keysToSign: &[crate::aidl::r#android::r#hardware::r#security::r#keymint::r#MacedPublicKey::r#MacedPublicKey], _arg_endpointEncryptionCertChain: &[u8], _arg_challenge: &[u8], _arg_deviceInfo: &mut crate::aidl::r#android::r#hardware::r#security::r#keymint::r#DeviceInfo::r#DeviceInfo, _arg_protectedData: &mut crate::aidl::r#android::r#hardware::r#security::r#keymint::r#ProtectedData::r#ProtectedData) -> binder::Result<alloc::vec::Vec<u8>> { unimplemented!("stand-in") }
   fn r#generateCertificateRequestV2(&self, _arg_keysToSign: &[crate::aidl::r#android::r#hardware::r#security::r#keymint::r#MacedPublicKey::r#MacedPublicKey], _arg_challenge: &[u8]) -> binder::Result<alloc::vec::Vec<u8>> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IRemotelyProvisionedComponent {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IRemotelyProvisionedComponent>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IRemotelyProvisionedComponent>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#MacedPublicKey {

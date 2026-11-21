@@ -13,6 +13,10 @@ use std::ops::Deref;
 /// `Result<T>` as the real crate defines it: the error is a binder `Status`.
 pub type Result<T> = std::result::Result<T, Status>;
 
+/// The result of the real crate's internal modules (`crate::error::Result`): the error is a
+/// `StatusCode`. Service lookup, `FromIBinder`, `IBinder` and `Weak::upgrade` use it.
+type SResult<T> = std::result::Result<T, StatusCode>;
+
 // ---------------------------------------------------------------- errors
 
 /// Transaction-level status code (the real crate re-exports a bindgen enum of this name).
@@ -201,6 +205,10 @@ impl From<Status> for std::result::Result<(), Status> {
 
 /// Base of every binder interface trait.
 pub trait Interface: Send + Sync {
+    fn dump(&self, _writer: &mut dyn std::io::Write, _args: &[&std::ffi::CStr]) -> SResult<()> {
+        Ok(())
+    }
+
     fn as_binder(&self) -> SpIBinder {
         panic!("This object was not a Binder object and cannot be converted into an SpIBinder.")
     }
@@ -208,14 +216,14 @@ pub trait Interface: Send + Sync {
 
 /// An interface that can be rebuilt from a remote object.
 pub trait FromIBinder: Interface {
-    fn try_from(ibinder: SpIBinder) -> Result<Strong<Self>>;
+    fn try_from(ibinder: SpIBinder) -> SResult<Strong<Self>>;
 }
 
 /// Operations of a remote object.
 pub trait IBinder {
-    fn link_to_death(&mut self, recipient: &mut DeathRecipient) -> Result<()>;
-    fn unlink_to_death(&mut self, recipient: &mut DeathRecipient) -> Result<()>;
-    fn ping_binder(&mut self) -> Result<()>;
+    fn link_to_death(&mut self, recipient: &mut DeathRecipient) -> SResult<()>;
+    fn unlink_to_death(&mut self, recipient: &mut DeathRecipient) -> SResult<()>;
+    fn ping_binder(&mut self) -> SResult<()>;
 }
 
 /// A strong reference to a remote interface.
@@ -282,7 +290,7 @@ impl<I: FromIBinder + ?Sized> Eq for Strong<I> {}
 pub struct Weak<I: FromIBinder + ?Sized>(std::marker::PhantomData<Box<I>>);
 
 impl<I: FromIBinder + ?Sized> Weak<I> {
-    pub fn upgrade(&self) -> Result<Strong<I>> {
+    pub fn upgrade(&self) -> SResult<Strong<I>> {
         unimplemented!("stand-in")
     }
 }
@@ -297,14 +305,21 @@ impl<I: FromIBinder + ?Sized> Clone for Weak<I> {
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SpIBinder(());
 
+impl SpIBinder {
+    /// Turns the object into a strong reference to the interface `I`.
+    pub fn into_interface<I: FromIBinder + Interface + ?Sized>(self) -> SResult<Strong<I>> {
+        FromIBinder::try_from(self)
+    }
+}
+
 impl IBinder for SpIBinder {
-    fn link_to_death(&mut self, recipient: &mut DeathRecipient) -> Result<()> {
+    fn link_to_death(&mut self, recipient: &mut DeathRecipient) -> SResult<()> {
         unimplemented!("stand-in")
     }
-    fn unlink_to_death(&mut self, recipient: &mut DeathRecipient) -> Result<()> {
+    fn unlink_to_death(&mut self, recipient: &mut DeathRecipient) -> SResult<()> {
         unimplemented!("stand-in")
     }
-    fn ping_binder(&mut self) -> Result<()> {
+    fn ping_binder(&mut self) -> SResult<()> {
         unimplemented!("stand-in")
     }
 }
@@ -392,11 +407,11 @@ impl ThreadState {
 
 // ---------------------------------------------------------------- service manager
 
-pub fn add_service(identifier: &str, mut binder: SpIBinder) -> Result<()> {
+pub fn add_service(identifier: &str, mut binder: SpIBinder) -> SResult<()> {
     unimplemented!("stand-in")
 }
 
-pub fn register_lazy_service(identifier: &str, mut binder: SpIBinder) -> Result<()> {
+pub fn register_lazy_service(identifier: &str, mut binder: SpIBinder) -> SResult<()> {
     unimplemented!("stand-in")
 }
 
@@ -420,23 +435,23 @@ pub fn wait_for_service(name: &str) -> Option<SpIBinder> {
     unimplemented!("stand-in")
 }
 
-pub fn get_interface<T: FromIBinder + ?Sized>(name: &str) -> Result<Strong<T>> {
+pub fn get_interface<T: FromIBinder + ?Sized>(name: &str) -> SResult<Strong<T>> {
     unimplemented!("stand-in")
 }
 
-pub fn check_interface<T: FromIBinder + ?Sized>(name: &str) -> Result<Strong<T>> {
+pub fn check_interface<T: FromIBinder + ?Sized>(name: &str) -> SResult<Strong<T>> {
     unimplemented!("stand-in")
 }
 
-pub fn wait_for_interface<T: FromIBinder + ?Sized>(name: &str) -> Result<Strong<T>> {
+pub fn wait_for_interface<T: FromIBinder + ?Sized>(name: &str) -> SResult<Strong<T>> {
     unimplemented!("stand-in")
 }
 
-pub fn is_declared(interface: &str) -> Result<bool> {
+pub fn is_declared(interface: &str) -> SResult<bool> {
     unimplemented!("stand-in")
 }
 
-pub fn get_declared_instances(interface: &str) -> Result<Vec<String>> {
+pub fn get_declared_instances(interface: &str) -> SResult<Vec<String>> {
     unimplemented!("stand-in")
 }
 

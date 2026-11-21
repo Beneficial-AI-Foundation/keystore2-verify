@@ -263,16 +263,16 @@ pub trait r#IKeyMintDevice: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IKeyMintDevice + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeyMintDevice") } }
-pub struct r#BnIKeyMintDevice(());
-impl r#BnIKeyMintDevice {
+pub struct r#BnKeyMintDevice(());
+impl r#BnKeyMintDevice {
   pub fn new_binder<T: r#IKeyMintDevice + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeyMintDevice> { unimplemented!("stand-in") }
 }
-pub struct r#BpIKeyMintDevice { _binder: binder::SpIBinder }
-impl r#BpIKeyMintDevice {
+pub struct r#BpKeyMintDevice { _binder: binder::SpIBinder }
+impl r#BpKeyMintDevice {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IKeyMintDevice>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIKeyMintDevice {}
-impl r#IKeyMintDevice for r#BpIKeyMintDevice {
+impl binder::Interface for r#BpKeyMintDevice {}
+impl r#IKeyMintDevice for r#BpKeyMintDevice {
   fn r#getHardwareInfo(&self) -> binder::Result<crate::aidl::r#android::r#hardware::r#security::r#keymint::r#KeyMintHardwareInfo::r#KeyMintHardwareInfo> { unimplemented!("stand-in") }
   fn r#addRngEntropy(&self, _arg_data: &[u8]) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#generateKey(&self, _arg_keyParams: &[crate::aidl::r#android::r#hardware::r#security::r#keymint::r#KeyParameter::r#KeyParameter], _arg_attestationKey: Option<&crate::aidl::r#android::r#hardware::r#security::r#keymint::r#AttestationKey::r#AttestationKey>) -> binder::Result<crate::aidl::r#android::r#hardware::r#security::r#keymint::r#KeyCreationResult::r#KeyCreationResult> { unimplemented!("stand-in") }
@@ -293,7 +293,7 @@ impl r#IKeyMintDevice for r#BpIKeyMintDevice {
   fn r#setAdditionalAttestationInfo(&self, _arg_info: &[crate::aidl::r#android::r#hardware::r#security::r#keymint::r#KeyParameter::r#KeyParameter]) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IKeyMintDevice {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IKeyMintDevice>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IKeyMintDevice>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#IKeyMintOperation {
@@ -307,23 +307,23 @@ pub trait r#IKeyMintOperation: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IKeyMintOperation + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeyMintOperation") } }
-pub struct r#BnIKeyMintOperation(());
-impl r#BnIKeyMintOperation {
+pub struct r#BnKeyMintOperation(());
+impl r#BnKeyMintOperation {
   pub fn new_binder<T: r#IKeyMintOperation + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeyMintOperation> { unimplemented!("stand-in") }
 }
-pub struct r#BpIKeyMintOperation { _binder: binder::SpIBinder }
-impl r#BpIKeyMintOperation {
+pub struct r#BpKeyMintOperation { _binder: binder::SpIBinder }
+impl r#BpKeyMintOperation {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IKeyMintOperation>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIKeyMintOperation {}
-impl r#IKeyMintOperation for r#BpIKeyMintOperation {
+impl binder::Interface for r#BpKeyMintOperation {}
+impl r#IKeyMintOperation for r#BpKeyMintOperation {
   fn r#updateAad(&self, _arg_input: &[u8], _arg_authToken: Option<&crate::aidl::r#android::r#hardware::r#security::r#keymint::r#HardwareAuthToken::r#HardwareAuthToken>, _arg_timeStampToken: Option<&android_hardware_security_secureclock::aidl::r#android::r#hardware::r#security::r#secureclock::r#TimeStampToken::r#TimeStampToken>) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#update(&self, _arg_input: &[u8], _arg_authToken: Option<&crate::aidl::r#android::r#hardware::r#security::r#keymint::r#HardwareAuthToken::r#HardwareAuthToken>, _arg_timeStampToken: Option<&android_hardware_security_secureclock::aidl::r#android::r#hardware::r#security::r#secureclock::r#TimeStampToken::r#TimeStampToken>) -> binder::Result<alloc::vec::Vec<u8>> { unimplemented!("stand-in") }
   fn r#finish(&self, _arg_input: Option<&[u8]>, _arg_signature: Option<&[u8]>, _arg_authToken: Option<&crate::aidl::r#android::r#hardware::r#security::r#keymint::r#HardwareAuthToken::r#HardwareAuthToken>, _arg_timestampToken: Option<&android_hardware_security_secureclock::aidl::r#android::r#hardware::r#security::r#secureclock::r#TimeStampToken::r#TimeStampToken>, _arg_confirmationToken: Option<&[u8]>) -> binder::Result<alloc::vec::Vec<u8>> { unimplemented!("stand-in") }
   fn r#abort(&self) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IKeyMintOperation {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IKeyMintOperation>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IKeyMintOperation>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#KeyCharacteristics {

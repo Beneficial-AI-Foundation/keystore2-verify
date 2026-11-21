@@ -22,22 +22,22 @@ pub trait r#IPackageManagerNative: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IPackageManagerNative + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IPackageManagerNative") } }
-pub struct r#BnIPackageManagerNative(());
-impl r#BnIPackageManagerNative {
+pub struct r#BnPackageManagerNative(());
+impl r#BnPackageManagerNative {
   pub fn new_binder<T: r#IPackageManagerNative + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IPackageManagerNative> { unimplemented!("stand-in") }
 }
-pub struct r#BpIPackageManagerNative { _binder: binder::SpIBinder }
-impl r#BpIPackageManagerNative {
+pub struct r#BpPackageManagerNative { _binder: binder::SpIBinder }
+impl r#BpPackageManagerNative {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IPackageManagerNative>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIPackageManagerNative {}
-impl r#IPackageManagerNative for r#BpIPackageManagerNative {
+impl binder::Interface for r#BpPackageManagerNative {}
+impl r#IPackageManagerNative for r#BpPackageManagerNative {
   fn r#getPackageInfoWithSigningInfoForUid(&self, _arg_uid: i32) -> binder::Result<Option<alloc::vec::Vec<Option<crate::aidl::r#android::r#content::r#pm::r#PackageInfo::r#PackageInfo>>>> { unimplemented!("stand-in") }
   fn r#getTargetSdkVersionForPackage(&self, _arg_packageName: &str) -> binder::Result<i32> { unimplemented!("stand-in") }
   fn r#getLocationFlags(&self, _arg_packageName: &str) -> binder::Result<i32> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IPackageManagerNative {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IPackageManagerNative>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IPackageManagerNative>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#PackageInfo {

@@ -438,6 +438,11 @@ class World:
 KEYWORDS_NO_RAW = {"self", "Self", "super", "crate"}
 
 
+def bare(n):
+    """Interface IFoo is served by BnFoo and proxied by BpFoo: the AIDL compiler drops the I."""
+    return n[1:] if len(n) > 1 and n[0] == "I" and n[1].isupper() else n
+
+
 def rid(n):
     return f"{n}_" if n in KEYWORDS_NO_RAW else f"r#{n}"
 
@@ -653,13 +658,13 @@ class Emitter:
         o.append(f"impl core::fmt::Debug for dyn {n} + '_ {{ "
                  f"fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result "
                  f"{{ f.pad(\"{n}\") }} }}")
-        o.append(f"pub struct {rid('Bn' + d.name)}(());")
-        o.append(f"impl {rid('Bn' + d.name)} {{")
+        o.append(f"pub struct {rid('Bn' + bare(d.name))}(());")
+        o.append(f"impl {rid('Bn' + bare(d.name))} {{")
         o.append(f"  pub fn new_binder<T: {n} + Send + Sync + 'static>(_inner: T, "
                  f"_features: binder::BinderFeatures) -> binder::Strong<dyn {n}> {{ "
                  f"unimplemented!(\"stand-in\") }}")
         o.append("}")
-        bp = rid("Bp" + d.name)
+        bp = rid("Bp" + bare(d.name))
         o.append(f"pub struct {bp} {{ _binder: binder::SpIBinder }}")
         o.append(f"impl {bp} {{")
         o.append(f"  pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn {n}>> "
@@ -671,7 +676,7 @@ class Emitter:
             o.append(f"  fn {sig} {{ unimplemented!(\"stand-in\") }}")
         o.append("}")
         o.append(f"impl binder::FromIBinder for dyn {n} {{")
-        o.append(f"  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn {n}>> "
+        o.append(f"  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn {n}>, binder::StatusCode> "
                  f"{{ unimplemented!(\"stand-in\") }}")
         o.append("}")
         return o

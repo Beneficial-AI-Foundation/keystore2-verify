@@ -25,16 +25,16 @@ pub trait r#IKeystoreMaintenance: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IKeystoreMaintenance + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreMaintenance") } }
-pub struct r#BnIKeystoreMaintenance(());
-impl r#BnIKeystoreMaintenance {
+pub struct r#BnKeystoreMaintenance(());
+impl r#BnKeystoreMaintenance {
   pub fn new_binder<T: r#IKeystoreMaintenance + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreMaintenance> { unimplemented!("stand-in") }
 }
-pub struct r#BpIKeystoreMaintenance { _binder: binder::SpIBinder }
-impl r#BpIKeystoreMaintenance {
+pub struct r#BpKeystoreMaintenance { _binder: binder::SpIBinder }
+impl r#BpKeystoreMaintenance {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IKeystoreMaintenance>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIKeystoreMaintenance {}
-impl r#IKeystoreMaintenance for r#BpIKeystoreMaintenance {
+impl binder::Interface for r#BpKeystoreMaintenance {}
+impl r#IKeystoreMaintenance for r#BpKeystoreMaintenance {
   fn r#onUserAdded(&self, _arg_userId: i32) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#initUserSuperKeys(&self, _arg_userId: i32, _arg_password: &[u8], _arg_allowExisting: bool) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#onUserRemoved(&self, _arg_userId: i32) -> binder::Result<()> { unimplemented!("stand-in") }
@@ -46,7 +46,7 @@ impl r#IKeystoreMaintenance for r#BpIKeystoreMaintenance {
   fn r#getAppUidsAffectedBySid(&self, _arg_userId: i32, _arg_sid: i64) -> binder::Result<alloc::vec::Vec<i64>> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IKeystoreMaintenance {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IKeystoreMaintenance>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IKeystoreMaintenance>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 }

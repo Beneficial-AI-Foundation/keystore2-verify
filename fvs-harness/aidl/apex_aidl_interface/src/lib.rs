@@ -180,16 +180,16 @@ pub trait r#IApexService: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IApexService + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IApexService") } }
-pub struct r#BnIApexService(());
-impl r#BnIApexService {
+pub struct r#BnApexService(());
+impl r#BnApexService {
   pub fn new_binder<T: r#IApexService + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IApexService> { unimplemented!("stand-in") }
 }
-pub struct r#BpIApexService { _binder: binder::SpIBinder }
-impl r#BpIApexService {
+pub struct r#BpApexService { _binder: binder::SpIBinder }
+impl r#BpApexService {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IApexService>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIApexService {}
-impl r#IApexService for r#BpIApexService {
+impl binder::Interface for r#BpApexService {}
+impl r#IApexService for r#BpApexService {
   fn r#submitStagedSession(&self, _arg_params: &crate::aidl::r#android::r#apex::r#ApexSessionParams::r#ApexSessionParams, _arg_packages: &mut crate::aidl::r#android::r#apex::r#ApexInfoList::r#ApexInfoList) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#markStagedSessionReady(&self, _arg_session_id: i32) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#markStagedSessionSuccessful(&self, _arg_session_id: i32) -> binder::Result<()> { unimplemented!("stand-in") }
@@ -215,7 +215,7 @@ impl r#IApexService for r#BpIApexService {
   fn r#installAndActivatePackage(&self, _arg_packagePath: &str, _arg_force: bool) -> binder::Result<crate::aidl::r#android::r#apex::r#ApexInfo::r#ApexInfo> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IApexService {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IApexService>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IApexService>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 }

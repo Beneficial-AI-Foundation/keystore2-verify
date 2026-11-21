@@ -19,22 +19,22 @@ pub trait r#IKeystoreCompatService: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#IKeystoreCompatService + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreCompatService") } }
-pub struct r#BnIKeystoreCompatService(());
-impl r#BnIKeystoreCompatService {
+pub struct r#BnKeystoreCompatService(());
+impl r#BnKeystoreCompatService {
   pub fn new_binder<T: r#IKeystoreCompatService + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreCompatService> { unimplemented!("stand-in") }
 }
-pub struct r#BpIKeystoreCompatService { _binder: binder::SpIBinder }
-impl r#BpIKeystoreCompatService {
+pub struct r#BpKeystoreCompatService { _binder: binder::SpIBinder }
+impl r#BpKeystoreCompatService {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#IKeystoreCompatService>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpIKeystoreCompatService {}
-impl r#IKeystoreCompatService for r#BpIKeystoreCompatService {
+impl binder::Interface for r#BpKeystoreCompatService {}
+impl r#IKeystoreCompatService for r#BpKeystoreCompatService {
   fn r#getKeyMintDevice(&self, _arg_securityLevel: android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#SecurityLevel::r#SecurityLevel) -> binder::Result<binder::Strong<dyn android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#IKeyMintDevice::r#IKeyMintDevice>> { unimplemented!("stand-in") }
   fn r#getSecureClock(&self) -> binder::Result<binder::Strong<dyn android_hardware_security_secureclock::aidl::r#android::r#hardware::r#security::r#secureclock::r#ISecureClock::r#ISecureClock>> { unimplemented!("stand-in") }
   fn r#getSharedSecret(&self, _arg_securityLevel: android_hardware_security_keymint::aidl::r#android::r#hardware::r#security::r#keymint::r#SecurityLevel::r#SecurityLevel) -> binder::Result<binder::Strong<dyn android_hardware_security_sharedsecret::aidl::r#android::r#hardware::r#security::r#sharedsecret::r#ISharedSecret::r#ISharedSecret>> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IKeystoreCompatService {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IKeystoreCompatService>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#IKeystoreCompatService>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 }

@@ -21,21 +21,21 @@ pub trait r#ISharedSecret: binder::Interface + Send {
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
 impl core::fmt::Debug for dyn r#ISharedSecret + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#ISharedSecret") } }
-pub struct r#BnISharedSecret(());
-impl r#BnISharedSecret {
+pub struct r#BnSharedSecret(());
+impl r#BnSharedSecret {
   pub fn new_binder<T: r#ISharedSecret + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#ISharedSecret> { unimplemented!("stand-in") }
 }
-pub struct r#BpISharedSecret { _binder: binder::SpIBinder }
-impl r#BpISharedSecret {
+pub struct r#BpSharedSecret { _binder: binder::SpIBinder }
+impl r#BpSharedSecret {
   pub fn new(_binder: binder::SpIBinder) -> Option<binder::Strong<dyn r#ISharedSecret>> { unimplemented!("stand-in") }
 }
-impl binder::Interface for r#BpISharedSecret {}
-impl r#ISharedSecret for r#BpISharedSecret {
+impl binder::Interface for r#BpSharedSecret {}
+impl r#ISharedSecret for r#BpSharedSecret {
   fn r#getSharedSecretParameters(&self) -> binder::Result<crate::aidl::r#android::r#hardware::r#security::r#sharedsecret::r#SharedSecretParameters::r#SharedSecretParameters> { unimplemented!("stand-in") }
   fn r#computeSharedSecret(&self, _arg_params: &[crate::aidl::r#android::r#hardware::r#security::r#sharedsecret::r#SharedSecretParameters::r#SharedSecretParameters]) -> binder::Result<alloc::vec::Vec<u8>> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#ISharedSecret {
-  fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#ISharedSecret>> { unimplemented!("stand-in") }
+  fn try_from(_ibinder: binder::SpIBinder) -> core::result::Result<binder::Strong<dyn r#ISharedSecret>, binder::StatusCode> { unimplemented!("stand-in") }
 }
 }
 pub mod r#SharedSecretParameters {
