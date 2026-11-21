@@ -460,7 +460,9 @@ class Emitter:
             o = o.outer
         chain.reverse()
         mods = "::".join(rid(p) for p in parts)
-        types = "::".join(rid(p) for c in chain for p in (c, c))
+        # Module X holds trait or struct X and the modules of the types nested in it:
+        # X::X for a top-level type, X::Y::Y for Y nested in X.
+        types = "::".join(rid(p) for p in chain + chain[-1:])
         return f"{prefix}::aidl::{mods}::{types}"
 
     def rust_type(self, t, mode, scope):

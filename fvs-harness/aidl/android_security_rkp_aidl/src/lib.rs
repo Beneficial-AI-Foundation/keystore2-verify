@@ -14,7 +14,7 @@ pub trait r#IGetKeyCallback: binder::Interface + Send {
   fn get_descriptor() -> &'static str where Self: Sized { "android.security.rkp.IGetKeyCallback" }
   fn r#onSuccess(&self, _arg_key: &crate::aidl::r#android::r#security::r#rkp::r#RemotelyProvisionedKey::r#RemotelyProvisionedKey) -> binder::Result<()>;
   fn r#onCancel(&self) -> binder::Result<()>;
-  fn r#onError(&self, _arg_error: crate::aidl::r#android::r#security::r#rkp::r#IGetKeyCallback::r#IGetKeyCallback::r#ErrorCode::r#ErrorCode, _arg_description: &str) -> binder::Result<()>;
+  fn r#onError(&self, _arg_error: crate::aidl::r#android::r#security::r#rkp::r#IGetKeyCallback::r#ErrorCode::r#ErrorCode, _arg_description: &str) -> binder::Result<()>;
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
@@ -31,7 +31,7 @@ impl binder::Interface for r#BpIGetKeyCallback {}
 impl r#IGetKeyCallback for r#BpIGetKeyCallback {
   fn r#onSuccess(&self, _arg_key: &crate::aidl::r#android::r#security::r#rkp::r#RemotelyProvisionedKey::r#RemotelyProvisionedKey) -> binder::Result<()> { unimplemented!("stand-in") }
   fn r#onCancel(&self) -> binder::Result<()> { unimplemented!("stand-in") }
-  fn r#onError(&self, _arg_error: crate::aidl::r#android::r#security::r#rkp::r#IGetKeyCallback::r#IGetKeyCallback::r#ErrorCode::r#ErrorCode, _arg_description: &str) -> binder::Result<()> { unimplemented!("stand-in") }
+  fn r#onError(&self, _arg_error: crate::aidl::r#android::r#security::r#rkp::r#IGetKeyCallback::r#ErrorCode::r#ErrorCode, _arg_description: &str) -> binder::Result<()> { unimplemented!("stand-in") }
 }
 impl binder::FromIBinder for dyn r#IGetKeyCallback {
   fn try_from(_ibinder: binder::SpIBinder) -> binder::Result<binder::Strong<dyn r#IGetKeyCallback>> { unimplemented!("stand-in") }

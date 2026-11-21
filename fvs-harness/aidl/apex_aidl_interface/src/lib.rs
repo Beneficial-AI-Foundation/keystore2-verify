@@ -20,7 +20,7 @@ pub struct r#ApexInfo {
   pub r#isActive: bool,
   pub r#hasClassPathJars: bool,
   pub r#activeApexChanged: bool,
-  pub r#partition: crate::aidl::r#android::r#apex::r#ApexInfo::r#ApexInfo::r#Partition::r#Partition,
+  pub r#partition: crate::aidl::r#android::r#apex::r#ApexInfo::r#Partition::r#Partition,
 }
 impl Default for r#ApexInfo {
   fn default() -> Self {
