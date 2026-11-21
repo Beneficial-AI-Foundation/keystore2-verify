@@ -378,8 +378,11 @@ class World:
         key = (d.full, name)
         if key not in self.enum_cache:
             nxt = 0
+            bits = int(BACKING[d.backing][1:])
             for n, expr in d.enumerators:
                 v = self.evaluate(expr, d) if expr else nxt
+                # AIDL stores the value in the backing type: 4294967295 in an int enum is -1.
+                v = (v + (1 << (bits - 1))) % (1 << bits) - (1 << (bits - 1))
                 self.enum_cache[(d.full, n)] = v
                 nxt = v + 1
         return self.enum_cache[key]
