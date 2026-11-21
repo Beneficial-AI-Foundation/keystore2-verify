@@ -40,7 +40,12 @@ are kept as patches against a copy.
 |---|---|---|---|
 | `translation-patches/01-errno-platform-accessor.patch` | `keystore2/src/utils.rs` | `libc` defines `__errno` only for Android and the NetBSD family. The patch picks the platform's errno accessor by `cfg` and leaves the Android code as it was. | every host |
 | `translation-patches/02-watchdog-off-path-public.patch` | `keystore2/src/watchdog_helper.rs` | The module used when the `watchdog` feature is off keeps `watch` and `watch_millis` private and has no `DEFAULT_TIMEOUT_MS`. Soong always builds with the feature on, so this path was never compiled. | every host |
-| `fvs-harness/host-patches/macos-clock-boottime.patch` | `keystore2/src/utils.rs` | `libc` has no `CLOCK_BOOTTIME` for macOS. The patch reads `CLOCK_MONOTONIC` there. It is not in the series because a Linux host does not need it. | macOS only |
+| `fvs-harness/host-patches/macos-clock-boottime.patch` | `keystore2/src/utils.rs` | `libc` has no `CLOCK_BOOTTIME` for macOS. The patch reads `CLOCK_MONOTONIC` there. It is not in the series because a Linux host does not need it, and it changes what the function reads (classification B). | macOS only |
+
+The host patch has the header of a translation patch. The patch engine applies only `series`, so
+to use the engine on a macOS host, copy the file into `translation-patches/` of a working copy,
+append its name to `series` there, and give it the equivalence-gate packet that a B patch needs.
+The engine's `check` accepts the three patches together.
 
 Each patch keeps the line count of every hunk, so line numbers in later reports still point at
 the upstream lines. Without the patches the check fails with 100 errors on macOS; with the two
@@ -90,6 +95,10 @@ are not in the workspace.
   Charon then emits a signature and no body, and Aeneas an axiom, instead of a function that
   always panics. `cfg(charon)` is not set by `charon cargo`, so the attribute is unconditional:
   each such crate starts with `#![feature(register_tool)]` and `#![register_tool(charon)]`.
+  This was checked on a small crate that carried the attribute itself. Whether a function of a
+  dependency crate is treated the same when another crate reaches it is not tested: in the first
+  Charon run, functions of `keystore2_selinux`, `android_system_keystore2` and `anyhow` came out
+  opaque with no attribute, and the AIDL crates carry no attribute.
 - **Flags.** `keystore2_flags` has the six flags keystore2 reads. Each is opaque, not fixed to
   its production value.
 - **Models.** The five model crates copy the public API of the upstream crate: `Error` enums,

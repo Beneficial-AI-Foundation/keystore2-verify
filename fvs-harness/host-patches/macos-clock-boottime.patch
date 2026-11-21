@@ -1,10 +1,13 @@
-Host patch: keystore2::utils::get_current_time_in_milliseconds (macOS only)
+Translation patch: keystore2::utils::get_current_time_in_milliseconds (macOS host only)
 
 Change: keystore2/src/utils.rs: on Apple hosts the call reads `CLOCK_MONOTONIC`; on every other host it still reads `CLOCK_BOOTTIME`.
 Why: the `libc` crate defines `CLOCK_BOOTTIME` for Linux and Android, not for macOS, so `keystore2` does not compile on a macOS host.
-Behaviour: on macOS the clock does not count time the machine spends asleep, which `CLOCK_BOOTTIME` does. Nothing else changes, and a Linux host compiles the original line.
-Not part of translation-patches/series: a Linux host does not need it, and a series entry would change the verified source for no reason there. Apply it only to a disposable copy on macOS, from the fork root:
-  patch -p1 < fvs-harness/host-patches/macos-clock-boottime.patch
+Behaviour: on macOS the clock does not count time the machine spends asleep, which `CLOCK_BOOTTIME` does. A Linux host compiles the original line.
+Classification: B
+Assumptions: the clock is an oracle on the host; a result obtained on macOS says nothing about the Android clock.
+Obligations: an equivalence-gate packet before this patch is listed in any series that is extracted.
+Evidence: none yet; this patch is not in translation-patches/series.
+Independent: yes
 
 diff --git a/keystore2/src/utils.rs b/keystore2/src/utils.rs
 index b27a3c0..f06583b 100644
