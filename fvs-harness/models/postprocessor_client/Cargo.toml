@@ -1,0 +1,13 @@
+[package]
+name = "postprocessor_client"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+android_hardware_security_keymint = { path = "../../aidl/android_hardware_security_keymint" }
+binder = { path = "../../binder" }
+thiserror = "=2.0.16"
