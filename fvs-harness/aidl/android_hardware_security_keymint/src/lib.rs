@@ -262,6 +262,7 @@ pub trait r#IKeyMintDevice: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IKeyMintDevice + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeyMintDevice") } }
 pub struct r#BnIKeyMintDevice(());
 impl r#BnIKeyMintDevice {
   pub fn new_binder<T: r#IKeyMintDevice + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeyMintDevice> { unimplemented!("stand-in") }
@@ -305,6 +306,7 @@ pub trait r#IKeyMintOperation: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IKeyMintOperation + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeyMintOperation") } }
 pub struct r#BnIKeyMintOperation(());
 impl r#BnIKeyMintOperation {
   pub fn new_binder<T: r#IKeyMintOperation + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeyMintOperation> { unimplemented!("stand-in") }

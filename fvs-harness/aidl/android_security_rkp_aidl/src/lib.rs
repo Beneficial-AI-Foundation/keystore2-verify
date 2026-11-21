@@ -18,6 +18,7 @@ pub trait r#IGetKeyCallback: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IGetKeyCallback + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IGetKeyCallback") } }
 pub struct r#BnIGetKeyCallback(());
 impl r#BnIGetKeyCallback {
   pub fn new_binder<T: r#IGetKeyCallback + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IGetKeyCallback> { unimplemented!("stand-in") }
@@ -56,6 +57,7 @@ pub trait r#IGetRegistrationCallback: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IGetRegistrationCallback + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IGetRegistrationCallback") } }
 pub struct r#BnIGetRegistrationCallback(());
 impl r#BnIGetRegistrationCallback {
   pub fn new_binder<T: r#IGetRegistrationCallback + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IGetRegistrationCallback> { unimplemented!("stand-in") }
@@ -83,6 +85,7 @@ pub trait r#IRegistration: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IRegistration + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IRegistration") } }
 pub struct r#BnIRegistration(());
 impl r#BnIRegistration {
   pub fn new_binder<T: r#IRegistration + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IRegistration> { unimplemented!("stand-in") }
@@ -108,6 +111,7 @@ pub trait r#IRemoteProvisioning: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IRemoteProvisioning + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IRemoteProvisioning") } }
 pub struct r#BnIRemoteProvisioning(());
 impl r#BnIRemoteProvisioning {
   pub fn new_binder<T: r#IRemoteProvisioning + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IRemoteProvisioning> { unimplemented!("stand-in") }
@@ -132,6 +136,7 @@ pub trait r#IStoreUpgradedKeyCallback: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IStoreUpgradedKeyCallback + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IStoreUpgradedKeyCallback") } }
 pub struct r#BnIStoreUpgradedKeyCallback(());
 impl r#BnIStoreUpgradedKeyCallback {
   pub fn new_binder<T: r#IStoreUpgradedKeyCallback + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IStoreUpgradedKeyCallback> { unimplemented!("stand-in") }

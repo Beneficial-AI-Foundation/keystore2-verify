@@ -95,6 +95,7 @@ pub trait r#IKeystoreOperation: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IKeystoreOperation + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreOperation") } }
 pub struct r#BnIKeystoreOperation(());
 impl r#BnIKeystoreOperation {
   pub fn new_binder<T: r#IKeystoreOperation + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreOperation> { unimplemented!("stand-in") }
@@ -127,6 +128,7 @@ pub trait r#IKeystoreSecurityLevel: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IKeystoreSecurityLevel + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreSecurityLevel") } }
 pub struct r#BnIKeystoreSecurityLevel(());
 impl r#BnIKeystoreSecurityLevel {
   pub fn new_binder<T: r#IKeystoreSecurityLevel + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreSecurityLevel> { unimplemented!("stand-in") }
@@ -164,6 +166,7 @@ pub trait r#IKeystoreService: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IKeystoreService + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreService") } }
 pub struct r#BnIKeystoreService(());
 impl r#BnIKeystoreService {
   pub fn new_binder<T: r#IKeystoreService + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreService> { unimplemented!("stand-in") }

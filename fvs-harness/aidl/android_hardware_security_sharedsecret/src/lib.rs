@@ -20,6 +20,7 @@ pub trait r#ISharedSecret: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#ISharedSecret + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#ISharedSecret") } }
 pub struct r#BnISharedSecret(());
 impl r#BnISharedSecret {
   pub fn new_binder<T: r#ISharedSecret + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#ISharedSecret> { unimplemented!("stand-in") }

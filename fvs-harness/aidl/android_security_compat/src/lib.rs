@@ -18,6 +18,7 @@ pub trait r#IKeystoreCompatService: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IKeystoreCompatService + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IKeystoreCompatService") } }
 pub struct r#BnIKeystoreCompatService(());
 impl r#BnIKeystoreCompatService {
   pub fn new_binder<T: r#IKeystoreCompatService + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IKeystoreCompatService> { unimplemented!("stand-in") }

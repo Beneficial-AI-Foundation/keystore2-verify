@@ -16,6 +16,7 @@ pub trait r#IConfirmationCallback: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IConfirmationCallback + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IConfirmationCallback") } }
 pub struct r#BnIConfirmationCallback(());
 impl r#BnIConfirmationCallback {
   pub fn new_binder<T: r#IConfirmationCallback + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IConfirmationCallback> { unimplemented!("stand-in") }
@@ -43,6 +44,7 @@ pub trait r#IProtectedConfirmation: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IProtectedConfirmation + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IProtectedConfirmation") } }
 pub struct r#BnIProtectedConfirmation(());
 impl r#BnIProtectedConfirmation {
   pub fn new_binder<T: r#IProtectedConfirmation + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IProtectedConfirmation> { unimplemented!("stand-in") }

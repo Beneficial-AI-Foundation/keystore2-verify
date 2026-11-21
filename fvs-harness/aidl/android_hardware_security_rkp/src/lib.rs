@@ -39,6 +39,7 @@ pub trait r#IRemotelyProvisionedComponent: binder::Interface + Send {
   fn r#getInterfaceVersion(&self) -> binder::Result<i32> { Ok(0) }
   fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> { Ok(alloc::string::String::new()) }
 }
+impl core::fmt::Debug for dyn r#IRemotelyProvisionedComponent + '_ { fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result { f.pad("r#IRemotelyProvisionedComponent") } }
 pub struct r#BnIRemotelyProvisionedComponent(());
 impl r#BnIRemotelyProvisionedComponent {
   pub fn new_binder<T: r#IRemotelyProvisionedComponent + Send + Sync + 'static>(_inner: T, _features: binder::BinderFeatures) -> binder::Strong<dyn r#IRemotelyProvisionedComponent> { unimplemented!("stand-in") }

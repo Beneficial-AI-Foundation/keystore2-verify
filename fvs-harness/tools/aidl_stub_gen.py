@@ -643,6 +643,11 @@ class Emitter:
         o.append("  fn r#getInterfaceHash(&self) -> binder::Result<alloc::string::String> "
                  "{ Ok(alloc::string::String::new()) }")
         o.append("}")
+        # The binder macro implements Debug for the trait object; parcelables with interface
+        # fields derive Debug through it.
+        o.append(f"impl core::fmt::Debug for dyn {n} + '_ {{ "
+                 f"fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result "
+                 f"{{ f.pad(\"{n}\") }} }}")
         o.append(f"pub struct {rid('Bn' + d.name)}(());")
         o.append(f"impl {rid('Bn' + d.name)} {{")
         o.append(f"  pub fn new_binder<T: {n} + Send + Sync + 'static>(_inner: T, "
