@@ -1,0 +1,30 @@
+Translation patch: keystore2::utils::errno_clear and keystore2::utils::errno_read
+
+Change: keystore2/src/utils.rs: each of the two one-line bodies picks the platform's errno accessor with a block-local `use` chosen by `cfg`, then dereferences it as before. Android keeps `libc::__errno`, Apple and FreeBSD hosts use `libc::__error`, other Linux hosts use `libc::__errno_location`.
+Why: the `libc` crate defines `__errno` only for Android and the NetBSD family, so `keystore2` does not compile on a Linux (glibc, musl) or macOS host, which is where Charon runs. The standard library has no function that writes `errno`, which `errno_clear` needs, so the accessor is chosen instead of calling `std::io::Error::last_os_error`.
+Behaviour: unchanged. Every host reads and writes the same thread-local `errno` it did before; only the name of the accessor differs. On Android the compiled code is the same as upstream.
+Classification: A-mechanical
+Assumptions: none.
+Obligations: none.
+Independent: yes
+
+diff --git a/keystore2/src/utils.rs b/keystore2/src/utils.rs
+index b27a3c0..2f3d721 100644
+--- a/keystore2/src/utils.rs
++++ b/keystore2/src/utils.rs
+@@ -822,13 +822,13 @@ pub fn app_info_for_uid(uid: AppUid) -> AppInfo {
+ /// Clear the current thread's `errno` value.
+ fn errno_clear() {
+     // SAFETY: Writes to the thread's errno address should never fail
+-    unsafe { *libc::__errno() = 0 }
++    unsafe { #[cfg(target_os = "android")] use libc::__errno as errno_location; #[cfg(any(target_vendor = "apple", target_os = "freebsd"))] use libc::__error as errno_location; #[cfg(not(any(target_os = "android", target_vendor = "apple", target_os = "freebsd")))] use libc::__errno_location as errno_location; *errno_location() = 0 }
+ }
+ 
+ /// Return the current thread's `errno` value.
+ fn errno_read() -> libc::c_int {
+     // SAFETY: Reads from the thread's errno address should never fail
+-    unsafe { *libc::__errno() }
++    unsafe { #[cfg(target_os = "android")] use libc::__errno as errno_location; #[cfg(any(target_vendor = "apple", target_os = "freebsd"))] use libc::__error as errno_location; #[cfg(not(any(target_os = "android", target_vendor = "apple", target_os = "freebsd")))] use libc::__errno_location as errno_location; *errno_location() }
+ }
+ 
+ /// A safe wrapper around [`libc::getpriority()`] for the current thread.

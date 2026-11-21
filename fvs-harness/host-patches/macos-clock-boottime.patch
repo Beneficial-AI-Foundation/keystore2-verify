@@ -1,0 +1,21 @@
+Host patch: keystore2::utils::get_current_time_in_milliseconds (macOS only)
+
+Change: keystore2/src/utils.rs: on Apple hosts the call reads `CLOCK_MONOTONIC`; on every other host it still reads `CLOCK_BOOTTIME`.
+Why: the `libc` crate defines `CLOCK_BOOTTIME` for Linux and Android, not for macOS, so `keystore2` does not compile on a macOS host.
+Behaviour: on macOS the clock does not count time the machine spends asleep, which `CLOCK_BOOTTIME` does. Nothing else changes, and a Linux host compiles the original line.
+Not part of translation-patches/series: a Linux host does not need it, and a series entry would change the verified source for no reason there. Apply it only to a disposable copy on macOS, from the fork root:
+  patch -p1 < fvs-harness/host-patches/macos-clock-boottime.patch
+
+diff --git a/keystore2/src/utils.rs b/keystore2/src/utils.rs
+index b27a3c0..f06583b 100644
+--- a/keystore2/src/utils.rs
++++ b/keystore2/src/utils.rs
+@@ -516,7 +516,7 @@ pub fn get_current_time_in_milliseconds() -> i64 {
+     let mut current_time = libc::timespec { tv_sec: 0, tv_nsec: 0 };
+     // SAFETY: The pointer is valid because it comes from a reference, and clock_gettime doesn't
+     // retain it beyond the call.
+-    unsafe { libc::clock_gettime(libc::CLOCK_BOOTTIME, &mut current_time) };
++    unsafe { #[cfg(target_vendor = "apple")] use libc::CLOCK_MONOTONIC as CLOCK_BOOTTIME; #[cfg(not(target_vendor = "apple"))] use libc::CLOCK_BOOTTIME; libc::clock_gettime(CLOCK_BOOTTIME, &mut current_time) };
+     current_time.tv_sec as i64 * 1000 + (current_time.tv_nsec as i64 / 1_000_000)
+ }
+ 
