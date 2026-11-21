@@ -1,0 +1,59 @@
+[package]
+name = "keystore2"
+version = "0.0.0"
+edition = "2021"
+publish = false
+autobins = false
+autotests = false
+autoexamples = false
+autobenches = false
+
+[lib]
+path = "src/lib.rs"
+
+[features]
+default = []
+# Off in this layout: the watchdog crate is not part of the workspace, and the code has its own
+# `cfg(not(feature = "watchdog"))` path. Turning it on needs that crate as a dependency.
+watchdog = []
+keystore2_blob_test_utils = []
+
+[dependencies]
+android_hardware_security_keymint = { path = "../fvs-harness/aidl/android_hardware_security_keymint" }
+android_hardware_security_rkp = { path = "../fvs-harness/aidl/android_hardware_security_rkp" }
+android_hardware_security_secureclock = { path = "../fvs-harness/aidl/android_hardware_security_secureclock" }
+android_hardware_security_sharedsecret = { path = "../fvs-harness/aidl/android_hardware_security_sharedsecret" }
+android_os_permissions_aidl = { path = "../fvs-harness/aidl/android_os_permissions_aidl" }
+android_security_apc = { path = "../fvs-harness/aidl/android_security_apc" }
+android_security_authorization = { path = "../fvs-harness/aidl/android_security_authorization" }
+android_security_compat = { path = "../fvs-harness/aidl/android_security_compat" }
+android_security_maintenance = { path = "../fvs-harness/aidl/android_security_maintenance" }
+android_security_metrics = { path = "../fvs-harness/aidl/android_security_metrics" }
+android_security_rkp_aidl = { path = "../fvs-harness/aidl/android_security_rkp_aidl" }
+android_system_keystore2 = { path = "../fvs-harness/aidl/android_system_keystore2" }
+apex_aidl_interface = { path = "../fvs-harness/aidl/apex_aidl_interface" }
+packagemanager_aidl = { path = "../fvs-harness/aidl/packagemanager_aidl" }
+binder = { path = "../fvs-harness/binder" }
+bssl_crypto = { path = "../fvs-harness/util/bssl_crypto" }
+keystore2_flags = { path = "../fvs-harness/util/keystore2_flags" }
+rustutils = { path = "../fvs-harness/util/rustutils" }
+structured_log = { path = "../fvs-harness/util/structured_log" }
+keystore2_aaid = { path = "../fvs-harness/models/keystore2_aaid" }
+keystore2_apc_compat = { path = "../fvs-harness/models/keystore2_apc_compat" }
+keystore2_hal_names = { path = "../fvs-harness/models/keystore2_hal_names" }
+postprocessor_client = { path = "../fvs-harness/models/postprocessor_client" }
+rkpd_client = { path = "../fvs-harness/models/rkpd_client" }
+keystore2_crypto = { path = "src/crypto" }
+keystore2_km_compat = { path = "src/km_compat" }
+keystore2_selinux = { path = "selinux" }
+message_macro = { path = "message_macro" }
+anyhow = "=1.0.102"
+der = { version = "=0.7.10", features = ["alloc", "derive"] }
+hex = "=0.4.3"
+libc = "=0.2.183"
+libsqlite3-sys = "=0.30.1"
+log = "=0.4.29"
+rand = "=0.9.2"
+rusqlite = "=0.32.1"
+serde = { version = "=1.0.228", features = ["derive"] }
+thiserror = "=2.0.16"
