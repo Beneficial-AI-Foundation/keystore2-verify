@@ -100,7 +100,8 @@ When fewer than 4 bytes remain, the missing high bytes count as 0. -/
 def u32At (l : List Std.U8) (i : Nat) : Nat := leNat ((l.drop i).take 4)
 
 /-- The DER encoding of a length, as numbers: `[n]` up to `0x7f`, `[0x81, n]` up to `0xff` and
-`[0x82, n / 256, n % 256]` up to `0xffff`. Longer lengths have no encoding. -/
+`[0x82, n / 256, n % 256]` up to `0xffff`. It is used as a DER encoding only for
+`n ≤ 0xffff`; for larger values the definition gives a value that nothing relies on. -/
 def derLen (n : Nat) : List Nat :=
   if n ≤ 0x7f then [n]
   else if n ≤ 0xff then [0x81, n]

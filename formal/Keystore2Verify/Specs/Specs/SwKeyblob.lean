@@ -25,7 +25,7 @@ recall tag_type_same_top_bits (t1 t2 : Tag.Tag) (h : t1.bv >>> 28 = t2.bv >>> 28
     ∃ r, sw_keyblob.tag_type t1 = ok r ∧ sw_keyblob.tag_type t2 = ok r
 
 recall add_der_len_ok (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
-    (hlen : len.val ≤ 0xffff) (hcap : buf.val.length + 3 ≤ Std.Usize.max) :
+    (hlen : len.val ≤ 0xffff) (hcap : buf.val.length + (derLen len.val).length ≤ Std.Usize.max) :
     ∃ buf', sw_keyblob.add_der_len buf len = ok (.Ok (), buf') ∧
       nums buf'.val = nums buf.val ++ derLen len.val
 
