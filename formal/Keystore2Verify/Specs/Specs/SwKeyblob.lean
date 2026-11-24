@@ -29,6 +29,11 @@ recall add_der_len_ok (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
     ∃ buf', sw_keyblob.add_der_len buf len = ok (.Ok (), buf') ∧
       nums buf'.val = nums buf.val ++ derLen len.val
 
+recall add_der_len_fail_capacity (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
+    (hlen : len.val ≤ 0xffff)
+    (hover : Std.Usize.max < buf.val.length + (derLen len.val).length) :
+    ∃ x, sw_keyblob.add_der_len buf len = fail x
+
 recall add_der_len_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
     (buf : alloc.vec.Vec Std.U8) (len : Std.Usize) (hlen : 0xffff < len.val) :
     ∃ e, sw_keyblob.add_der_len buf len = ok (.Err e, buf) ∧ IsBlobErr root e

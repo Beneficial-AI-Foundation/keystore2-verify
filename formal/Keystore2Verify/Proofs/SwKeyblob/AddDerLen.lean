@@ -15,6 +15,14 @@ theorem add_der_len_ok (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
       nums buf'.val = nums buf.val ++ derLen len.val := by
   sorry
 
+/-- exact: for a length up to `0xffff`, if the buffer has no room for the encoding (one push per
+byte of `derLen len`), `add_der_len` panics: one of its pushes fails. -/
+theorem add_der_len_fail_capacity (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
+    (hlen : len.val ≤ 0xffff)
+    (hover : Std.Usize.max < buf.val.length + (derLen len.val).length) :
+    ∃ x, sw_keyblob.add_der_len buf len = fail x := by
+  sorry
+
 /-- conditional: for a length above `0xffff`, `add_der_len` returns an error whose root cause is
 `INVALID_KEY_BLOB`, and the buffer is returned unchanged. Hypotheses: the length is above
 `0xffff`, and the shared laws of `BlobErrLaws`. -/
