@@ -19,6 +19,11 @@ Every law holds for the real Rust function, with these labels:
 
 * **idealisation: allocation never fails.** The real process aborts when memory runs out. A law
   with this label says the call does not fail.
+* **idealisation: formatting never panics.** No `Display` or `Debug` implementation reached by
+  the verified code returns an error or panics, and no writer panics. The laws are stated for
+  every implementation and every writer, which is stronger than the real library.
+* **idealisation: destruction never panics.** Dropping an element does not panic.
+* **idealisation: logging never panics.** Effects of logging are not modelled.
 * **target assumption.** The law depends on the target machine.
 
 A Lean value has the form `Result (core.result.Result T E)`. The outer layer `fail` is a Rust
@@ -146,12 +151,18 @@ def ResultContextLaw {T E Err C : Type} (rootE : E → ErrRoot) (root : Err → 
 /-! ## Formatting
 
 Used by the `ks_err!` and `bloberr!` macros and by `format!`. The laws say that the calls do not
-panic. The text is out of scope. Source: Rust standard library documentation. -/
+panic. The text is out of scope. Source: Rust standard library documentation.
+
+Every law of this group except `from_str_nonconst` carries the label **idealisation: formatting
+never panics**. Real `format` panics when a `Display` or `Debug` implementation returns an error
+or panics, and a `fmt` call panics when its writer panics. The laws hold for every argument and
+every formatter, so they say more than the library does. They are true of the code under
+verification, where all implementations are derived or are those of integers, `str`, `String`
+and the error types, and the writer is a `String`. -/
 
 /-- Law for `alloc::fmt::format` (register record `ks2-ext-alloc-fmt-format`).
-`format a` never panics. It panics in Rust only if a `Display` or `Debug` implementation returns
-an error: none that the verified files reach does.
-Idealisation: allocation never fails. -/
+`format a` never panics.
+Idealisation: formatting never panics (see the group comment), and allocation never fails. -/
 def AllocFmtFormatSpec : Prop := TotalLaw alloc.fmt.format
 
 /-- Law for `core::fmt::Arguments::from_str_nonconst` (register record
@@ -162,7 +173,8 @@ def CoreFmtArgumentsFromStrNonconstSpec : Prop := TotalLaw argumentsFromStr
 /-- Law for `Display` of a reference `&T` (register record
 `ks2-ext-shared0t-insts-corefmtdisplay-fmt`).
 If `fmt` of `T` never panics, then `fmt` of `&T` never panics. The inner layer (`fmt::Error`)
-is left open. Source: `core::fmt`, which forwards to `T`. -/
+is left open.
+Idealisation: formatting never panics. Source: `core::fmt`, which forwards to `T`. -/
 def Shared0TDisplayFmtSpec : Prop :=
   ∀ {T : Type} (D : core.fmt.Display T),
     Total2Law D.fmt → Total2Law (shared0TDisplayFmt D)
@@ -170,38 +182,43 @@ def Shared0TDisplayFmtSpec : Prop :=
 /-- Law for `Display` of a mutable reference `&mut T` (register record
 `ks2-ext-mut0t-insts-corefmtdisplay-fmt`).
 If `fmt` of `T` never panics, then `fmt` of `&mut T` never panics. The inner layer is left
-open. Source: `core::fmt`, which forwards to `T`. -/
+open.
+Idealisation: formatting never panics. Source: `core::fmt`, which forwards to `T`. -/
 def Mut0TDisplayFmtSpec : Prop :=
   ∀ {T : Type} (D : core.fmt.Display T),
     Total2Law D.fmt → Total2Law (mut0TDisplayFmt D)
 
 /-- Law for `Display` of `str` (register record `ks2-ext-str-insts-corefmtdisplay-fmt`).
-`fmt` never panics. The inner layer is left open. -/
+`fmt` never panics. The inner layer is left open. Idealisation: formatting never panics. -/
 def StrDisplayFmtSpec : Prop := Total2Law strDisplayFmt
 
 /-- Law for `Display` of `String` (register record
 `ks2-ext-alloc-string-string-insts-corefmtdisplay-fmt`).
-`fmt` never panics. The inner layer is left open. -/
+`fmt` never panics. The inner layer is left open. Idealisation: formatting never panics. -/
 def StringDisplayFmtSpec : Prop := Total2Law stringDisplayFmt
 
 /-- Law for `Debug` of `EcCurve` (register record
 `ks2-ext-android-hardware-security-keymint-aidl-android-hardware-security-keymint-eccurve-eccurve-insts-corefmtdebug-fmt`).
-`fmt` never panics. The inner layer is left open. Source: derived `Debug` of an AIDL enum. -/
+`fmt` never panics. The inner layer is left open.
+Idealisation: formatting never panics. Source: derived `Debug` of an AIDL enum. -/
 def EcCurveDebugFmtSpec : Prop := Total2Law ecCurveDebugFmt
 
 /-- Law for `Debug` of `KeyFormat` (register record
 `ks2-ext-android-hardware-security-keymint-aidl-android-hardware-security-keymint-keyformat-keyformat-insts-corefmtdebug-fmt`).
-`fmt` never panics. The inner layer is left open. Source: derived `Debug` of an AIDL enum. -/
+`fmt` never panics. The inner layer is left open.
+Idealisation: formatting never panics. Source: derived `Debug` of an AIDL enum. -/
 def KeyFormatDebugFmtSpec : Prop := Total2Law keyFormatDebugFmt
 
 /-- Law for `Debug` of `KeyParameterValue` (register record
 `ks2-ext-android-hardware-security-keymint-aidl-android-hardware-security-keymint-keyparametervalue-keyparametervalue-insts-corefmtdebug-fmt`).
-`fmt` never panics. The inner layer is left open. Source: derived `Debug` of an AIDL union. -/
+`fmt` never panics. The inner layer is left open.
+Idealisation: formatting never panics. Source: derived `Debug` of an AIDL union. -/
 def KeyParameterValueDebugFmtSpec : Prop := Total2Law keyParameterValueDebugFmt
 
 /-- Law for `Debug` of `Domain` (register record
 `ks2-ext-android-system-keystore2-aidl-android-system-keystore2-domain-domain-insts-corefmtdebug-fmt`).
-`fmt` never panics. The inner layer is left open. Source: derived `Debug` of an AIDL enum. -/
+`fmt` never panics. The inner layer is left open.
+Idealisation: formatting never panics. Source: derived `Debug` of an AIDL enum. -/
 def DomainDebugFmtSpec : Prop := Total2Law domainDebugFmt
 
 /-! ## log
@@ -262,17 +279,28 @@ def VecDequeIsEmptyLaw {Q T : Type} (view : Q → List T) (is_empty : Q → Resu
 
 /-- Law for `VecDeque::clear` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-clear`).
-`clear` never panics. The queue it returns is empty. The Lean function returns the new queue. -/
+`clear` never panics. The queue it returns is empty. The Lean function returns the new queue.
+Idealisation: destruction never panics. `clear` drops the elements, and a destructor may panic
+in general. The element type in the verified code is `ZVec`, whose `drop` overwrites the buffer
+and calls `munlock`; an `munlock` error is only logged. -/
 def VecDequeClearLaw {Q T : Type} (view : Q → List T) (clear : Q → Result Q) : Prop :=
   ∀ q, ∃ q', clear q = ok q' ∧ view q' = []
 
+/-- The length below which `push_back` is assumed to succeed: a 64th of the largest `usize`.
+For an element of at most 64 bytes (a `ZVec` has 24), the capacity then stays far below the
+limit of `isize::MAX` bytes at which Rust panics with "capacity overflow". -/
+def queueBound : Nat := Std.Usize.max / 64
+
 /-- Law for `VecDeque::push_back` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-push-back`).
-`push_back q x` never panics. The queue it returns holds the old elements and then `x`.
-Idealisation: allocation never fails (the capacity cannot overflow `isize` either). -/
+If the queue has fewer than `queueBound` elements, `push_back q x` never panics, and the queue
+it returns holds the old elements and then `x`. Nothing is said for longer queues: Rust panics
+on capacity overflow there. The bound keeps the laws consistent with `len`, which returns a
+`usize`. Idealisation: allocation never fails. -/
 def VecDequePushBackLaw {Q T : Type} (view : Q → List T) (push_back : Q → T → Result Q) :
     Prop :=
-  ∀ q x, ∃ q', push_back q x = ok q' ∧ view q' = view q ++ [x]
+  ∀ q x, (view q).length < queueBound →
+    ∃ q', push_back q x = ok q' ∧ view q' = view q ++ [x]
 
 /-- Law for `VecDeque::split_off` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-split-off`).
