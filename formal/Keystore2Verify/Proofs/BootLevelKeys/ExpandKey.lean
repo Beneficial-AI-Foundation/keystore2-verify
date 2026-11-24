@@ -11,8 +11,10 @@ open CoreCmpPartialOrdBootLevel renaming partial_cmp → bootLevelPartialCmp
 open keystore2.keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8 renaming
   deref → zvecDeref
 
-/-- exact: if `get_hkdf_key` returned the cache `s1`, then `expand_key` returns the cache `s1`,
-whatever its result: `expand_key` itself changes nothing. -/
+/-- conditional: if `get_hkdf_key` returned the cache `s1`, then `expand_key` returns the cache
+`s1`, whatever its result: `expand_key` itself changes nothing. Hypotheses: the call outcome
+`get_hkdf_key s L = ok (r0, s1)` (`hget`), where `r0` and `s1` are otherwise arbitrary; and that
+`expand_key` returned `ok (r, s')` (`h`). -/
 theorem BootLevelKeyCache_expand_key_state
     (s s1 s' : BootLevelKeyCache) (L : BootLevel) (n : Std.Usize) (info : Slice Std.U8)
     (r0 : core.result.Result (Option keystore2_crypto.zvec.ZVec) anyhow.Error)

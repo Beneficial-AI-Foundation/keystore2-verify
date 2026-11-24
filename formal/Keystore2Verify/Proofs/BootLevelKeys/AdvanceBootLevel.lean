@@ -40,10 +40,11 @@ theorem BootLevelKeyCache_advance_boot_level_below (view : View)
     BootLevelKeyCache.advance_boot_level s L = ok (ROk (), s) := by
   sorry
 
-/-- exact: if the level is accessible and `get_hkdf_key` returned the cache `s1`, then
+/-- conditional: if the level is accessible and `get_hkdf_key` returned the cache `s1`, then
 `advance_boot_level` either returns an `Err` together with `s1`, or returns `Ok ()` together
-with a cache whose current level is the requested level. Nothing is assumed about `get_hkdf_key`:
-`r0` and `s1` are whatever it returned. -/
+with a cache whose current level is the requested level. Hypotheses: the call outcome
+`get_hkdf_key s L = ok (r0, s1)` (`hget`), where `r0` and `s1` are otherwise arbitrary; that the
+level is accessible (`hacc`); and that `advance_boot_level` returned `ok (r, s')` (`h`). -/
 theorem BootLevelKeyCache_advance_boot_level_accessible_shape
     (s s1 s' : BootLevelKeyCache) (L : BootLevel)
     (r0 : core.result.Result (Option keystore2_crypto.zvec.ZVec) anyhow.Error)
@@ -57,9 +58,10 @@ theorem BootLevelKeyCache_advance_boot_level_accessible_shape
 
 /-- conditional: if the level is accessible and `get_hkdf_key` returned `Err e` with the cache
 `s1`, then `advance_boot_level` returns an `Err` with the same root cause and the cache `s1`:
-nothing is dropped and the current level does not change. Hypotheses: the outcome of
-`get_hkdf_key` (`hget`), the shared law `ResultContextLaw` for `Result::context` (`ContextKeyLaw`),
-and the shared laws that the message building does not panic (`format`, `from_str_nonconst`). -/
+the wrapper returns the state supplied by the lookup, without further change. Hypotheses: the
+outcome of `get_hkdf_key` (`hget`), the shared law `ResultContextLaw` for `Result::context`
+(`ContextKeyLaw`), and the shared laws that the message building does not panic (`format`,
+`from_str_nonconst`). -/
 theorem BootLevelKeyCache_advance_boot_level_err (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
@@ -72,9 +74,10 @@ theorem BootLevelKeyCache_advance_boot_level_err (root : anyhow.Error → ErrRoo
 
 /-- conditional: if the level is accessible and `get_hkdf_key` returned `Ok` with the cache `s1`,
 then `advance_boot_level` returns `Ok ()` and a cache whose current level is the requested level
-and whose queue is the queue of `s1` without its first `L - current` entries. Hypotheses: the
-outcome of `get_hkdf_key` (`hget`); that its cache has current level at most `L` (`hle`) and more
-than `L - current` entries (`hlen`), which is what makes the subtraction and the split succeed;
+and whose queue is the queue of `s1` without its first `L - current` entries (`current` is that
+of `s1`). Hypotheses: the outcome of `get_hkdf_key` (`hget`); that the cache `s1` has current
+level at most `L` (`hle`) and at least `L - current` entries (`hlen`), which is what makes the
+subtraction and the split succeed (the queue left may be empty);
 the shared law for `VecDeque::split_off`; `ContextKeyLaw`; the laws `format` and
 `from_str_nonconst`. -/
 theorem BootLevelKeyCache_advance_boot_level_ok (view : View) (root : anyhow.Error → ErrRoot)

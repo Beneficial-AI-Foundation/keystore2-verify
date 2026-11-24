@@ -11,9 +11,11 @@ open CoreCmpPartialOrdBootLevel renaming partial_cmp → bootLevelPartialCmp
 open keystore2.keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8 renaming
   deref → zvecDeref
 
-/-- exact: if `expand_key` (called with the length `AES_256_KEY_LENGTH` and the info string
+/-- conditional: if `expand_key` (called with the length `AES_256_KEY_LENGTH` and the info string
 `HKDF_AES`) returned the cache `s1`, then `aes_key` returns the cache `s1`: `aes_key` itself
-changes nothing. -/
+changes nothing. Hypotheses: the call outcome `expand_key s L AES_256_KEY_LENGTH HKDF_AES =
+ok (r0, s1)` (`hexp`), where `r0` and `s1` are otherwise arbitrary; and that `aes_key` returned
+`ok (r, s')` (`h`). -/
 theorem BootLevelKeyCache_aes_key_state
     (s s1 s' : BootLevelKeyCache) (L : BootLevel)
     (r0 r : core.result.Result (Option keystore2_crypto.zvec.ZVec) anyhow.Error)
