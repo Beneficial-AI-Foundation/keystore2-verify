@@ -58,4 +58,23 @@ theorem public_key_fail_get_point (self : ec_crypto.ECDHPrivateKey)
     ec_crypto.ECDHPrivateKey.public_key self = fail x := by
   sorry
 
+/-- conditional: if `ec_key_get0_public_key` panics, then `public_key` panics in the same way.
+Hypothesis: the outcome of this call. No law is needed. -/
+theorem public_key_fail_get0_public_key (self : ec_crypto.ECDHPrivateKey) (x : Error)
+    (hkey : keystore2_crypto.ec_key_get0_public_key self = fail x) :
+    ec_crypto.ECDHPrivateKey.public_key self = fail x := by
+  sorry
+
+/-- conditional: if `ec_key_get0_public_key` and `get_point` succeed and `ec_point_point_to_oct`
+panics, then `public_key` panics in the same way. Hypotheses: the outcomes of the three calls. No
+law is needed. -/
+theorem public_key_fail_point_to_oct (self : ec_crypto.ECDHPrivateKey)
+    (pt : keystore2_crypto.BorrowedECPoint) (eps : keystore2_crypto_bindgen.ec_point_st)
+    (x : Error)
+    (hkey : keystore2_crypto.ec_key_get0_public_key self = ok pt)
+    (hpt : keystore2_crypto.BorrowedECPoint.get_point pt = ok eps)
+    (hoct : keystore2_crypto.ec_point_point_to_oct eps = fail x) :
+    ec_crypto.ECDHPrivateKey.public_key self = fail x := by
+  sorry
+
 end Keystore2Verify.EcCrypto

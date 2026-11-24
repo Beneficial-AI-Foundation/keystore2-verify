@@ -227,4 +227,77 @@ theorem encrypt_message_fail_agree_key (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
   sorry
 
+/-- conditional: if `generate` panics, then `encrypt_message` panics in the same way. Hypothesis:
+the outcome of this call. No law is needed. -/
+theorem encrypt_message_fail_generate (recipient message : Slice Std.U8)
+    (x : Error)
+    (hg : ec_crypto.ECDHPrivateKey.generate = fail x) :
+    ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
+  sorry
+/-- conditional: if `generate_salt` (the key and its public key are `Ok`) panics, then
+`encrypt_message` panics in the same way. Hypotheses: the shared laws for `from_str_nonconst`,
+`format` and `context` (the steps before it pass through `context`), and the outcomes of the earlier
+calls and of this one. -/
+theorem encrypt_message_fail_generate_salt (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (recipient message : Slice Std.U8)
+    (k : ec_crypto.ECDHPrivateKey)
+    (spk : alloc.vec.Vec Std.U8)
+    (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Ok k))
+    (hpk : ec_crypto.ECDHPrivateKey.public_key k = ok (.Ok spk))
+    (x : Error)
+    (hs : keystore2_crypto.generate_salt = fail x) :
+    ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
+  sorry
+/-- conditional: if `deref` of the derived key panics, then `encrypt_message` panics in the same
+way. Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the steps before
+it pass through `context`), and the outcomes of the earlier calls and of this one. -/
+theorem encrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (recipient message : Slice Std.U8)
+    (k : ec_crypto.ECDHPrivateKey)
+    (spk : alloc.vec.Vec Std.U8)
+    (salt : alloc.vec.Vec Std.U8)
+    (key : keystore2_crypto.zvec.ZVec)
+    (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Ok k))
+    (hpk : ec_crypto.ECDHPrivateKey.public_key k = ok (.Ok spk))
+    (hs : keystore2_crypto.generate_salt = ok (.Ok salt))
+    (ha : ec_crypto.ECDHPrivateKey.agree_key k (Vec.deref salt) recipient
+      (Vec.deref spk) recipient keystore2_crypto.EcdhComputeKeyVersion.Current =
+      ok (.Ok key))
+    (x : Error)
+    (hd : zvecDeref key = fail x) :
+    ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
+  sorry
+/-- conditional: if `aes_gcm_encrypt` panics, then `encrypt_message` panics in the same way.
+Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the steps before it
+pass through `context`), and the outcomes of the earlier calls and of this one. -/
+theorem encrypt_message_fail_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (recipient message : Slice Std.U8)
+    (k : ec_crypto.ECDHPrivateKey)
+    (spk : alloc.vec.Vec Std.U8)
+    (salt : alloc.vec.Vec Std.U8)
+    (key : keystore2_crypto.zvec.ZVec)
+    (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Ok k))
+    (hpk : ec_crypto.ECDHPrivateKey.public_key k = ok (.Ok spk))
+    (hs : keystore2_crypto.generate_salt = ok (.Ok salt))
+    (ha : ec_crypto.ECDHPrivateKey.agree_key k (Vec.deref salt) recipient
+      (Vec.deref spk) recipient keystore2_crypto.EcdhComputeKeyVersion.Current =
+      ok (.Ok key))
+    (ks : Slice Std.U8) (x : Error)
+    (hd : zvecDeref key = ok ks)
+    (he : keystore2_crypto.aes_gcm_encrypt message ks = fail x) :
+    ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
+  sorry
+
 end Keystore2Verify.EcCrypto

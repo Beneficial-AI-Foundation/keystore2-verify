@@ -218,21 +218,41 @@ theorem agree_key_err_expand (root : anyhow.Error → ErrRoot)
       root e' = ErrRoot.crypto e := by
   sorry
 
-/-- conditional: if the first extract panics, then `agree_key` panics in the same way. Hypotheses:
-the outcomes of the earlier calls and of this one. No law is needed. -/
+/-- conditional: if the first extract panics, then `agree_key` panics in the same way. Hypothesis:
+the outcome of this call. No law is needed. -/
 theorem agree_key_fail_sender_extract (self : ec_crypto.ECDHPrivateKey)
     (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
-    
     (x : Error)
     (hext1 : keystore2_crypto.hkdf_extract sender salt = fail x) :
     ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
   sorry
 
-/-- conditional: if the first extract returns `Ok` and the second panics, then `agree_key` panics in
-the same way. Hypotheses: the outcomes of the earlier calls and of this one. No law is needed. -/
-theorem agree_key_fail_recipient_extract (self : ec_crypto.ECDHPrivateKey)
-    (salt other sender recipient : Slice Std.U8)
+/-- conditional: if `deref` of the output of the first extract (the first call is `Ok`) panics, then
+`agree_key` panics in the same way. Hypotheses: the shared laws for `from_str_nonconst`, `format`
+and `context` (the calls before it pass through `context`), and the outcomes of the earlier calls
+and of this one. -/
+theorem agree_key_fail_deref_sender_extract (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
+    (version : keystore2_crypto.EcdhComputeKeyVersion)
+    (k1 : keystore2_crypto.zvec.ZVec)
+    (hext1 : keystore2_crypto.hkdf_extract sender salt = ok (.Ok k1))
+    (x : Error)
+    (hd1 : zvecDeref k1 = fail x) :
+    ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
+  sorry
+
+/-- conditional: if the second extract panics, then `agree_key` panics in the same way. Hypotheses:
+the shared laws for `from_str_nonconst`, `format` and `context` (the calls before it pass through
+`context`), and the outcomes of the earlier calls and of this one. -/
+theorem agree_key_fail_recipient_extract (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
     (s1 : Slice Std.U8)
@@ -243,11 +263,34 @@ theorem agree_key_fail_recipient_extract (self : ec_crypto.ECDHPrivateKey)
     ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
   sorry
 
-/-- conditional: if both extracts and the parsing of `other` return `Ok` and `get_point` of the
-parsed point panics, then `agree_key` panics in the same way. Hypotheses: the outcomes of the
-earlier calls and of this one. No law is needed. -/
-theorem agree_key_fail_get_point (self : ec_crypto.ECDHPrivateKey)
-    (salt other sender recipient : Slice Std.U8)
+/-- conditional: if `ec_point_oct_to_point other` panics, then `agree_key` panics in the same way.
+Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the calls before it
+pass through `context`), and the outcomes of the earlier calls and of this one. -/
+theorem agree_key_fail_oct_to_point (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
+    (version : keystore2_crypto.EcdhComputeKeyVersion)
+    (k1 : keystore2_crypto.zvec.ZVec)
+    (s1 : Slice Std.U8)
+    (k2 : keystore2_crypto.zvec.ZVec)
+    (hext1 : keystore2_crypto.hkdf_extract sender salt = ok (.Ok k1))
+    (hd1 : zvecDeref k1 = ok s1)
+    (hext2 : keystore2_crypto.hkdf_extract recipient s1 = ok (.Ok k2))
+    (x : Error)
+    (hoct : keystore2_crypto.ec_point_oct_to_point other = fail x) :
+    ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
+  sorry
+
+/-- conditional: if `get_point` of the parsed point panics, then `agree_key` panics in the same way.
+Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context`, and the outcomes of the
+earlier calls and of this one. -/
+theorem agree_key_fail_get_point (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
     (s1 : Slice Std.U8)
@@ -261,11 +304,14 @@ theorem agree_key_fail_get_point (self : ec_crypto.ECDHPrivateKey)
     ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
   sorry
 
-/-- conditional: if the earlier calls return `Ok` and `ecdh_compute_key` panics, then `agree_key`
-panics in the same way. Hypotheses: the outcomes of the earlier calls and of this one. No law is
-needed. -/
-theorem agree_key_fail_ecdh (self : ec_crypto.ECDHPrivateKey)
-    (salt other sender recipient : Slice Std.U8)
+/-- conditional: if `ecdh_compute_key` panics, then `agree_key` panics in the same way. Hypotheses:
+the shared laws for `from_str_nonconst`, `format` and `context` (the calls before it pass through
+`context`), and the outcomes of the earlier calls and of this one. -/
+theorem agree_key_fail_ecdh (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
     (s1 : Slice Std.U8)
@@ -281,11 +327,14 @@ theorem agree_key_fail_ecdh (self : ec_crypto.ECDHPrivateKey)
     ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
   sorry
 
-/-- conditional: if the earlier calls return `Ok` and the third extract panics, then `agree_key`
-panics in the same way. Hypotheses: the outcomes of the earlier calls and of this one. No law is
-needed. -/
-theorem agree_key_fail_secret_extract (self : ec_crypto.ECDHPrivateKey)
-    (salt other sender recipient : Slice Std.U8)
+/-- conditional: if `deref` of the ECDH secret panics, then `agree_key` panics in the same way.
+Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the calls before it
+pass through `context`), and the outcomes of the earlier calls and of this one. -/
+theorem agree_key_fail_deref_secret (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
     (s1 : Slice Std.U8)
@@ -298,9 +347,118 @@ theorem agree_key_fail_secret_extract (self : ec_crypto.ECDHPrivateKey)
     (hoct : keystore2_crypto.ec_point_oct_to_point other = ok (.Ok p))
     (hgp : keystore2_crypto.OwnedECPoint.get_point p = ok eps)
     (hecdh : keystore2_crypto.ecdh_compute_key eps self version = ok (.Ok sec))
-    (x : Error)
-    (ss s2 : Slice Std.U8) (hds : zvecDeref sec = ok ss) (hd2 : zvecDeref k2 = ok s2)
+    (ss : Slice Std.U8) (x : Error)
+    (hds : zvecDeref sec = fail x) :
+    ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
+  sorry
+
+/-- conditional: if `deref` of the output of the second extract (the `deref` of the secret is `Ok`)
+panics, then `agree_key` panics in the same way. Hypotheses: the shared laws for
+`from_str_nonconst`, `format` and `context` (the calls before it pass through `context`), and the
+outcomes of the earlier calls and of this one. -/
+theorem agree_key_fail_deref_recipient_prk (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
+    (version : keystore2_crypto.EcdhComputeKeyVersion)
+    (k1 : keystore2_crypto.zvec.ZVec)
+    (s1 : Slice Std.U8)
+    (k2 : keystore2_crypto.zvec.ZVec)
+    (p : keystore2_crypto.OwnedECPoint) (eps : keystore2_crypto_bindgen.ec_point_st)
+    (sec : keystore2_crypto.zvec.ZVec)
+    (hext1 : keystore2_crypto.hkdf_extract sender salt = ok (.Ok k1))
+    (hd1 : zvecDeref k1 = ok s1)
+    (hext2 : keystore2_crypto.hkdf_extract recipient s1 = ok (.Ok k2))
+    (hoct : keystore2_crypto.ec_point_oct_to_point other = ok (.Ok p))
+    (hgp : keystore2_crypto.OwnedECPoint.get_point p = ok eps)
+    (hecdh : keystore2_crypto.ecdh_compute_key eps self version = ok (.Ok sec))
+    (ss s2 : Slice Std.U8) (x : Error)
+    (hds : zvecDeref sec = ok ss) (hd2 : zvecDeref k2 = fail x) :
+    ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
+  sorry
+
+/-- conditional: if the third extract panics, then `agree_key` panics in the same way. Hypotheses:
+the shared laws for `from_str_nonconst`, `format` and `context` (the calls before it pass through
+`context`), and the outcomes of the earlier calls and of this one. -/
+theorem agree_key_fail_secret_extract (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
+    (version : keystore2_crypto.EcdhComputeKeyVersion)
+    (k1 : keystore2_crypto.zvec.ZVec)
+    (s1 : Slice Std.U8)
+    (k2 : keystore2_crypto.zvec.ZVec)
+    (p : keystore2_crypto.OwnedECPoint) (eps : keystore2_crypto_bindgen.ec_point_st)
+    (sec : keystore2_crypto.zvec.ZVec)
+    (hext1 : keystore2_crypto.hkdf_extract sender salt = ok (.Ok k1))
+    (hd1 : zvecDeref k1 = ok s1)
+    (hext2 : keystore2_crypto.hkdf_extract recipient s1 = ok (.Ok k2))
+    (hoct : keystore2_crypto.ec_point_oct_to_point other = ok (.Ok p))
+    (hgp : keystore2_crypto.OwnedECPoint.get_point p = ok eps)
+    (hecdh : keystore2_crypto.ecdh_compute_key eps self version = ok (.Ok sec))
+    (ss s2 : Slice Std.U8) (x : Error)
+    (hds : zvecDeref sec = ok ss) (hd2 : zvecDeref k2 = ok s2)
     (hext3 : keystore2_crypto.hkdf_extract ss s2 = fail x) :
+    ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
+  sorry
+
+/-- conditional: if `deref` of the output of the third extract panics, then `agree_key` panics in
+the same way. Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the calls
+before it pass through `context`), and the outcomes of the earlier calls and of this one. -/
+theorem agree_key_fail_deref_prk (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
+    (version : keystore2_crypto.EcdhComputeKeyVersion)
+    (k1 : keystore2_crypto.zvec.ZVec)
+    (s1 : Slice Std.U8)
+    (k2 : keystore2_crypto.zvec.ZVec)
+    (p : keystore2_crypto.OwnedECPoint) (eps : keystore2_crypto_bindgen.ec_point_st)
+    (sec : keystore2_crypto.zvec.ZVec)
+    (ss s2 : Slice Std.U8) (k3 : keystore2_crypto.zvec.ZVec)
+    (hext1 : keystore2_crypto.hkdf_extract sender salt = ok (.Ok k1))
+    (hd1 : zvecDeref k1 = ok s1)
+    (hext2 : keystore2_crypto.hkdf_extract recipient s1 = ok (.Ok k2))
+    (hoct : keystore2_crypto.ec_point_oct_to_point other = ok (.Ok p))
+    (hgp : keystore2_crypto.OwnedECPoint.get_point p = ok eps)
+    (hecdh : keystore2_crypto.ecdh_compute_key eps self version = ok (.Ok sec))
+    (hds : zvecDeref sec = ok ss) (hd2 : zvecDeref k2 = ok s2)
+    (hext3 : keystore2_crypto.hkdf_extract ss s2 = ok (.Ok k3))
+    (x : Error)
+    (hd3 : zvecDeref k3 = fail x) :
+    ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
+  sorry
+
+/-- conditional: if `hkdf_expand` panics, then `agree_key` panics in the same way. Hypotheses: the
+shared laws for `from_str_nonconst`, `format` and `context` (the calls before it pass through
+`context`), and the outcomes of the earlier calls and of this one. -/
+theorem agree_key_fail_expand (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
+    (version : keystore2_crypto.EcdhComputeKeyVersion)
+    (k1 : keystore2_crypto.zvec.ZVec)
+    (s1 : Slice Std.U8)
+    (k2 : keystore2_crypto.zvec.ZVec)
+    (p : keystore2_crypto.OwnedECPoint) (eps : keystore2_crypto_bindgen.ec_point_st)
+    (sec : keystore2_crypto.zvec.ZVec)
+    (ss s2 : Slice Std.U8) (k3 : keystore2_crypto.zvec.ZVec)
+    (hext1 : keystore2_crypto.hkdf_extract sender salt = ok (.Ok k1))
+    (hd1 : zvecDeref k1 = ok s1)
+    (hext2 : keystore2_crypto.hkdf_extract recipient s1 = ok (.Ok k2))
+    (hoct : keystore2_crypto.ec_point_oct_to_point other = ok (.Ok p))
+    (hgp : keystore2_crypto.OwnedECPoint.get_point p = ok eps)
+    (hecdh : keystore2_crypto.ecdh_compute_key eps self version = ok (.Ok sec))
+    (hds : zvecDeref sec = ok ss) (hd2 : zvecDeref k2 = ok s2)
+    (hext3 : keystore2_crypto.hkdf_extract ss s2 = ok (.Ok k3))
+    (s3 : Slice Std.U8) (x : Error)
+    (hd3 : zvecDeref k3 = ok s3)
+    (hexp : keystore2_crypto.hkdf_expand keystore2_crypto.AES_256_KEY_LENGTH s3 aesKeyInfo =
+      fail x) :
     ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x := by
   sorry
 

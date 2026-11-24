@@ -221,4 +221,94 @@ theorem decrypt_message_closure_ignores_error
     closureCallOnce c e1 = closureCallOnce c e2 := by
   sorry
 
+/-- conditional: if `deref` of the derived key panics, then `decrypt_message` panics in the same
+way. Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the steps before
+it pass through `context`), and the outcomes of the earlier calls and of this one. -/
+theorem decrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
+    (rpk : alloc.vec.Vec Std.U8)
+    (key : keystore2_crypto.zvec.ZVec)
+    (hpk : ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok rpk))
+    (ha : ec_crypto.ECDHPrivateKey.agree_key self salt sender sender
+      (Vec.deref rpk) keystore2_crypto.EcdhComputeKeyVersion.Current = ok (.Ok key))
+    (x : Error)
+    (hd : zvecDeref key = fail x) :
+    ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x := by
+  sorry
+/-- conditional: if the first `aes_gcm_decrypt` panics, then `decrypt_message` panics in the same
+way. The legacy key is not derived and no second decryption is tried: the panic is not an `Err`, so
+the fallback does not run. Hypotheses: the shared laws for `from_str_nonconst`, `format` and
+`context` (the steps before it pass through `context`), and the outcomes of the earlier calls and of
+this one. -/
+theorem decrypt_message_fail_first_decrypt (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
+    (rpk : alloc.vec.Vec Std.U8)
+    (key : keystore2_crypto.zvec.ZVec)
+    (ks : Slice Std.U8)
+    (hpk : ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok rpk))
+    (ha : ec_crypto.ECDHPrivateKey.agree_key self salt sender sender
+      (Vec.deref rpk) keystore2_crypto.EcdhComputeKeyVersion.Current = ok (.Ok key))
+    (hd : zvecDeref key = ok ks)
+    (x : Error)
+    (hdec : keystore2_crypto.aes_gcm_decrypt ct iv tag ks = fail x) :
+    ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x := by
+  sorry
+/-- conditional: if `deref` of the legacy key panics, then `decrypt_message` panics in the same way.
+Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the steps before it
+pass through `context`), and the outcomes of the earlier calls and of this one. -/
+theorem decrypt_message_fail_deref_legacy_key (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
+    (rpk : alloc.vec.Vec Std.U8)
+    (key : keystore2_crypto.zvec.ZVec)
+    (ks : Slice Std.U8)
+    (e1 : keystore2_crypto.error.Error)
+    (key2 : keystore2_crypto.zvec.ZVec)
+    (hpk : ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok rpk))
+    (ha : ec_crypto.ECDHPrivateKey.agree_key self salt sender sender
+      (Vec.deref rpk) keystore2_crypto.EcdhComputeKeyVersion.Current = ok (.Ok key))
+    (hd : zvecDeref key = ok ks)
+    (hdec1 : keystore2_crypto.aes_gcm_decrypt ct iv tag ks = ok (.Err e1))
+    (ha2 : ec_crypto.ECDHPrivateKey.agree_key self salt sender sender
+      (Vec.deref rpk) keystore2_crypto.EcdhComputeKeyVersion.LegacyTruncated = ok (.Ok key2))
+    (x : Error)
+    (hd2 : zvecDeref key2 = fail x) :
+    ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x := by
+  sorry
+/-- conditional: if the second `aes_gcm_decrypt`, with the legacy key panics, then `decrypt_message`
+panics in the same way. Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context`
+(the steps before it pass through `context`), and the outcomes of the earlier calls and of this
+one. -/
+theorem decrypt_message_fail_legacy_decrypt (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
+    (rpk : alloc.vec.Vec Std.U8)
+    (key : keystore2_crypto.zvec.ZVec)
+    (ks : Slice Std.U8)
+    (e1 : keystore2_crypto.error.Error)
+    (key2 : keystore2_crypto.zvec.ZVec)
+    (ks2 : Slice Std.U8)
+    (hpk : ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok rpk))
+    (ha : ec_crypto.ECDHPrivateKey.agree_key self salt sender sender
+      (Vec.deref rpk) keystore2_crypto.EcdhComputeKeyVersion.Current = ok (.Ok key))
+    (hd : zvecDeref key = ok ks)
+    (hdec1 : keystore2_crypto.aes_gcm_decrypt ct iv tag ks = ok (.Err e1))
+    (ha2 : ec_crypto.ECDHPrivateKey.agree_key self salt sender sender
+      (Vec.deref rpk) keystore2_crypto.EcdhComputeKeyVersion.LegacyTruncated = ok (.Ok key2))
+    (hd2 : zvecDeref key2 = ok ks2)
+    (x : Error)
+    (hdec2 : keystore2_crypto.aes_gcm_decrypt ct iv tag ks2 = fail x) :
+    ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x := by
+  sorry
+
 end Keystore2Verify.EcCrypto
