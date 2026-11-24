@@ -129,7 +129,8 @@ axiom Usize.Insts.CoreHashHash.hash
     Name pattern: [core::hint::must_use]
     Visibility: public -/
 @[rust_fun "core::hint::must_use"]
-axiom core.hint.must_use {T : Type _} : T → Result T
+def core.hint.must_use {T : Type _} (value : T) : Result T := do
+  ok value
 
 /-- [core::mem::size_of]:
     Source: '/rustc/library/core/src/mem/mod.rs', lines 375:0-375:34
@@ -164,10 +165,21 @@ axiom core.num.U32.from_ne_bytes : Array Std.U8 4#usize → Result Std.U32
     Name pattern: [core::option::{core::option::Option<@T>}::ok_or_else]
     Visibility: public -/
 @[rust_fun "core::option::{core::option::Option<@T>}::ok_or_else"]
-axiom core.option.Option.ok_or_else
+def core.option.Option.ok_or_else
   {T : Type _} {E : Type _} {F : Type _} (opsfunctionFnOnceFTupleEInst :
-  core.ops.function.FnOnce F Unit E) :
-  Option T → F → Result (core.result.Result T E)
+  core.ops.function.FnOnce F Unit E) (self : Option T) (err : F) :
+  Result (core.result.Result T E)
+  := do
+  let (r, b) ←
+    match self with
+    | none =>
+      do
+      let t ← opsfunctionFnOnceFTupleEInst.call_once err ()
+      ok (core.result.Result.Err t, false)
+    | some v => ok (core.result.Result.Ok v, true)
+  if b
+  then ok r
+  else ok r
 
 /-- [core::option::{core::option::Option<core::result::Result<T, E>>}::transpose]:
     Source: '/rustc/library/core/src/option.rs', lines 2239:4-2239:56
@@ -175,9 +187,16 @@ axiom core.option.Option.ok_or_else
     Visibility: public -/
 @[rust_fun
   "core::option::{core::option::Option<core::result::Result<@T, @E>>}::transpose"]
-axiom core.option.OptionResult.transpose
-  {T : Type _} {E : Type _} :
-  Option (core.result.Result T E) → Result (core.result.Result (Option T) E)
+def core.option.OptionResult.transpose
+  {T : Type _} {E : Type _} (self : Option (core.result.Result T E)) :
+  Result (core.result.Result (Option T) E)
+  := do
+  match self with
+  | none => ok (core.result.Result.Ok none)
+  | some r =>
+    match r with
+    | core.result.Result.Ok x => ok (core.result.Result.Ok (some x))
+    | core.result.Result.Err e => ok (core.result.Result.Err e)
 
 /-- [core::panic::location::Location]
     Source: '/rustc/library/core/src/panic/location.rs', lines 39:0-39:23
@@ -191,11 +210,22 @@ axiom core.panic.location.Location : Type
     Name pattern: [core::result::{core::result::Result<@T, @E>}::or_else]
     Visibility: public -/
 @[rust_fun "core::result::{core::result::Result<@T, @E>}::or_else"]
-axiom core.result.Result.or_else
+def core.result.Result.or_else
   {T : Type _} {E : Type _} {F : Type _} {O : Type _}
   (opsfunctionFnOnceOTupleEResultInst : core.ops.function.FnOnce O E
-  (core.result.Result T F)) :
-  core.result.Result T E → O → Result (core.result.Result T F)
+  (core.result.Result T F)) (self : core.result.Result T E) (op : O) :
+  Result (core.result.Result T F)
+  := do
+  let (r, b) ←
+    match self with
+    | core.result.Result.Ok t => ok (core.result.Result.Ok t, true)
+    | core.result.Result.Err e =>
+      do
+      let r1 ← opsfunctionFnOnceOTupleEResultInst.call_once op e
+      ok (r1, false)
+  if b
+  then ok r
+  else ok r
 
 /-- [core::slice::{[T]}::first]:
     Source: '/rustc/library/core/src/slice/mod.rs', lines 157:4-157:43
@@ -398,49 +428,53 @@ def
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 100:0-108:1
     Name pattern: [android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_224]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_224"]
-axiom
+def
   android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
   :
-  Result
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve
+  android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve
+  :=
+  0#i32
 
 /-- [android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_256]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 100:0-108:1
     Name pattern: [android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_256]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_256"]
-axiom
+def
   android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
   :
-  Result
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve
+  android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve
+  :=
+  1#i32
 
 /-- [android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_384]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 100:0-108:1
     Name pattern: [android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_384]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_384"]
-axiom
+def
   android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
   :
-  Result
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve
+  android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve
+  :=
+  2#i32
 
 /-- [android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_521]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 100:0-108:1
     Name pattern: [android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_521]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_521"]
-axiom
+def
   android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
   :
-  Result
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve
+  android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve
+  :=
+  3#i32
 
 /-- [android_hardware_security_keymint::aidl::android::hardware::security::keymint::ErrorCode::ErrorCode]
     Source: 'fvs-harness/binder/src/lib.rs', lines 474:8-474:39; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 112:0-204:1
@@ -456,13 +490,14 @@ def android_hardware_security_keymint.aidl.android.hardware.security.keymint.Err
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 112:0-204:1
     Name pattern: [android_hardware_security_keymint::aidl::android::hardware::security::keymint::ErrorCode::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::ErrorCode::ErrorCode}::INVALID_KEY_BLOB]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_hardware_security_keymint::aidl::android::hardware::security::keymint::ErrorCode::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::ErrorCode::ErrorCode}::INVALID_KEY_BLOB"]
-axiom
+def
   android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
   :
-  Result
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode
+  android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode
+  :=
+  (-33)#i32
 
 /-- [android_hardware_security_keymint::aidl::android::hardware::security::keymint::HardwareAuthenticatorType::HardwareAuthenticatorType]
     Source: 'fvs-harness/binder/src/lib.rs', lines 474:8-474:39; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 231:0-238:1
@@ -515,25 +550,27 @@ def
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 363:0-369:1
     Name pattern: [android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat}::RAW]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat}::RAW"]
-axiom
+def
   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
   :
-  Result
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
+  android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
+  :=
+  3#i32
 
 /-- [android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat}::PKCS8]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 363:0-369:1
     Name pattern: [android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat}::PKCS8]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat}::PKCS8"]
-axiom
+def
   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8
   :
-  Result
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
+  android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
+  :=
+  1#i32
 
 /-- [android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyOrigin::KeyOrigin]
     Source: 'fvs-harness/binder/src/lib.rs', lines 474:8-474:39; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 394:0-402:1
@@ -764,25 +801,27 @@ def
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 492:0-563:1
     Name pattern: [android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::Tag}::ALGORITHM]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::Tag}::ALGORITHM"]
-axiom
+def
   android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.ALGORITHM
   :
-  Result
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag
+  android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag
+  :=
+  268435458#i32
 
 /-- [android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::Tag}::EC_CURVE]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 492:0-563:1
     Name pattern: [android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::Tag}::EC_CURVE]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::Tag}::EC_CURVE"]
-axiom
+def
   android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
   :
-  Result
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag
+  android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag
+  :=
+  268435466#i32
 
 /-- [android_hardware_security_keymint::aidl::android::hardware::security::keymint::TagType::TagType]
     Source: 'fvs-harness/binder/src/lib.rs', lines 474:8-474:39; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs', lines 567:0-581:1
@@ -856,133 +895,144 @@ def android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPerm
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::CONVERT_STORAGE_KEY_TO_EPHEMERAL]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::CONVERT_STORAGE_KEY_TO_EPHEMERAL"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.CONVERT_STORAGE_KEY_TO_EPHEMERAL
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  2048#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::DELETE]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::DELETE]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::DELETE"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.DELETE
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  1#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GEN_UNIQUE_ID]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GEN_UNIQUE_ID]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GEN_UNIQUE_ID"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GEN_UNIQUE_ID
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  2#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GET_INFO]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GET_INFO]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GET_INFO"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GET_INFO
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  4#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GRANT]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GRANT]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GRANT"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GRANT
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  8#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::MANAGE_BLOB]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::MANAGE_BLOB]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::MANAGE_BLOB"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.MANAGE_BLOB
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  16#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REBIND]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REBIND]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REBIND"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REBIND
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  32#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REQ_FORCED_OP]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REQ_FORCED_OP]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REQ_FORCED_OP"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REQ_FORCED_OP
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  64#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::UPDATE]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::UPDATE]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::UPDATE"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.UPDATE
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  128#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  256#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE_DEV_ID]
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 267:0-283:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE_DEV_ID]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE_DEV_ID"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE_DEV_ID
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission
+  :=
+  512#i32
 
 /-- [android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode]
     Source: 'fvs-harness/binder/src/lib.rs', lines 474:8-474:39; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 300:0-323:1
@@ -998,13 +1048,27 @@ def android_system_keystore2.aidl.android.system.keystore2.ResponseCode.Response
     Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 300:0-323:1
     Name pattern: [android_system_keystore2::aidl::android::system::keystore2::ResponseCode::{android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode}::INVALID_ARGUMENT]
     Visibility: public -/
-@[rust_const
+@[global_simps, irreducible, rust_const
   "android_system_keystore2::aidl::android::system::keystore2::ResponseCode::{android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode}::INVALID_ARGUMENT"]
-axiom
+def
   android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.INVALID_ARGUMENT
   :
-  Result
-    android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode
+  android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode
+  :=
+  20#i32
+
+/-- [android_system_keystore2::aidl::android::system::keystore2::ResponseCode::{android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode}::SYSTEM_ERROR]
+    Source: 'fvs-harness/binder/src/lib.rs', lines 476:59-476:80; this code is generated from a macro invocation at: 'fvs-harness/aidl/android_system_keystore2/src/lib.rs', lines 300:0-323:1
+    Name pattern: [android_system_keystore2::aidl::android::system::keystore2::ResponseCode::{android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode}::SYSTEM_ERROR]
+    Visibility: public -/
+@[global_simps, irreducible, rust_const
+  "android_system_keystore2::aidl::android::system::keystore2::ResponseCode::{android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode}::SYSTEM_ERROR"]
+def
+  android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.SYSTEM_ERROR
+  :
+  android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode
+  :=
+  4#i32
 
 /-- [anyhow::Error]
     Source: '/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/lib.rs', lines 390:0-390:16
@@ -1358,8 +1422,8 @@ def keystore2_crypto.error.Error.Insts.CoreErrorError : core.error.Error
     Source: 'keystore2/src/crypto/lib.rs', lines 37:0-37:35
     Name pattern: [keystore2_crypto::AES_256_KEY_LENGTH]
     Visibility: public -/
-@[rust_const "keystore2_crypto::AES_256_KEY_LENGTH"]
-axiom keystore2_crypto.AES_256_KEY_LENGTH : Result Std.Usize
+@[global_simps, irreducible, rust_const "keystore2_crypto::AES_256_KEY_LENGTH"]
+def keystore2_crypto.AES_256_KEY_LENGTH : Std.Usize := 32#usize
 
 /-- [keystore2_crypto::generate_salt]:
     Source: 'keystore2/src/crypto/lib.rs', lines 68:0-68:48
@@ -1629,7 +1693,8 @@ def keystore2_selinux.Error.Insts.CoreErrorError : core.error.Error
     Name pattern: [keystore2_selinux::{keystore2_selinux::Error}::perm]
     Visibility: public -/
 @[rust_fun "keystore2_selinux::{keystore2_selinux::Error}::perm"]
-axiom keystore2_selinux.Error.perm : Result keystore2_selinux.Error
+def keystore2_selinux.Error.perm : Result keystore2_selinux.Error := do
+  ok keystore2_selinux.Error.PermissionDenied
 
 /-- [keystore2_selinux::Context]
     Source: 'keystore2/selinux/src/lib.rs', lines 94:0-94:16
@@ -1868,8 +1933,8 @@ impl_def log.Level.Insts.CoreCmpPartialOrdLevelFilter : core.cmp.PartialOrd
     Source: '/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs', lines 1611:0-1611:39
     Name pattern: [log::STATIC_MAX_LEVEL]
     Visibility: public -/
-@[rust_const "log::STATIC_MAX_LEVEL"]
-axiom log.STATIC_MAX_LEVEL : Result log.LevelFilter
+@[global_simps, irreducible, rust_const "log::STATIC_MAX_LEVEL"]
+def log.STATIC_MAX_LEVEL : log.LevelFilter := log.LevelFilter.Trace
 
 /-- [keystore2::boot_level_keys::BootLevel]
     Source: 'keystore2/src/boot_level_keys.rs', lines 34:0-34:32
@@ -2272,16 +2337,16 @@ def boot_level_keys.BootLevelKeyCache.advance_boot_level
           Unit (core.convert.FromSame anyhow.Error) residual
       ok (r2, self1)
   else
-    let lf ← log.STATIC_MAX_LEVEL
     let b1 ←
       core.cmp.PartialOrd.le.trait_default
-        log.Level.Insts.CoreCmpPartialOrdLevelFilter log.Level.Error lf
+        log.Level.Insts.CoreCmpPartialOrdLevelFilter log.Level.Error
+        log.STATIC_MAX_LEVEL
     if b1
     then
-      let lf1 ← log.max_level
+      let lf ← log.max_level
       let b2 ←
         core.cmp.PartialOrd.le.trait_default
-          log.Level.Insts.CoreCmpPartialOrdLevelFilter log.Level.Error lf1
+          log.Level.Insts.CoreCmpPartialOrdLevelFilter log.Level.Error lf
       if b2
       then
         let i ← alloc.collections.vec_deque.VecDeque.len self.cache
@@ -2411,9 +2476,9 @@ def boot_level_keys.BootLevelKeyCache.aes_key
   Result ((core.result.Result (Option keystore2_crypto.zvec.ZVec) anyhow.Error)
     × boot_level_keys.BootLevelKeyCache)
   := do
-  let i ← keystore2_crypto.AES_256_KEY_LENGTH
   let (r, self1) ←
-    boot_level_keys.BootLevelKeyCache.expand_key self boot_level i
+    boot_level_keys.BootLevelKeyCache.expand_key self boot_level
+      keystore2_crypto.AES_256_KEY_LENGTH
       boot_level_keys.BootLevelKeyCache.HKDF_AES
   let a ←
     core.fmt.Arguments.from_str_nonconst (toStr
@@ -2634,8 +2699,9 @@ def ec_crypto.ECDHPrivateKey.agree_key
                   65#u8, 69#u8, 83#u8, 45#u8, 50#u8, 53#u8, 54#u8, 45#u8,
                   71#u8, 67#u8, 77#u8, 32#u8, 107#u8, 101#u8, 121#u8
                   ]))
-            let i ← keystore2_crypto.AES_256_KEY_LENGTH
-            let r10 ← keystore2_crypto.hkdf_expand i s13 s14
+            let r10 ←
+              keystore2_crypto.hkdf_expand keystore2_crypto.AES_256_KEY_LENGTH
+                s13 s14
             let a5 ←
               core.fmt.Arguments.from_str_nonconst (toStr
                 "keystore2/src/ec_crypto.rs:73: hkdf_expand failed")
@@ -2945,7 +3011,9 @@ def error.Error.Insts.CoreErrorError : core.error.Error error.Error := {
 /-- [keystore2::error::{keystore2::error::Error}::sys]:
     Source: 'keystore2/src/error.rs', lines 90:4-92:5
     Visibility: public -/
-axiom error.Error.sys : Result error.Error
+def error.Error.sys : Result error.Error := do
+  ok (error.Error.Rc
+    android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.SYSTEM_ERROR)
 
 /-- [keystore2::permission::lookup_keystore2_key_context]:
     Source: 'keystore2/src/permission.rs', lines 50:0-52:1 -/
@@ -3056,69 +3124,90 @@ def permission.KeyPerm.Insts.Keystore2_selinuxClassPermission :
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::ConvertStorageKeyToEphemeral]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.ConvertStorageKeyToEphemeral
-  : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.CONVERT_STORAGE_KEY_TO_EPHEMERAL
+def permission.FromKeyPermI32.from.ConvertStorageKeyToEphemeral : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.CONVERT_STORAGE_KEY_TO_EPHEMERAL
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Delete]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.Delete : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.DELETE
+def permission.FromKeyPermI32.from.Delete : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.DELETE
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::GenUniqueId]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.GenUniqueId : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GEN_UNIQUE_ID
+def permission.FromKeyPermI32.from.GenUniqueId : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GEN_UNIQUE_ID
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::GetInfo]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.GetInfo : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GET_INFO
+def permission.FromKeyPermI32.from.GetInfo : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GET_INFO
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Grant]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.Grant : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GRANT
+def permission.FromKeyPermI32.from.Grant : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GRANT
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::ManageBlob]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.ManageBlob : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.MANAGE_BLOB
+def permission.FromKeyPermI32.from.ManageBlob : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.MANAGE_BLOB
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Rebind]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.Rebind : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REBIND
+def permission.FromKeyPermI32.from.Rebind : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REBIND
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::ReqForcedOp]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.ReqForcedOp : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REQ_FORCED_OP
+def permission.FromKeyPermI32.from.ReqForcedOp : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REQ_FORCED_OP
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Update]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.Update : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.UPDATE
+def permission.FromKeyPermI32.from.Update : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.UPDATE
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Use]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.Use : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE
+def permission.FromKeyPermI32.from.Use : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE
+  i
 
 /-- [keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::UseDevId]
     Source: 'keystore2/selinux/src/lib.rs', lines 579:18-579:44; this code is generated from a macro invocation at: 'keystore2/src/permission.rs', lines 54:0-100:1 -/
 @[global_simps, irreducible]
-def permission.FromKeyPermI32.from.UseDevId : Result Std.I32 :=
-  android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE_DEV_ID
+def permission.FromKeyPermI32.from.UseDevId : Std.I32 :=
+  let i :=
+    android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE_DEV_ID
+  i
 
 /-- [keystore2::permission::{impl core::clone::Clone for keystore2::permission::KeyPerm}::clone]:
     Source: 'keystore2/src/permission.rs', lines 60:13-60:18
@@ -4345,8 +4434,6 @@ def permission.check_key_permission
         core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
           Unit (core.convert.FromSame anyhow.Error) residual
     | _ =>
-      let rc ←
-        android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.INVALID_ARGUMENT
       let a ←
         core.fmt.rt.Argument.new_debug
           android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug
@@ -4364,7 +4451,9 @@ def permission.check_key_permission
       core.result.Result.Insts.AnyhowContext.context
         (anyhow.context.ext.StdError.Blanket error.Error.Insts.CoreErrorError)
         alloc.string.String.Insts.CoreFmtDisplay (core.result.Result.Err
-        (error.Error.Rc rc)) s1
+        (error.Error.Rc
+        android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.INVALID_ARGUMENT))
+        s1
   | some access_vector1 =>
     let b ←
       permission.KeyPermSet.includes (core.convert.IntoFrom
@@ -4494,8 +4583,6 @@ def permission.check_key_permission
           core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
             Unit (core.convert.FromSame anyhow.Error) residual
       | _ =>
-        let rc ←
-          android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.INVALID_ARGUMENT
         let a ←
           core.fmt.rt.Argument.new_debug
             android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug
@@ -4514,7 +4601,9 @@ def permission.check_key_permission
           (anyhow.context.ext.StdError.Blanket
           error.Error.Insts.CoreErrorError)
           alloc.string.String.Insts.CoreFmtDisplay (core.result.Result.Err
-          (error.Error.Rc rc)) s1
+          (error.Error.Rc
+          android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.INVALID_ARGUMENT))
+          s1
 
 /-- [keystore2::sw_keyblob::SOFTWARE_ROOT_OF_TRUST]
     Source: 'keystore2/src/sw_keyblob.rs', lines 35:0-35:44 -/
@@ -4579,11 +4668,9 @@ def sw_keyblob.consume_u32
   let i1 ← sw_keyblob.consume_u32.LEN
   if i < i1
   then
-    let ec ←
-      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
     let e ←
       anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
-        ec)
+        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
     let a ← core.fmt.rt.Argument.new_display Usize.Insts.CoreFmtDisplay i1
     let a1 ←
       core.fmt.Arguments.new
@@ -4631,11 +4718,9 @@ def sw_keyblob.consume_vec
     let i := Slice.len data1
     if len > i
     then
-      let ec ←
-        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
       let e ←
         anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
-          ec)
+          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
       let a ← core.fmt.rt.Argument.new_display Usize.Insts.CoreFmtDisplay len
       let a1 ←
         core.fmt.Arguments.new
@@ -4680,11 +4765,9 @@ def sw_keyblob.consume_u8
   let o ← core.slice.Slice.first data
   match o with
   | none =>
-    let ec ←
-      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
     let e ←
       anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
-        ec)
+        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
     let a ←
       core.fmt.Arguments.from_str_nonconst (toStr
         "keystore2/src/sw_keyblob.rs:303: failed to find 1 byte")
@@ -4789,11 +4872,9 @@ def sw_keyblob.KeyBlob.new_from_serialized
   let i4 ← i3 + sw_keyblob.KeyBlob.MAC_LEN
   if i < i4
   then
-    let ec ←
-      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
     let e ←
       anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
-        ec)
+        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
     let args := Slice.len data
     let a ← core.fmt.rt.Argument.new_display Usize.Insts.CoreFmtDisplay args
     let a1 ←
@@ -4835,11 +4916,10 @@ def sw_keyblob.KeyBlob.new_from_serialized
           core.cmp.PartialEqU8 mac val
       if b
       then
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.Arguments.from_str_nonconst (toStr
             "keystore2/src/sw_keyblob.rs:243: invalid key blob")
@@ -4856,11 +4936,10 @@ def sw_keyblob.KeyBlob.new_from_serialized
         | core.ops.control_flow.ControlFlow.Continue val1 =>
           if val1 != sw_keyblob.KeyBlob.KEY_BLOB_VERSION
           then
-            let ec ←
-              android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
             let e ←
               anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                (error.Error.Km ec)
+                (error.Error.Km
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
             let a ←
               core.fmt.rt.Argument.new_display U8.Insts.CoreFmtDisplay val1
             let a1 ←
@@ -4908,11 +4987,10 @@ def sw_keyblob.KeyBlob.new_from_serialized
                         sw_enforced := val4
                       })
                   else
-                    let ec ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                     let e ←
                       anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                        (error.Error.Km ec)
+                        (error.Error.Km
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                     let args := Slice.len rest
                     let a ←
                       core.fmt.rt.Argument.new_display
@@ -4984,11 +5062,10 @@ def sw_keyblob.add_der_len
         let buf3 ← alloc.vec.Vec.push buf2 i3
         ok (core.result.Result.Ok (), buf3)
       else
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_display Usize.Insts.CoreFmtDisplay len
         let a1 ←
@@ -5215,11 +5292,9 @@ def sw_keyblob.pkcs8_wrap_nist_key
       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
         (alloc.vec.Vec Std.U8) (core.convert.FromSame anyhow.Error) residual
   | _ =>
-    let ec ←
-      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
     let e ←
       anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
-        ec)
+        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
     let a ←
       core.fmt.rt.Argument.new_debug
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.Insts.CoreFmtDebug
@@ -5250,10 +5325,9 @@ def sw_keyblob.export_key.closure_1 := Unit
 def
   sw_keyblob.export_key.closure_1.Insts.CoreOpsFunctionFnOnceTupleError.call_once
   (c : sw_keyblob.export_key.closure_1) (_ : Unit) : Result anyhow.Error := do
-  let ec ←
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
   let e ←
-    anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km ec)
+    anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
+      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
   let a ←
     core.fmt.Arguments.from_str_nonconst (toStr
       "keystore2/src/sw_keyblob.rs:82: Failed to determine curve for EC key!")
@@ -5281,10 +5355,9 @@ def sw_keyblob.export_key.closure := Unit
 def
   sw_keyblob.export_key.closure.Insts.CoreOpsFunctionFnOnceTupleError.call_once
   (c : sw_keyblob.export_key.closure) (_ : Unit) : Result anyhow.Error := do
-  let ec ←
-    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
   let e ←
-    anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km ec)
+    anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
+      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
   let a ←
     core.fmt.Arguments.from_str_nonconst (toStr
       "keystore2/src/sw_keyblob.rs:67: No algorithm found!")
@@ -5330,9 +5403,9 @@ def sw_keyblob.export_key
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter.Insts.CoreCloneClone
         val.hw_enforced s2
     let s3 := alloc.vec.Vec.deref hw_enforced
-    let t ←
-      android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.ALGORITHM
-    let o ← sw_keyblob.get_tag_value s3 t
+    let o ←
+      sw_keyblob.get_tag_value s3
+        android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.ALGORITHM
     let r1 ←
       core.option.Option.ok_or_else
         sw_keyblob.export_key.closure.Insts.CoreOpsFunctionFnOnceTupleError o
@@ -5344,11 +5417,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Invalid
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5375,16 +5447,16 @@ def sw_keyblob.export_key
         a =>
         match a with
         | 32#iscalar =>
-          let format ←
+          let i :=
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
-          match format with
+          match i with
           | 1#iscalar =>
             match a with
             | 3#iscalar =>
               let s4 := alloc.vec.Vec.deref hw_enforced
-              let t1 ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
-              let o1 ← sw_keyblob.get_tag_value s4 t1
+              let o1 ←
+                sw_keyblob.get_tag_value s4
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
               let r2 ←
                 core.option.Option.ok_or_else
                   sw_keyblob.export_key.closure_1.Insts.CoreOpsFunctionFnOnceTupleError
@@ -5396,11 +5468,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Invalid
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5426,11 +5497,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Algorithm
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5456,11 +5526,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BlockMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5486,11 +5555,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.PaddingMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5516,11 +5584,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Digest
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5548,17 +5615,20 @@ def sw_keyblob.export_key
                   ec =>
                   match ec with
                   | 4#iscalar =>
-                    ok (core.result.Result.Ok (format, val.key_material,
-                      hw_enforced))
+                    ok (core.result.Result.Ok
+                      (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                      val.key_material, hw_enforced))
                   | 0#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -5567,13 +5637,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 1#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -5582,13 +5654,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 2#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -5597,13 +5671,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 3#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -5611,11 +5687,10 @@ def sw_keyblob.export_key
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                         (core.convert.FromSame anyhow.Error) residual
                   | _ =>
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                     let e ←
                       anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                        (error.Error.Km ec1)
+                        (error.Error.Km
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                     let a1 ←
                       core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5643,11 +5718,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Origin
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5673,11 +5747,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.KeyPurpose
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5703,11 +5776,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.HardwareAuthenticatorType
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5733,11 +5805,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.SecurityLevel
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5763,11 +5834,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BoolValue
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5793,11 +5863,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Integer
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5823,11 +5892,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.LongInteger
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5853,11 +5921,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.DateTime
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5883,11 +5950,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Blob
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5913,11 +5979,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.MlDsaVariant
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5947,15 +6012,14 @@ def sw_keyblob.export_key
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                   (core.convert.FromSame anyhow.Error) residual
             | _ =>
-              let ec ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
               let e ←
                 anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                  (error.Error.Km ec)
+                  (error.Error.Km
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
               let a1 ←
                 core.fmt.rt.Argument.new_debug
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                  format
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
               let a2 ←
                 core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -5984,17 +6048,18 @@ def sw_keyblob.export_key
                   alloc.string.String.Insts.CoreFmtDisplay e s5
               ok (core.result.Result.Err e1)
           | 3#iscalar =>
-            ok (core.result.Result.Ok (format, val.key_material, hw_enforced))
+            ok (core.result.Result.Ok
+              (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+              val.key_material, hw_enforced))
           | _ =>
-            let ec ←
-              android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
             let e ←
               anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                (error.Error.Km ec)
+                (error.Error.Km
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
             let a1 ←
               core.fmt.rt.Argument.new_debug
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                format
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
             let a2 ←
               core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6023,16 +6088,16 @@ def sw_keyblob.export_key
                 alloc.string.String.Insts.CoreFmtDisplay e s5
             ok (core.result.Result.Err e1)
         | 33#iscalar =>
-          let format ←
+          let i :=
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
-          match format with
+          match i with
           | 1#iscalar =>
             match a with
             | 3#iscalar =>
               let s4 := alloc.vec.Vec.deref hw_enforced
-              let t1 ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
-              let o1 ← sw_keyblob.get_tag_value s4 t1
+              let o1 ←
+                sw_keyblob.get_tag_value s4
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
               let r2 ←
                 core.option.Option.ok_or_else
                   sw_keyblob.export_key.closure_1.Insts.CoreOpsFunctionFnOnceTupleError
@@ -6044,11 +6109,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Invalid
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6074,11 +6138,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Algorithm
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6104,11 +6167,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BlockMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6134,11 +6196,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.PaddingMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6164,11 +6225,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Digest
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6196,17 +6256,20 @@ def sw_keyblob.export_key
                   ec =>
                   match ec with
                   | 4#iscalar =>
-                    ok (core.result.Result.Ok (format, val.key_material,
-                      hw_enforced))
+                    ok (core.result.Result.Ok
+                      (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                      val.key_material, hw_enforced))
                   | 0#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -6215,13 +6278,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 1#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -6230,13 +6295,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 2#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -6245,13 +6312,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 3#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -6259,11 +6328,10 @@ def sw_keyblob.export_key
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                         (core.convert.FromSame anyhow.Error) residual
                   | _ =>
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                     let e ←
                       anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                        (error.Error.Km ec1)
+                        (error.Error.Km
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                     let a1 ←
                       core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6291,11 +6359,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Origin
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6321,11 +6388,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.KeyPurpose
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6351,11 +6417,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.HardwareAuthenticatorType
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6381,11 +6446,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.SecurityLevel
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6411,11 +6475,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BoolValue
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6441,11 +6504,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Integer
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6471,11 +6533,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.LongInteger
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6501,11 +6562,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.DateTime
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6531,11 +6591,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Blob
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6561,11 +6620,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.MlDsaVariant
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6595,15 +6653,14 @@ def sw_keyblob.export_key
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                   (core.convert.FromSame anyhow.Error) residual
             | _ =>
-              let ec ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
               let e ←
                 anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                  (error.Error.Km ec)
+                  (error.Error.Km
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
               let a1 ←
                 core.fmt.rt.Argument.new_debug
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                  format
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
               let a2 ←
                 core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6632,17 +6689,18 @@ def sw_keyblob.export_key
                   alloc.string.String.Insts.CoreFmtDisplay e s5
               ok (core.result.Result.Err e1)
           | 3#iscalar =>
-            ok (core.result.Result.Ok (format, val.key_material, hw_enforced))
+            ok (core.result.Result.Ok
+              (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+              val.key_material, hw_enforced))
           | _ =>
-            let ec ←
-              android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
             let e ←
               anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                (error.Error.Km ec)
+                (error.Error.Km
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
             let a1 ←
               core.fmt.rt.Argument.new_debug
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                format
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
             let a2 ←
               core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6671,16 +6729,16 @@ def sw_keyblob.export_key
                 alloc.string.String.Insts.CoreFmtDisplay e s5
             ok (core.result.Result.Err e1)
         | 128#iscalar =>
-          let format ←
+          let i :=
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
-          match format with
+          match i with
           | 1#iscalar =>
             match a with
             | 3#iscalar =>
               let s4 := alloc.vec.Vec.deref hw_enforced
-              let t1 ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
-              let o1 ← sw_keyblob.get_tag_value s4 t1
+              let o1 ←
+                sw_keyblob.get_tag_value s4
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
               let r2 ←
                 core.option.Option.ok_or_else
                   sw_keyblob.export_key.closure_1.Insts.CoreOpsFunctionFnOnceTupleError
@@ -6692,11 +6750,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Invalid
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6722,11 +6779,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Algorithm
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6752,11 +6808,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BlockMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6782,11 +6837,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.PaddingMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6812,11 +6866,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Digest
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6844,17 +6897,20 @@ def sw_keyblob.export_key
                   ec =>
                   match ec with
                   | 4#iscalar =>
-                    ok (core.result.Result.Ok (format, val.key_material,
-                      hw_enforced))
+                    ok (core.result.Result.Ok
+                      (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                      val.key_material, hw_enforced))
                   | 0#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -6863,13 +6919,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 1#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -6878,13 +6936,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 2#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -6893,13 +6953,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 3#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -6907,11 +6969,10 @@ def sw_keyblob.export_key
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                         (core.convert.FromSame anyhow.Error) residual
                   | _ =>
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                     let e ←
                       anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                        (error.Error.Km ec1)
+                        (error.Error.Km
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                     let a1 ←
                       core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6939,11 +7000,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Origin
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6969,11 +7029,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.KeyPurpose
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -6999,11 +7058,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.HardwareAuthenticatorType
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7029,11 +7087,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.SecurityLevel
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7059,11 +7116,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BoolValue
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7089,11 +7145,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Integer
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7119,11 +7174,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.LongInteger
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7149,11 +7203,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.DateTime
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7179,11 +7232,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Blob
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7209,11 +7261,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.MlDsaVariant
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7243,15 +7294,14 @@ def sw_keyblob.export_key
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                   (core.convert.FromSame anyhow.Error) residual
             | _ =>
-              let ec ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
               let e ←
                 anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                  (error.Error.Km ec)
+                  (error.Error.Km
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
               let a1 ←
                 core.fmt.rt.Argument.new_debug
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                  format
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
               let a2 ←
                 core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7280,17 +7330,18 @@ def sw_keyblob.export_key
                   alloc.string.String.Insts.CoreFmtDisplay e s5
               ok (core.result.Result.Err e1)
           | 3#iscalar =>
-            ok (core.result.Result.Ok (format, val.key_material, hw_enforced))
+            ok (core.result.Result.Ok
+              (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW,
+              val.key_material, hw_enforced))
           | _ =>
-            let ec ←
-              android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
             let e ←
               anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                (error.Error.Km ec)
+                (error.Error.Km
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
             let a1 ←
               core.fmt.rt.Argument.new_debug
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                format
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW
             let a2 ←
               core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7319,16 +7370,16 @@ def sw_keyblob.export_key
                 alloc.string.String.Insts.CoreFmtDisplay e s5
             ok (core.result.Result.Err e1)
         | 1#iscalar =>
-          let format ←
+          let i :=
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8
-          match format with
+          match i with
           | 1#iscalar =>
             match a with
             | 3#iscalar =>
               let s4 := alloc.vec.Vec.deref hw_enforced
-              let t1 ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
-              let o1 ← sw_keyblob.get_tag_value s4 t1
+              let o1 ←
+                sw_keyblob.get_tag_value s4
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
               let r2 ←
                 core.option.Option.ok_or_else
                   sw_keyblob.export_key.closure_1.Insts.CoreOpsFunctionFnOnceTupleError
@@ -7340,11 +7391,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Invalid
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7370,11 +7420,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Algorithm
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7400,11 +7449,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BlockMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7430,11 +7478,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.PaddingMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7460,11 +7507,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Digest
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7492,17 +7538,20 @@ def sw_keyblob.export_key
                   ec =>
                   match ec with
                   | 4#iscalar =>
-                    ok (core.result.Result.Ok (format, val.key_material,
-                      hw_enforced))
+                    ok (core.result.Result.Ok
+                      (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                      val.key_material, hw_enforced))
                   | 0#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -7511,13 +7560,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 1#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -7526,13 +7577,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 2#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -7541,13 +7594,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 3#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -7555,11 +7610,10 @@ def sw_keyblob.export_key
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                         (core.convert.FromSame anyhow.Error) residual
                   | _ =>
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                     let e ←
                       anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                        (error.Error.Km ec1)
+                        (error.Error.Km
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                     let a1 ←
                       core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7587,11 +7641,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Origin
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7617,11 +7670,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.KeyPurpose
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7647,11 +7699,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.HardwareAuthenticatorType
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7677,11 +7728,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.SecurityLevel
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7707,11 +7757,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BoolValue
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7737,11 +7786,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Integer
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7767,11 +7815,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.LongInteger
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7797,11 +7844,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.DateTime
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7827,11 +7873,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Blob
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7857,11 +7902,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.MlDsaVariant
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7891,15 +7935,14 @@ def sw_keyblob.export_key
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                   (core.convert.FromSame anyhow.Error) residual
             | _ =>
-              let ec ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
               let e ←
                 anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                  (error.Error.Km ec)
+                  (error.Error.Km
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
               let a1 ←
                 core.fmt.rt.Argument.new_debug
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                  format
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8
               let a2 ←
                 core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7928,17 +7971,18 @@ def sw_keyblob.export_key
                   alloc.string.String.Insts.CoreFmtDisplay e s5
               ok (core.result.Result.Err e1)
           | 3#iscalar =>
-            ok (core.result.Result.Ok (format, val.key_material, hw_enforced))
+            ok (core.result.Result.Ok
+              (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+              val.key_material, hw_enforced))
           | _ =>
-            let ec ←
-              android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
             let e ←
               anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                (error.Error.Km ec)
+                (error.Error.Km
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
             let a1 ←
               core.fmt.rt.Argument.new_debug
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                format
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8
             let a2 ←
               core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -7967,16 +8011,16 @@ def sw_keyblob.export_key
                 alloc.string.String.Insts.CoreFmtDisplay e s5
             ok (core.result.Result.Err e1)
         | 3#iscalar =>
-          let format ←
+          let i :=
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8
-          match format with
+          match i with
           | 1#iscalar =>
             match a with
             | 3#iscalar =>
               let s4 := alloc.vec.Vec.deref hw_enforced
-              let t1 ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
-              let o1 ← sw_keyblob.get_tag_value s4 t1
+              let o1 ←
+                sw_keyblob.get_tag_value s4
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE
               let r2 ←
                 core.option.Option.ok_or_else
                   sw_keyblob.export_key.closure_1.Insts.CoreOpsFunctionFnOnceTupleError
@@ -7988,11 +8032,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Invalid
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8018,11 +8061,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Algorithm
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8048,11 +8090,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BlockMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8078,11 +8119,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.PaddingMode
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8108,11 +8148,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Digest
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8140,17 +8179,20 @@ def sw_keyblob.export_key
                   ec =>
                   match ec with
                   | 4#iscalar =>
-                    ok (core.result.Result.Ok (format, val.key_material,
-                      hw_enforced))
+                    ok (core.result.Result.Ok
+                      (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                      val.key_material, hw_enforced))
                   | 0#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -8159,13 +8201,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 1#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -8174,13 +8218,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 2#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -8189,13 +8235,15 @@ def sw_keyblob.export_key
                         (core.convert.FromSame anyhow.Error) residual
                   | 3#iscalar =>
                     let s5 := alloc.vec.Vec.deref val.key_material
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
-                    let r3 ← sw_keyblob.pkcs8_wrap_nist_key s5 ec1
+                    let r3 ←
+                      sw_keyblob.pkcs8_wrap_nist_key s5
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521
                     let cf3 ← core.result.Result.Insts.CoreOpsTry.branch r3
                     match cf3 with
                     | core.ops.control_flow.ControlFlow.Continue val3 =>
-                      ok (core.result.Result.Ok (format, val3, hw_enforced))
+                      ok (core.result.Result.Ok
+                        (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+                        val3, hw_enforced))
                     | core.ops.control_flow.ControlFlow.Break residual =>
                       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
                         (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat
@@ -8203,11 +8251,10 @@ def sw_keyblob.export_key
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                         (core.convert.FromSame anyhow.Error) residual
                   | _ =>
-                    let ec1 ←
-                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                     let e ←
                       anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                        (error.Error.Km ec1)
+                        (error.Error.Km
+                        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                     let a1 ←
                       core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8235,11 +8282,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Origin
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8265,11 +8311,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.KeyPurpose
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8295,11 +8340,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.HardwareAuthenticatorType
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8325,11 +8369,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.SecurityLevel
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8355,11 +8398,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BoolValue
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8385,11 +8427,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Integer
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8415,11 +8456,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.LongInteger
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8445,11 +8485,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.DateTime
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8475,11 +8514,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Blob
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8505,11 +8543,10 @@ def sw_keyblob.export_key
                 |
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.MlDsaVariant
                   _ =>
-                  let ec ←
-                    android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
                   let e ←
                     anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                      (error.Error.Km ec)
+                      (error.Error.Km
+                      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
                   let a1 ←
                     core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                       android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8539,15 +8576,14 @@ def sw_keyblob.export_key
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter))
                   (core.convert.FromSame anyhow.Error) residual
             | _ =>
-              let ec ←
-                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
               let e ←
                 anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                  (error.Error.Km ec)
+                  (error.Error.Km
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
               let a1 ←
                 core.fmt.rt.Argument.new_debug
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                  format
+                  android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8
               let a2 ←
                 core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                   android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8576,17 +8612,18 @@ def sw_keyblob.export_key
                   alloc.string.String.Insts.CoreFmtDisplay e s5
               ok (core.result.Result.Err e1)
           | 3#iscalar =>
-            ok (core.result.Result.Ok (format, val.key_material, hw_enforced))
+            ok (core.result.Result.Ok
+              (android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8,
+              val.key_material, hw_enforced))
           | _ =>
-            let ec ←
-              android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
             let e ←
               anyhow.error.Error.new error.Error.Insts.CoreErrorError
-                (error.Error.Km ec)
+                (error.Error.Km
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
             let a1 ←
               core.fmt.rt.Argument.new_debug
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug
-                format
+                android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8
             let a2 ←
               core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
                 android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8615,11 +8652,10 @@ def sw_keyblob.export_key
                 alloc.string.String.Insts.CoreFmtDisplay e s5
             ok (core.result.Result.Err e1)
         | _ =>
-          let ec ←
-            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
           let e ←
             anyhow.error.Error.new error.Error.Insts.CoreErrorError
-              (error.Error.Km ec)
+              (error.Error.Km
+              android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
           let a1 ←
             core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
               android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8645,11 +8681,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BlockMode
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8674,11 +8709,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.PaddingMode
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8703,11 +8737,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Digest
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8732,11 +8765,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.EcCurve
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8761,11 +8793,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Origin
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8790,11 +8821,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.KeyPurpose
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8819,11 +8849,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.HardwareAuthenticatorType
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8848,11 +8877,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.SecurityLevel
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8877,11 +8905,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.BoolValue
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8906,11 +8933,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Integer
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8935,11 +8961,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.LongInteger
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8964,11 +8989,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.DateTime
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -8993,11 +9017,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Blob
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -9022,11 +9045,10 @@ def sw_keyblob.export_key
       |
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.MlDsaVariant
         _ =>
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
             android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug)
@@ -9129,11 +9151,9 @@ def sw_keyblob.consume_bool
     if val = 1#u8
     then ok (core.result.Result.Ok true, data1)
     else
-      let ec ←
-        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
       let e ←
         anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
-          ec)
+          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
       let a ←
         core.fmt.Arguments.from_str_nonconst (toStr
           "keystore2/src/sw_keyblob.rs:315: bool value other than 1 encountered")
@@ -9164,11 +9184,9 @@ def sw_keyblob.consume_i32
   let i1 ← sw_keyblob.consume_i32.LEN
   if i < i1
   then
-    let ec ←
-      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
     let e ←
       anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
-        ec)
+        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
     let a ← core.fmt.rt.Argument.new_display Usize.Insts.CoreFmtDisplay i1
     let a1 ←
       core.fmt.Arguments.new
@@ -9216,11 +9234,9 @@ def sw_keyblob.consume_i64
   let i1 ← sw_keyblob.consume_i64.LEN
   if i < i1
   then
-    let ec ←
-      android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
     let e ←
       anyhow.error.Error.new error.Error.Insts.CoreErrorError (error.Error.Km
-        ec)
+        android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
     let a ← core.fmt.rt.Argument.new_display Usize.Insts.CoreFmtDisplay i1
     let a1 ←
       core.fmt.Arguments.new
@@ -9273,11 +9289,10 @@ def sw_keyblob.consume_blob
       let data_offset ← lift (UScalar.cast .Usize val1)
       if data_offset != next_blob_offset
       then
-        let ec ←
-          android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
         let e ←
           anyhow.error.Error.new error.Error.Insts.CoreErrorError
-            (error.Error.Km ec)
+            (error.Error.Km
+            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
         let a ←
           core.fmt.rt.Argument.new_display Usize.Insts.CoreFmtDisplay
             data_offset
@@ -9307,11 +9322,10 @@ def sw_keyblob.consume_blob
         let i1 := Slice.len blob_data
         if i > i1
         then
-          let ec ←
-            android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB
           let e ←
             anyhow.error.Error.new error.Error.Insts.CoreErrorError
-              (error.Error.Km ec)
+              (error.Error.Km
+              android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB)
           let i2 := Slice.len blob_data
           let a ←
             core.fmt.rt.Argument.new_display Usize.Insts.CoreFmtDisplay

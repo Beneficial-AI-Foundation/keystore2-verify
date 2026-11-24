@@ -44,9 +44,49 @@ to a copy of the tree (the checkout is never edited). Cargo arguments:
 --opaque crate::sw_keyblob::hidden_params
 --opaque binder::StatusCode
 --opaque binder::ExceptionCode
+--include android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::_::P_224
+--include android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::_::P_256
+--include android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::_::P_384
+--include android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::_::P_521
+--include android_hardware_security_keymint::aidl::android::hardware::security::keymint::ErrorCode::_::INVALID_KEY_BLOB
+--include android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::_::PKCS8
+--include android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::_::RAW
+--include android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::_::ALGORITHM
+--include android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::_::EC_CURVE
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::CONVERT_STORAGE_KEY_TO_EPHEMERAL
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::DELETE
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::GEN_UNIQUE_ID
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::GET_INFO
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::GRANT
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::MANAGE_BLOB
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::REBIND
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::REQ_FORCED_OP
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::UPDATE
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::USE
+--include android_system_keystore2::aidl::android::system::keystore2::KeyPermission::_::USE_DEV_ID
+--include android_system_keystore2::aidl::android::system::keystore2::ResponseCode::_::INVALID_ARGUMENT
+--include keystore2_crypto::AES_256_KEY_LENGTH
+--include log::STATIC_MAX_LEVEL
+--include core::option::_::ok_or_else
+--include core::result::_::or_else
+--include core::option::_::transpose
+--include keystore2_selinux::_::perm
+--include crate::error::_::sys
+--include android_system_keystore2::aidl::android::system::keystore2::ResponseCode::_::SYSTEM_ERROR
+--include core::hint::must_use
 ```
 
 Aeneas arguments: `-backend lean -emit-json`.
+
+## Items of other crates that are translated with their bodies
+
+Charon keeps the body of an item of another crate opaque unless `--include` names it. The
+`--include` arguments above name plain constants (the AIDL values such as `KeyFormat::RAW`,
+`ErrorCode::INVALID_KEY_BLOB` and the `KeyPermission` bits, `keystore2_crypto::AES_256_KEY_LENGTH`,
+`log::STATIC_MAX_LEVEL`) and six small functions (`Option::ok_or_else`, `Result::or_else`,
+`Option::transpose`, `core::hint::must_use`, `keystore2_selinux::Error::perm`, and
+`keystore2::error::Error::sys`), so the translation holds their real values and bodies and no
+statement has to assume them.
 
 ## Why some items are opaque
 
@@ -65,7 +105,7 @@ An opaque item has a signature in the translation and no body: Lean knows its ty
 | `binder::StatusCode`, `binder::ExceptionCode` | Enums with negative discriminants. Aeneas writes them into a `discriminant` attribute that the Aeneas Lean library reads as natural numbers only, so Lean rejects the file. |
 
 Items of the standard library and of the other crates that have no Lean model are axioms in the
-generated file as well: 120 axioms in all. A statement that depends on one of them says so.
+generated file as well: 91 axioms in all. A statement that depends on one of them says so.
 
 `Extraction/translation.json` maps each Rust item to its Lean name. `Extraction/.fvs-publication.json`
 records the hashes of the published files.

@@ -99,7 +99,7 @@
         "begin_line": 613,
         "end_line": 613
       },
-      "is_opaque": true,
+      "is_opaque": false,
       "can_fail": true,
       "can_diverge": false,
       "is_rec": false,
@@ -184,7 +184,7 @@
         "begin_line": 1361,
         "end_line": 1363
       },
-      "is_opaque": true,
+      "is_opaque": false,
       "can_fail": true,
       "can_diverge": false,
       "is_rec": false,
@@ -201,7 +201,7 @@
         "begin_line": 2239,
         "end_line": 2239
       },
-      "is_opaque": true,
+      "is_opaque": false,
       "can_fail": true,
       "can_diverge": false,
       "is_rec": false,
@@ -218,7 +218,7 @@
         "begin_line": 1556,
         "end_line": 1558
       },
-      "is_opaque": true,
+      "is_opaque": false,
       "can_fail": true,
       "can_diverge": false,
       "is_rec": false,
@@ -463,7 +463,7 @@
       "reducible": false
     },
     {
-      "def_id": 437,
+      "def_id": 438,
       "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter.Insts.CoreCmpPartialEqKeyParameter.eq",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::{impl core::cmp::PartialEq<android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter> for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter}::eq",
@@ -599,7 +599,7 @@
       "reducible": false
     },
     {
-      "def_id": 439,
+      "def_id": 440,
       "lean_name": "keystore2.anyhow.Error.Insts.CoreConvertFrom.from",
       "lean_file": "Keystore2.lean",
       "rust_name": "anyhow::error::{impl core::convert::From<E> for anyhow::Error}::from",
@@ -616,7 +616,7 @@
       "reducible": false
     },
     {
-      "def_id": 475,
+      "def_id": 476,
       "lean_name": "keystore2.keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2_crypto::error::{impl core::fmt::Debug for keystore2_crypto::error::Error}::fmt",
@@ -633,7 +633,7 @@
       "reducible": false
     },
     {
-      "def_id": 476,
+      "def_id": 477,
       "lean_name": "keystore2.keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2_crypto::error::{impl core::fmt::Display for keystore2_crypto::error::Error}::fmt",
@@ -922,7 +922,7 @@
       "reducible": false
     },
     {
-      "def_id": 402,
+      "def_id": 403,
       "lean_name": "keystore2.keystore2_selinux.Error.Insts.CoreFmtDebug.fmt",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2_selinux::{impl core::fmt::Debug for keystore2_selinux::Error}::fmt",
@@ -939,7 +939,7 @@
       "reducible": false
     },
     {
-      "def_id": 403,
+      "def_id": 404,
       "lean_name": "keystore2.keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2_selinux::{impl core::fmt::Display for keystore2_selinux::Error}::fmt",
@@ -966,7 +966,7 @@
         "begin_line": 81,
         "end_line": 81
       },
-      "is_opaque": true,
+      "is_opaque": false,
       "can_fail": true,
       "can_diverge": false,
       "is_rec": false,
@@ -1024,7 +1024,7 @@
       "reducible": false
     },
     {
-      "def_id": 417,
+      "def_id": 418,
       "lean_name": "keystore2.Tuple.Insts.Log__private_apiSealedKVs.into_kvs",
       "lean_file": "Keystore2.lean",
       "rust_name": "log::__private_api::{impl log::__private_api::sealed::KVs<'a> for ()}::into_kvs",
@@ -1041,7 +1041,7 @@
       "reducible": false
     },
     {
-      "def_id": 420,
+      "def_id": 421,
       "lean_name": "keystore2.log.__private_api.GlobalLogger.Insts.LogLog.flush",
       "lean_file": "Keystore2.lean",
       "rust_name": "log::__private_api::{impl log::Log for log::__private_api::GlobalLogger}::flush",
@@ -1058,7 +1058,7 @@
       "reducible": false
     },
     {
-      "def_id": 419,
+      "def_id": 420,
       "lean_name": "keystore2.log.__private_api.GlobalLogger.Insts.LogLog.log",
       "lean_file": "Keystore2.lean",
       "rust_name": "log::__private_api::{impl log::Log for log::__private_api::GlobalLogger}::log",
@@ -1075,7 +1075,7 @@
       "reducible": false
     },
     {
-      "def_id": 418,
+      "def_id": 419,
       "lean_name": "keystore2.log.__private_api.GlobalLogger.Insts.LogLog.enabled",
       "lean_file": "Keystore2.lean",
       "rust_name": "log::__private_api::{impl log::Log for log::__private_api::GlobalLogger}::enabled",
@@ -1126,7 +1126,7 @@
       "reducible": false
     },
     {
-      "def_id": 471,
+      "def_id": 472,
       "lean_name": "keystore2.log.Level.Insts.CoreCmpPartialEqLevelFilter.eq",
       "lean_file": "Keystore2.lean",
       "rust_name": "log::{impl core::cmp::PartialEq<log::LevelFilter> for log::Level}::eq",
@@ -1143,7 +1143,7 @@
       "reducible": false
     },
     {
-      "def_id": 415,
+      "def_id": 416,
       "lean_name": "keystore2.log.Level.Insts.CoreCmpPartialOrdLevelFilter.partial_cmp",
       "lean_file": "Keystore2.lean",
       "rust_name": "log::{impl core::cmp::PartialOrd<log::LevelFilter> for log::Level}::partial_cmp",
@@ -1483,7 +1483,7 @@
       "reducible": false
     },
     {
-      "def_id": 421,
+      "def_id": 422,
       "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.expand_key.closure.Insts.CoreOpsFunctionFnOnceTupleShared0ZVecResultZVecError.call_once",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::expand_key::{impl core::ops::function::FnOnce<(&'_0 keystore2_crypto::zvec::ZVec,), core::result::Result<keystore2_crypto::zvec::ZVec, keystore2_crypto::error::Error>> for keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::expand_key::{closure}<'_0, '_1, '_2>}::call_once",
@@ -1551,7 +1551,7 @@
       "reducible": false
     },
     {
-      "def_id": 443,
+      "def_id": 444,
       "lean_name": "keystore2.P.Insts.CoreOpsFunctionFnOnceTupleECKeyECDHPrivateKey.call_once",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2::ec_crypto::{impl core::ops::function::FnOnce<(keystore2_crypto::ECKey,), keystore2::ec_crypto::ECDHPrivateKey> for keystore2::ec_crypto::ECDHPrivateKey}::call_once",
@@ -1670,7 +1670,7 @@
       "reducible": false
     },
     {
-      "def_id": 447,
+      "def_id": 448,
       "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.decrypt_message.closure.Insts.CoreOpsFunctionFnOnceTupleErrorResultZVecError.call_once",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message::{impl core::ops::function::FnOnce<(keystore2_crypto::error::Error,), core::result::Result<keystore2_crypto::zvec::ZVec, anyhow::Error>> for keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message::{closure}<'_0, '_1, '_2, '_3, '_4, '_5, '_6>}::call_once",
@@ -1704,7 +1704,7 @@
       "reducible": false
     },
     {
-      "def_id": 404,
+      "def_id": 405,
       "lean_name": "keystore2.error.Error.Insts.CoreFmtDebug.fmt",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2::error::{impl core::fmt::Debug for keystore2::error::Error}::fmt",
@@ -1721,7 +1721,7 @@
       "reducible": false
     },
     {
-      "def_id": 405,
+      "def_id": 406,
       "lean_name": "keystore2.error.Error.Insts.CoreFmtDisplay.fmt",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2::error::{impl core::fmt::Display for keystore2::error::Error}::fmt",
@@ -1748,7 +1748,7 @@
         "begin_line": 90,
         "end_line": 92
       },
-      "is_opaque": true,
+      "is_opaque": false,
       "can_fail": true,
       "can_diverge": false,
       "is_rec": false,
@@ -3499,7 +3499,7 @@
         "begin_line": 100,
         "end_line": 108
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 47,
@@ -3512,7 +3512,7 @@
         "begin_line": 100,
         "end_line": 108
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 48,
@@ -3525,7 +3525,7 @@
         "begin_line": 100,
         "end_line": 108
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 49,
@@ -3538,7 +3538,7 @@
         "begin_line": 100,
         "end_line": 108
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 42,
@@ -3551,7 +3551,7 @@
         "begin_line": 112,
         "end_line": 204
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 43,
@@ -3564,7 +3564,7 @@
         "begin_line": 363,
         "end_line": 369
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 44,
@@ -3577,7 +3577,7 @@
         "begin_line": 363,
         "end_line": 369
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 41,
@@ -3590,7 +3590,7 @@
         "begin_line": 492,
         "end_line": 563
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 45,
@@ -3603,10 +3603,10 @@
         "begin_line": 492,
         "end_line": 563
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 138,
+      "def_id": 139,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.CONVERT_STORAGE_KEY_TO_EPHEMERAL",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::CONVERT_STORAGE_KEY_TO_EPHEMERAL",
@@ -3616,10 +3616,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 139,
+      "def_id": 140,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.DELETE",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::DELETE",
@@ -3629,10 +3629,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 140,
+      "def_id": 141,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GEN_UNIQUE_ID",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GEN_UNIQUE_ID",
@@ -3642,10 +3642,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 141,
+      "def_id": 142,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GET_INFO",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GET_INFO",
@@ -3655,10 +3655,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 142,
+      "def_id": 143,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GRANT",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GRANT",
@@ -3668,10 +3668,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 143,
+      "def_id": 144,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.MANAGE_BLOB",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::MANAGE_BLOB",
@@ -3681,10 +3681,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 144,
+      "def_id": 145,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REBIND",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REBIND",
@@ -3694,10 +3694,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 145,
+      "def_id": 146,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REQ_FORCED_OP",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REQ_FORCED_OP",
@@ -3707,10 +3707,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 146,
+      "def_id": 147,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.UPDATE",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::UPDATE",
@@ -3720,10 +3720,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 147,
+      "def_id": 148,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE",
@@ -3733,10 +3733,10 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 148,
+      "def_id": 149,
       "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE_DEV_ID",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE_DEV_ID",
@@ -3746,7 +3746,7 @@
         "begin_line": 267,
         "end_line": 283
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 29,
@@ -3759,10 +3759,23 @@
         "begin_line": 300,
         "end_line": 323
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 101,
+      "def_id": 96,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.SYSTEM_ERROR",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::ResponseCode::{android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode}::SYSTEM_ERROR",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 300,
+        "end_line": 323
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 102,
       "lean_name": "keystore2.keystore2_crypto.AES_256_KEY_LENGTH",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2_crypto::AES_256_KEY_LENGTH",
@@ -3772,10 +3785,10 @@
         "begin_line": 37,
         "end_line": 37
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
-      "def_id": 153,
+      "def_id": 154,
       "lean_name": "keystore2.log.STATIC_MAX_LEVEL",
       "lean_file": "Keystore2.lean",
       "rust_name": "log::STATIC_MAX_LEVEL",
@@ -3785,7 +3798,7 @@
         "begin_line": 1611,
         "end_line": 1611
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 7,
@@ -3850,7 +3863,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 62,
@@ -3863,7 +3876,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 63,
@@ -3876,7 +3889,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 64,
@@ -3889,7 +3902,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 65,
@@ -3902,7 +3915,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 66,
@@ -3915,7 +3928,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 67,
@@ -3928,7 +3941,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 68,
@@ -3941,7 +3954,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 69,
@@ -3954,7 +3967,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 70,
@@ -3967,7 +3980,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 71,
@@ -3980,7 +3993,7 @@
         "begin_line": 54,
         "end_line": 100
       },
-      "can_fail": true
+      "can_fail": false
     },
     {
       "def_id": 73,
@@ -4521,7 +4534,7 @@
       "impl_trait_is_builtin": true
     },
     {
-      "def_id": 144,
+      "def_id": 145,
       "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter.Insts.CoreCmpPartialEqKeyParameter",
       "lean_file": "Keystore2.lean",
       "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::{impl core::cmp::PartialEq<android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter> for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter}",
@@ -4596,7 +4609,7 @@
       "impl_trait_is_builtin": false
     },
     {
-      "def_id": 148,
+      "def_id": 149,
       "lean_name": "keystore2.anyhow.Error.Insts.CoreConvertFrom",
       "lean_file": "Keystore2.lean",
       "rust_name": "anyhow::error::{impl core::convert::From<E> for anyhow::Error}",
@@ -4611,7 +4624,7 @@
       "impl_trait_is_builtin": true
     },
     {
-      "def_id": 167,
+      "def_id": 168,
       "lean_name": "keystore2.keystore2_crypto.error.Error.Insts.CoreFmtDebug",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2_crypto::error::{impl core::fmt::Debug for keystore2_crypto::error::Error}",
@@ -4626,7 +4639,7 @@
       "impl_trait_is_builtin": true
     },
     {
-      "def_id": 168,
+      "def_id": 169,
       "lean_name": "keystore2.keystore2_crypto.error.Error.Insts.CoreFmtDisplay",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2_crypto::error::{impl core::fmt::Display for keystore2_crypto::error::Error}",
@@ -4731,7 +4744,7 @@
       "impl_trait_is_builtin": false
     },
     {
-      "def_id": 164,
+      "def_id": 165,
       "lean_name": "keystore2.log.Level.Insts.CoreCmpPartialEqLevelFilter",
       "lean_file": "Keystore2.lean",
       "rust_name": "log::{impl core::cmp::PartialEq<log::LevelFilter> for log::Level}",
@@ -5001,7 +5014,7 @@
       "impl_trait_is_builtin": true
     },
     {
-      "def_id": 151,
+      "def_id": 152,
       "lean_name": "keystore2.P.Insts.CoreOpsFunctionFnOnceTupleECKeyECDHPrivateKey",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2::ec_crypto::{impl core::ops::function::FnOnce<(keystore2_crypto::ECKey,), keystore2::ec_crypto::ECDHPrivateKey> for keystore2::ec_crypto::ECDHPrivateKey}",
@@ -5016,7 +5029,7 @@
       "impl_trait_is_builtin": true
     },
     {
-      "def_id": 157,
+      "def_id": 158,
       "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.decrypt_message.closure.Insts.CoreOpsFunctionFnOnceTupleErrorResultZVecError",
       "lean_file": "Keystore2.lean",
       "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message::{impl core::ops::function::FnOnce<(keystore2_crypto::error::Error,), core::result::Result<keystore2_crypto::zvec::ZVec, anyhow::Error>> for keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message::{closure}<'_0, '_1, '_2, '_3, '_4, '_5, '_6>}",
