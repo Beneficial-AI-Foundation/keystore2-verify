@@ -286,17 +286,25 @@ and calls `munlock`; an `munlock` error is only logged. -/
 def VecDequeClearLaw {Q T : Type} (view : Q → List T) (clear : Q → Result Q) : Prop :=
   ∀ q, ∃ q', clear q = ok q' ∧ view q' = []
 
-/-- The length below which `push_back` is assumed to succeed: a 64th of the largest `usize`.
-For an element of at most 64 bytes (a `ZVec` has 24), the capacity then stays far below the
-limit of `isize::MAX` bytes at which Rust panics with "capacity overflow". -/
-def queueBound : Nat := Std.Usize.max / 64
+/-- The length below which `push_back` is assumed to succeed: a 128th of the largest `usize`,
+that is `2^57 - 1` on 64-bit targets.
+The bound is justified only for small elements. When the queue is full, Rust doubles the
+capacity, and it panics with "capacity overflow" if the new buffer would exceed `isize::MAX`
+bytes. For `ZVec` (24 bytes, the element type of the verified code) the buffer then holds at
+most `2 * 2^57 * 24 < 2^63` bytes, so the bound is safe. For an element of `s` bytes the bound
+would have to be at most `isize::MAX / (2 * s)`: a larger element type needs a smaller one. -/
+def queueBound : Nat := Std.Usize.max / 128
 
 /-- Law for `VecDeque::push_back` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-push-back`).
 If the queue has fewer than `queueBound` elements, `push_back q x` never panics, and the queue
 it returns holds the old elements and then `x`. Nothing is said for longer queues: Rust panics
 on capacity overflow there. The bound keeps the laws consistent with `len`, which returns a
-`usize`. Idealisation: allocation never fails. -/
+`usize`. Idealisation: allocation never fails.
+The law is asserted of the real `push_back` only at the element type of the verified code,
+`ZVec` with the global allocator (see `ZVecQueuePushBackLaw`). For a larger element type the
+bound would have to be smaller (see `queueBound`); the abstract shape is kept for other types
+only so that the consistency of the laws can be stated for every type. -/
 def VecDequePushBackLaw {Q T : Type} (view : Q → List T) (push_back : Q → T → Result Q) :
     Prop :=
   ∀ q x, (view q).length < queueBound →
@@ -314,6 +322,46 @@ def VecDequeSplitOffLaw {Q T : Type} (view : Q → List T)
   (∀ q n, (view q).length < n.val → split_off q n = fail Error.panic) ∧
   (∀ q n, n.val ≤ (view q).length → ∃ tl hd, split_off q n = ok (tl, hd) ∧
     view tl = (view q).drop n.val ∧ view hd = (view q).take n.val)
+
+/-! ## The queue of `ZVec`
+
+The one real instance of the six queue laws asserted by this file: the field `cache` of
+`BootLevelKeyCache` (`keystore2/src/boot_level_keys.rs`) has the type `VecDeque<ZVec>` with the
+global allocator. `view` is the shared view, front of the queue first. -/
+
+section ZVecQueue
+
+open keystore2.alloc.collections.vec_deque
+
+/-- The queue type of the field `cache` of `BootLevelKeyCache`. -/
+abbrev ZVecQueue : Type :=
+  VecDeque keystore2_crypto.zvec.ZVec alloc.alloc.Global
+
+/-- `VecDeque::new` for `ZVec`. -/
+def ZVecQueueNewLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
+  VecDequeNewLaw view (VecDequeTGlobal.new keystore2_crypto.zvec.ZVec)
+
+/-- `VecDeque::len` for `ZVec`. -/
+def ZVecQueueLenLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
+  VecDequeLenLaw view VecDeque.len
+
+/-- `VecDeque::is_empty` for `ZVec`. -/
+def ZVecQueueIsEmptyLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
+  VecDequeIsEmptyLaw view VecDeque.is_empty
+
+/-- `VecDeque::clear` for `ZVec`. -/
+def ZVecQueueClearLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
+  VecDequeClearLaw view VecDeque.clear
+
+/-- `VecDeque::push_back` for `ZVec`. -/
+def ZVecQueuePushBackLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
+  VecDequePushBackLaw view VecDeque.push_back
+
+/-- `VecDeque::split_off` for `ZVec`, with the clone instance of the global allocator. -/
+def ZVecQueueSplitOffLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
+  VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal)
+
+end ZVecQueue
 
 /-! ## Standard library -/
 
