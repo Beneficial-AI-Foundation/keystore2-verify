@@ -3,9 +3,8 @@ import Keystore2Verify.Specs.Defs.Externals
 /-!
 # Definitions for the statements about `permission.rs`
 
-The value tables of the two permission enums, bit sets, the key domains, the context laws at
-the `context` calls of the three `check_*` functions, and the hypotheses that name the target
-context. Nothing here is an axiom.
+The value tables of the two permission enums, bit sets, the key domains, and the context laws at
+the `context` calls of the three `check_*` functions. Nothing here is an axiom.
 -/
 
 namespace Keystore2Verify.Permission
@@ -168,34 +167,11 @@ abbrev KsStringCtxLaw (root : anyhow.Error → ErrRoot) : Prop :=
       (StdBlanket KsErrorError)
       StringDisplay)
 
-/-! ## The target context
+/-! ## Coverage by an access vector -/
 
-`check_grant_permission` and `check_key_permission` first compute a target SELinux context from
-the key descriptor. These hypotheses say that the computation succeeded and name the context as
-a `CStr`. -/
-
-/-- The target context `c` for the domains `APP` and `SELINUX`, as `check_grant_permission` and
-`check_key_permission` compute it. For `APP` the caller uid equals the namespace and `getcon`
-returned a context `ctx`. For `SELINUX` the lookup of the namespace returned a context `ctx`. In
-both cases `c` is the view of `ctx` as a `CStr`. -/
-def AppSelinuxTarget (caller_uid : utils.AppUid) (key : KeyDesc) (c : CStr) :
-    Prop :=
-  ∃ ctx, contextCStr ctx = ok c ∧
-    ((key.domain = domainApp ∧ caller_uid = key.nspace ∧
-        keystore2_selinux.getcon = ok (.Ok ctx)) ∨
-      (key.domain = domainSelinux ∧
-        permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)))
-
-/-- The target context `c` for the domain `BLOB`, as `check_key_permission` computes it. The
-lookup of the namespace returned a context `ctx`, `c` is its view as a `CStr`, and the check of
-the permission `ManageBlob` of the caller returned `Ok`. -/
-def BlobTarget (caller_ctx : CStr) (key : KeyDesc) (c : CStr) :
-    Prop :=
-  ∃ ctx, contextCStr ctx = ok c ∧ key.domain = domainBlob ∧
-    permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx) ∧
-    keystore2_selinux.check_permission
-      Keystore2_selinuxClassPermission caller_ctx c
-      permission.KeyPerm.ManageBlob = ok (.Ok ())
+/-- Bit `i` is a bit that is no `KeyPerm`: bit 10 (`USE_NO_LSKF_BINDING`) and bits 12 to 31.
+`KeyPerm::from(1 << i)` is `KeyPerm::None` for exactly these bits (and for no other bit). -/
+def UnknownBit (i : Nat) : Prop := i = 10 ∨ (12 ≤ i ∧ i < 32)
 
 /-- The access vector covers `perm`: it is `some s`, and `s` includes the bit set of `perm`. -/
 def Covers (perm : permission.KeyPerm) (access_vector : Option permission.KeyPermSet) : Prop :=

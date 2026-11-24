@@ -19,10 +19,13 @@ open permission.KeyPerm.Insts
 `Covers perm access_vector` says that step 0 applies. The theorems about steps 1 and 2 assume that
 it does not (`¬ Covers perm access_vector`): this includes `access_vector = none`.
 In the theorems, `contextCStr ctx = ok c` says that the context `ctx` has the view `c` as a
-`CStr`, `AppSelinuxTarget` and `BlobTarget` say that step 1 succeeded with the target `c`.
-A hypothesis about a call of `check_permission` is a hypothesis about that call only. For the
-domain `BLOB` with `perm = KeyPerm.ManageBlob` the two checks are the same call, and a theorem
-that assumes different outcomes for them has no instance. -/
+`CStr`.
+A hypothesis about a call of `check_permission` is a hypothesis about that call only. The
+translation models a repeated call with the same arguments as one pure function, so no theorem
+here assumes two outcomes for two calls with the same arguments. For the domain `BLOB` with
+`perm = ManageBlob`, step 1 and step 2 make the same call: the theorems about the final check
+assume `perm ≠ ManageBlob`. That execution is covered only where the first call already fails
+(`check_key_permission_blob_manage_err`). -/
 
 /-- exact: the access vector is `some av` and `av` includes the bit set of `perm`. The result is
 `Ok`, for every domain (`GRANT`, `KEY_ID` and unknown numbers included), every caller uid and
@@ -167,34 +170,88 @@ theorem check_key_permission_blob_manage_err (root : anyhow.Error → ErrRoot)
         ok (.Err e') ∧ root e' = root e := by
   sorry
 
-/-- conditional: the access vector does not cover `perm`, the target is `c`, and the check of
-`perm` against `c` returns `Ok`. The result is `Ok`. The target is `c` as `AppSelinuxTarget` or
-`BlobTarget` say. Hypotheses: the `from_str_nonconst` and `format` laws, the `context` law of
-`check_key_permission_app_getcon_err`, and the outcomes those two definitions name and of the
-check of `perm`. -/
-theorem check_key_permission_check_ok (root : anyhow.Error → ErrRoot)
+/-- conditional: the access vector does not cover `perm`, the domain is `APP` (the uid equals the
+namespace and `getcon` returns `ctx`) or `SELINUX` (the lookup returns `ctx`), and the check of
+`perm` against the view `c` of `ctx` returns `Ok`. The result is `Ok`. Hypotheses: the
+`from_str_nonconst` and `format` laws, the `context` law of `check_key_permission_app_getcon_err`,
+and the outcomes of `getcon` or the lookup, of the view of `ctx`, and of the check of `perm`. -/
+theorem check_key_permission_app_selinux_check_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
     (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
     (hnc : ¬ Covers perm access_vector) (c : CStr)
-    (htarget : AppSelinuxTarget caller_uid key c ∨ BlobTarget caller_ctx key c)
+    (ctx : keystore2_selinux.Context) (hc : contextCStr ctx = ok c)
+    (htarget : (key.domain = domainApp ∧ caller_uid = key.nspace ∧
+        keystore2_selinux.getcon = ok (.Ok ctx)) ∨
+      (key.domain = domainSelinux ∧
+        permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)))
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       perm = ok (.Ok ())) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector =
       ok (.Ok ()) := by
   sorry
 
-/-- conditional: the access vector does not cover `perm`, the target is `c`, and the check of
-`perm` against `c` returns an error `e`. The result is an error with the same root cause as `e`:
-no message is added. Hypotheses: the same as `check_key_permission_check_ok`. -/
-theorem check_key_permission_check_err (root : anyhow.Error → ErrRoot)
+/-- conditional: the same as `check_key_permission_app_selinux_check_ok`, but the check of `perm`
+returns an error `e`. The result is an error with the same root cause as `e`: no message is added.
+Hypotheses: the same. -/
+theorem check_key_permission_app_selinux_check_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
     (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
     (hnc : ¬ Covers perm access_vector) (c : CStr)
-    (htarget : AppSelinuxTarget caller_uid key c ∨ BlobTarget caller_ctx key c)
+    (ctx : keystore2_selinux.Context) (hc : contextCStr ctx = ok c)
+    (htarget : (key.domain = domainApp ∧ caller_uid = key.nspace ∧
+        keystore2_selinux.getcon = ok (.Ok ctx)) ∨
+      (key.domain = domainSelinux ∧
+        permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)))
+    (e : anyhow.Error)
+    (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
+      perm = ok (.Err e)) :
+    ∃ e', permission.check_key_permission caller_uid caller_ctx perm key access_vector =
+        ok (.Err e') ∧ root e' = root e := by
+  sorry
+
+/-- conditional: the access vector does not cover `perm`, the domain is `BLOB`, `perm` is not
+`ManageBlob`, the lookup returns `ctx`, the check of `ManageBlob` against the view `c` of `ctx`
+returns `Ok`, and the check of `perm` against `c` returns `Ok`. The result is `Ok`. `perm` is not
+`ManageBlob`, so the two checks are calls with different arguments. Hypotheses: the laws of
+`check_key_permission_app_selinux_check_ok`, and the outcomes of the lookup, of the view of `ctx`,
+and of the two checks. -/
+theorem check_key_permission_blob_check_ok (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
+    (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
+    (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
+    (hnc : ¬ Covers perm access_vector) (hdom : key.domain = domainBlob)
+    (hperm : perm ≠ permission.KeyPerm.ManageBlob)
+    (ctx : keystore2_selinux.Context) (c : CStr)
+    (hlook : permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))
+    (hc : contextCStr ctx = ok c)
+    (hmanage : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
+      permission.KeyPerm.ManageBlob = ok (.Ok ()))
+    (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
+      perm = ok (.Ok ())) :
+    permission.check_key_permission caller_uid caller_ctx perm key access_vector =
+      ok (.Ok ()) := by
+  sorry
+
+/-- conditional: the same as `check_key_permission_blob_check_ok`, but the check of `perm` returns
+an error `e`. The result is an error with the same root cause as `e`: no message is added.
+Hypotheses: the same. -/
+theorem check_key_permission_blob_check_err (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
+    (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
+    (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
+    (hnc : ¬ Covers perm access_vector) (hdom : key.domain = domainBlob)
+    (hperm : perm ≠ permission.KeyPerm.ManageBlob)
+    (ctx : keystore2_selinux.Context) (c : CStr)
+    (hlook : permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))
+    (hc : contextCStr ctx = ok c)
+    (hmanage : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
+      permission.KeyPerm.ManageBlob = ok (.Ok ()))
     (e : anyhow.Error)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       perm = ok (.Err e)) :

@@ -18,10 +18,14 @@ open CoreConvertFromI32 renaming «from» → keyPermFromI32
    is no `KeyPerm` is checked as `KeyPerm::None`.
 
 In the theorems, `contextCStr ctx = ok c` says that the context `ctx` has the view `c` as a
-`CStr`, and `AppSelinuxTarget caller_uid key c` says that step 1 succeeded with the target `c`.
+`CStr`. `htarget` says that step 1 succeeded: for `APP` the uid equals the namespace and `getcon`
+returned `ctx`, for `SELINUX` the lookup returned `ctx`.
 A hypothesis about a call of `check_permission` for the permission `p` is a hypothesis about that
-call only. Two bits that give the same `KeyPerm` (all the bits that are no `KeyPerm` give `None`)
-refer to the same call, and a theorem that assumes different outcomes for them has no instance. -/
+call only. The translation models a repeated call with the same arguments as one pure function, so
+no theorem here assumes two outcomes for two calls with the same arguments. The loop checks bits
+that are no `KeyPerm` as `KeyPerm::None`, so two such bits make two identical calls. These
+executions are not covered, except where the first such call already fails
+(`check_grant_permission_loop_err`): see the hypotheses `hone` and `hfirst`. -/
 
 /-- conditional: the domain is `APP` and the caller uid differs from the namespace. The result is
 an error whose root cause is `selinux::Error::PermissionDenied`. Hypothesis: the `context` law for
@@ -79,13 +83,17 @@ theorem check_grant_permission_other_domain (root : anyhow.Error → ErrRoot)
 /-- conditional: the target is `c` and the check of `Grant` returns an error `e`. The result is an
 error with the same root cause as `e`, whatever `access_vec` is. Hypotheses: the `context` laws
 for a context value and for `()` with a `&str` message (`AnyhowStrCtxLaw`), and the outcomes that
-`AppSelinuxTarget` names and the outcome of `check_permission` for `Grant`. -/
+`htarget` names and the outcome of `check_permission` for `Grant`. -/
 theorem check_grant_permission_grant_check_err (root : anyhow.Error → ErrRoot)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (hctxU : AnyhowStrCtxLaw root Unit)
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
     (access_vec : permission.KeyPermSet) (key : KeyDesc) (c : CStr)
-    (htarget : AppSelinuxTarget caller_uid key c) (e : anyhow.Error)
+    (ctx : keystore2_selinux.Context) (hc : contextCStr ctx = ok c)
+    (htarget : (key.domain = domainApp ∧ caller_uid = key.nspace ∧
+        keystore2_selinux.getcon = ok (.Ok ctx)) ∨
+      (key.domain = domainSelinux ∧
+        permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))) (e : anyhow.Error)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.Grant = ok (.Err e)) :
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
@@ -95,15 +103,19 @@ theorem check_grant_permission_grant_check_err (root : anyhow.Error → ErrRoot)
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, and `access_vec` has bit 3
 set (the value of `Grant`). The result is an error whose root cause is
 `selinux::Error::PermissionDenied`. No other permission is checked. Hypotheses: the `context`
-laws of `check_grant_permission_grant_check_err`, the `context` law for a SELinux error
-(`SelinuxStrCtxLaw`), and the outcomes that `AppSelinuxTarget` names and of `check_permission` for
+of `check_grant_permission_grant_check_err`, the `context` law for a SELinux error
+(`SelinuxStrCtxLaw`), and the outcomes `htarget` names and of `check_permission` for
 `Grant`. -/
 theorem check_grant_permission_grant_in_set (root : anyhow.Error → ErrRoot)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (hctxU : AnyhowStrCtxLaw root Unit) (hsel : SelinuxStrCtxLaw root)
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
     (access_vec : permission.KeyPermSet) (key : KeyDesc) (c : CStr)
-    (htarget : AppSelinuxTarget caller_uid key c)
+    (ctx : keystore2_selinux.Context) (hc : contextCStr ctx = ok c)
+    (htarget : (key.domain = domainApp ∧ caller_uid = key.nspace ∧
+        keystore2_selinux.getcon = ok (.Ok ctx)) ∨
+      (key.domain = domainSelinux ∧
+        permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)))
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.Grant = ok (.Ok ()))
     (hbit : HasBit access_vec 3) :
@@ -112,20 +124,27 @@ theorem check_grant_permission_grant_in_set (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, bit 3 of `access_vec` is not
-set, and for every set bit `i` the check of the permission `KeyPerm::from(1 << i)` returns `Ok`.
-The result is `Ok`. With the empty set no check is made in the loop. Hypotheses: the `context`
-laws of `check_grant_permission_grant_check_err`, the `context` law for `()` with a `String`
-message (`AnyhowStringCtxLaw`), and the outcomes that `AppSelinuxTarget` names and of the calls of
-`check_permission`. -/
+set, at most one set bit is no `KeyPerm` (`hone`: otherwise two identical checks of
+`KeyPerm::None` are made, which this model cannot tell apart), and for every set bit `i` the check
+of the permission `KeyPerm::from(1 << i)` returns `Ok`. The result is `Ok`. With the empty set
+no check is made in the loop. Hypotheses: the `context` laws of
+`check_grant_permission_grant_check_err`, the `context` law for `()` with a `String` message
+(`AnyhowStringCtxLaw`), and the outcomes `htarget` names and of the calls of `check_permission`. -/
 theorem check_grant_permission_ok (root : anyhow.Error → ErrRoot)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (hctxU : AnyhowStrCtxLaw root Unit) (hctxS : AnyhowStringCtxLaw root Unit)
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
     (access_vec : permission.KeyPermSet) (key : KeyDesc) (c : CStr)
-    (htarget : AppSelinuxTarget caller_uid key c)
+    (ctx : keystore2_selinux.Context) (hc : contextCStr ctx = ok c)
+    (htarget : (key.domain = domainApp ∧ caller_uid = key.nspace ∧
+        keystore2_selinux.getcon = ok (.Ok ctx)) ∨
+      (key.domain = domainSelinux ∧
+        permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)))
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.Grant = ok (.Ok ()))
     (hbit : ¬ HasBit access_vec 3)
+    (hone : ∀ i j, UnknownBit i → UnknownBit j → HasBit access_vec i → HasBit access_vec j →
+      i = j)
     (hloop : ∀ i, i < 32 → HasBit access_vec i → ∃ kp, keyPermFromI32 (bitVal i) = ok kp ∧
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ())) :
@@ -134,17 +153,24 @@ theorem check_grant_permission_ok (root : anyhow.Error → ErrRoot)
 
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, bit 3 of `access_vec` is not
 set, `i` is a set bit, the checks of the permissions of the set bits below `i` return `Ok`, and the
-check of the permission of bit `i` returns an error `e`. The result is an error with the same root
+check of the permission of bit `i` returns an error `e`. No earlier check is for the same
+permission (`hfirst`): otherwise the failing call would repeat an earlier call with the same
+arguments, which this model cannot tell apart. For a bit that is no `KeyPerm`, this says `i` is the
+lowest such set bit. The result is an error with the same root
 cause as `e`. The bits above `i` are not checked. Hypotheses: the `context` laws of
 `check_grant_permission_ok`, the `format` law (`AllocFmtFormatSpec`), and the outcomes that
-`AppSelinuxTarget` names and of the calls of `check_permission`. -/
+`htarget` names and of the calls of `check_permission`. -/
 theorem check_grant_permission_loop_err (root : anyhow.Error → ErrRoot)
     (hfmt : AllocFmtFormatSpec)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (hctxU : AnyhowStrCtxLaw root Unit) (hctxS : AnyhowStringCtxLaw root Unit)
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
     (access_vec : permission.KeyPermSet) (key : KeyDesc) (c : CStr)
-    (htarget : AppSelinuxTarget caller_uid key c)
+    (ctx : keystore2_selinux.Context) (hc : contextCStr ctx = ok c)
+    (htarget : (key.domain = domainApp ∧ caller_uid = key.nspace ∧
+        keystore2_selinux.getcon = ok (.Ok ctx)) ∨
+      (key.domain = domainSelinux ∧
+        permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)))
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.Grant = ok (.Ok ()))
     (hbit : ¬ HasBit access_vec 3)
@@ -152,7 +178,10 @@ theorem check_grant_permission_loop_err (root : anyhow.Error → ErrRoot)
     (hlow : ∀ j, j < i → HasBit access_vec j → ∃ kp, keyPermFromI32 (bitVal j) = ok kp ∧
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ()))
-    (kp : permission.KeyPerm) (hkp : keyPermFromI32 (bitVal i) = ok kp) (e : anyhow.Error)
+    (kp : permission.KeyPerm) (hkp : keyPermFromI32 (bitVal i) = ok kp)
+    (hfirst : ∀ j, j < i → HasBit access_vec j → ∀ kpj, keyPermFromI32 (bitVal j) = ok kpj →
+      kpj ≠ kp)
+    (e : anyhow.Error)
     (hbad : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
       ok (.Err e)) :
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
