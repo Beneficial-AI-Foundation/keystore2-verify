@@ -1,0 +1,8 @@
+{
+  "schema": "fvs-extract-patches/publication",
+  "version": 1,
+  "files": {
+    "Keystore2.lean": "e0b05a9dbdccf2aa5b5078ed54bd6b25369436643214dec06e45afa1a5ab18ca",
+    "translation.json": "b1dcf9ec0d429a0721461e3c7359173f26e0aa5574c61af3a5056970073c8b46"
+  }
+}
