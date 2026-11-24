@@ -145,8 +145,9 @@ The call never panics. An `Ok v` stays `Ok v`. An `Err x` becomes an `Err e` who
 wrapped standard error type.
 Idealisation: allocation never fails.
 Idealisation: destruction never panics. On the `Ok` branch Rust drops the unused context, and a
-destructor may panic in general. The verified code passes only `String` contexts, built by
-`format!`, whose drop cannot panic: assert the law only for that context type.
+destructor may panic in general. The verified code passes two context types: `&'static str`
+literals and `String` values built by `format!`. Neither can panic when dropped: assert the law
+only for these two.
 Source: `anyhow` `src/context.rs`, `impl Context for Result`. -/
 def ResultContextLaw {T E Err C : Type} (rootE : E → ErrRoot) (root : Err → ErrRoot)
     (context : core.result.Result T E → C → Result (core.result.Result T Err)) : Prop :=
