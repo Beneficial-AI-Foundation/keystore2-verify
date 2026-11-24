@@ -1,0 +1,31 @@
+Translation patch: keystore2::watchdog_helper::watchdog (feature `watchdog` off)
+
+Change: keystore2/src/watchdog_helper.rs, module `watchdog` under `cfg(not(feature = "watchdog"))`: `watch` and `watch_millis` become `pub`, and the constant `DEFAULT_TIMEOUT_MS` (500, as in the feature-on module) is declared on the line of `WatchPoint`.
+Why: the callers use `wd::watch`, `wd::watch_millis` and `wd::DEFAULT_TIMEOUT_MS`. The feature-off module has the first two private and lacks the constant, so keystore2 does not compile without the watchdog. Soong always builds with the feature on, which is why the off path was never compiled.
+Behaviour: unchanged for the feature-on build, which this patch does not touch. With the feature off, every watch point is `None` as before.
+Classification: A-mechanical
+Assumptions: none.
+Obligations: none.
+Independent: yes
+
+diff --git a/keystore2/src/watchdog_helper.rs b/keystore2/src/watchdog_helper.rs
+index 63383aa..04df8b8 100644
+--- a/keystore2/src/watchdog_helper.rs
++++ b/keystore2/src/watchdog_helper.rs
+@@ -55,13 +55,13 @@ pub mod watchdog {
+ #[cfg(not(feature = "watchdog"))]
+ pub mod watchdog {
+     /// Noop watch point.
+-    pub struct WatchPoint();
++    pub struct WatchPoint(); pub const DEFAULT_TIMEOUT_MS: u64 = 500;
+     /// Sets a Noop watch point.
+-    fn watch_millis(_: &'static str, _: u64) -> Option<WatchPoint> {
++    pub fn watch_millis(_: &'static str, _: u64) -> Option<WatchPoint> {
+         None
+     }
+     /// Sets a Noop watch point.
+-    fn watch(_: &'static str) -> Option<WatchPoint> {
++    pub fn watch(_: &'static str) -> Option<WatchPoint> {
+         None
+     }
+ 

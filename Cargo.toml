@@ -1,0 +1,47 @@
+# Cargo workspace added for the verification harness. The upstream tree is built by Soong and
+# has no Cargo manifests of its own; every member below either wraps an upstream source tree
+# unchanged (keystore2 and its reused helpers) or lives in fvs-harness/.
+#
+# Building needs the nightly toolchain pinned by fvs-harness/README.md (the stand-in crates use
+# `register_tool`), and `--locked` so the committed Cargo.lock decides every version.
+[workspace]
+resolver = "2"
+members = [
+    "keystore2",
+    "keystore2/selinux",
+    "keystore2/message_macro",
+    "keystore2/src/crypto",
+    "keystore2/src/km_compat",
+    "fvs-harness/binder",
+    "fvs-harness/aidl/android_hardware_security_keymint",
+    "fvs-harness/aidl/android_hardware_security_rkp",
+    "fvs-harness/aidl/android_hardware_security_secureclock",
+    "fvs-harness/aidl/android_hardware_security_sharedsecret",
+    "fvs-harness/aidl/android_os_permissions_aidl",
+    "fvs-harness/aidl/android_security_apc",
+    "fvs-harness/aidl/android_security_authorization",
+    "fvs-harness/aidl/android_security_compat",
+    "fvs-harness/aidl/android_security_maintenance",
+    "fvs-harness/aidl/android_security_metrics",
+    "fvs-harness/aidl/android_security_rkp_aidl",
+    "fvs-harness/aidl/android_system_keystore2",
+    "fvs-harness/aidl/apex_aidl_interface",
+    "fvs-harness/aidl/packagemanager_aidl",
+    "fvs-harness/util/bssl_crypto",
+    "fvs-harness/util/keystore2_flags",
+    "fvs-harness/util/rustutils",
+    "fvs-harness/util/structured_log",
+    "fvs-harness/bindgen/keystore2_crypto_bindgen",
+    "fvs-harness/bindgen/selinux_bindgen",
+    "fvs-harness/models/keystore2_aaid",
+    "fvs-harness/models/keystore2_apc_compat",
+    "fvs-harness/models/keystore2_hal_names",
+    "fvs-harness/models/postprocessor_client",
+    "fvs-harness/models/rkpd_client",
+]
+# Trees that carry their own manifests and are not part of this build.
+exclude = [
+    "hals",
+    "mls",
+    "prng_seeder/test",
+]

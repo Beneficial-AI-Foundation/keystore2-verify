@@ -1,0 +1,12 @@
+[package]
+name = "message_macro"
+version = "0.0.0"
+edition = "2021"
+publish = false
+autobins = false
+autotests = false
+autoexamples = false
+autobenches = false
+
+[lib]
+path = "src/lib.rs"
