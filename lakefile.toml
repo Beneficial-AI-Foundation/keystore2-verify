@@ -1,0 +1,17 @@
+name = "keystore2-verify"
+version = "0.1.0"
+defaultTargets = ["Keystore2Verify"]
+
+# The Lean backend of Aeneas, at the release whose `aeneas` and `charon` made the translation.
+[[require]]
+name = "aeneas"
+git = "https://github.com/AeneasVerif/aeneas"
+rev = "nightly-2026.11.09-5a392f4"
+subDir = "backends/lean"
+
+# Every module under formal/Keystore2Verify is built: the generated translation (Extraction),
+# the statements (Specs), the proofs (Proofs) and the hand-written assumptions (Trusted).
+[[lean_lib]]
+name = "Keystore2Verify"
+srcDir = "formal"
+globs = ["Keystore2Verify.+"]
