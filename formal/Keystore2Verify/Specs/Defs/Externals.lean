@@ -22,7 +22,8 @@ Every law holds for the real Rust function, with these labels:
 * **idealisation: formatting never panics.** No `Display` or `Debug` implementation reached by
   the verified code returns an error or panics, and no writer panics. The laws are stated for
   every implementation and every writer, which is stronger than the real library.
-* **idealisation: destruction never panics.** Dropping an element does not panic.
+* **idealisation: destruction never panics.** Dropping an element or an unused context does not
+  panic.
 * **idealisation: logging never panics.** Effects of logging are not modelled.
 * **target assumption.** The law depends on the target machine.
 
@@ -112,8 +113,9 @@ def ErrorFromLaw {Err E : Type} (root : Err → ErrRoot) (wrap : E → ErrRoot)
 
 /-- Law for `anyhow::Error::context` (register record `ks2-ext-anyhow-error-error-context`).
 `context e c` never panics. The new error has the same root cause as `e`.
-Idealisation: allocation never fails. Source: `anyhow` `Error::context`, which wraps the
-error in a `ContextError` whose `source` is `e`. -/
+Idealisation: allocation never fails. The context is moved into the new error, not dropped.
+Source: `anyhow` `Error::context`, which wraps the error in a `ContextError` whose `source` is
+`e`. -/
 def ErrorContextLaw {Err C : Type} (root : Err → ErrRoot)
     (context : Err → C → Result Err) : Prop :=
   ∀ e c, ∃ e', context e c = ok e' ∧ root e' = root e
@@ -121,8 +123,8 @@ def ErrorContextLaw {Err C : Type} (root : Err → ErrRoot)
 /-- Law for `StdError::ext_context` on `anyhow::Error` (register record
 `ks2-ext-anyhow-error-insts-anyhowcontextextstderror-ext-context`).
 `ext_context e c` never panics. The new error has the same root cause as `e`.
-Idealisation: allocation never fails. Source: `anyhow` `src/context.rs`, where this method
-calls `Error::context`. -/
+Idealisation: allocation never fails. The context is moved into the new error, not dropped.
+Source: `anyhow` `src/context.rs`, where this method calls `Error::context`. -/
 def ExtContextErrorLaw {Err C : Type} (root : Err → ErrRoot)
     (ext_context : Err → C → Result Err) : Prop :=
   ∀ e c, ∃ e', ext_context e c = ok e' ∧ root e' = root e
@@ -130,8 +132,8 @@ def ExtContextErrorLaw {Err C : Type} (root : Err → ErrRoot)
 /-- Law for `StdError::ext_context` on a standard error type (register record
 `ks2-ext-anyhow-context-ext-stderror-blanket-ext-context`).
 `ext_context x c` never panics. The new error has the root cause `x`, of class `wrap x`.
-Idealisation: allocation never fails. Source: `anyhow` `src/context.rs`, where this method
-calls `Error::from_context`. -/
+Idealisation: allocation never fails. The context is moved into the new error, not dropped.
+Source: `anyhow` `src/context.rs`, where this method calls `Error::from_context`. -/
 def ExtContextBlanketLaw {Err E C : Type} (root : Err → ErrRoot) (wrap : E → ErrRoot)
     (ext_context : E → C → Result Err) : Prop :=
   ∀ x c, ∃ e, ext_context x c = ok e ∧ root e = wrap x
@@ -141,8 +143,11 @@ def ExtContextBlanketLaw {Err E C : Type} (root : Err → ErrRoot) (wrap : E →
 The call never panics. An `Ok v` stays `Ok v`. An `Err x` becomes an `Err e` whose class is
 `rootE x`: `rootE` is `root` when the input error is an `anyhow::Error`, and `wrap` when it is a
 wrapped standard error type.
-Idealisation: allocation never fails. Source: `anyhow` `src/context.rs`, `impl Context for
-Result`. -/
+Idealisation: allocation never fails.
+Idealisation: destruction never panics. On the `Ok` branch Rust drops the unused context, and a
+destructor may panic in general. The verified code passes only `String` contexts, built by
+`format!`, whose drop cannot panic: assert the law only for that context type.
+Source: `anyhow` `src/context.rs`, `impl Context for Result`. -/
 def ResultContextLaw {T E Err C : Type} (rootE : E → ErrRoot) (root : Err → ErrRoot)
     (context : core.result.Result T E → C → Result (core.result.Result T Err)) : Prop :=
   (∀ v c, context (.Ok v) c = ok (.Ok v)) ∧
@@ -260,25 +265,22 @@ Observation: `VecDeque T A` is an opaque type. The view `view : Q → List T` gi
 front of the queue first. Source: Rust standard library documentation of
 `alloc::collections::VecDeque`. A theorem takes the view `view` once and passes it to every law. -/
 
-/-- Law for `VecDeque::new` (register record
-`ks2-ext-alloc-collections-vec-deque-vecdequetglobal-new`).
+/-- Law for `VecDeque::new` (the register record is on `ZVecQueueNewLaw`).
 `new` never panics, and the queue it returns is empty. `new` does not allocate. -/
 def VecDequeNewLaw {Q T : Type} (view : Q → List T) (new : Result Q) : Prop :=
   ∃ q, new = ok q ∧ view q = []
 
-/-- Law for `VecDeque::len` (register record `ks2-ext-alloc-collections-vec-deque-vecdeque-len`).
+/-- Law for `VecDeque::len` (the register record is on `ZVecQueueLenLaw`).
 `len` never panics and returns the number of elements. -/
 def VecDequeLenLaw {Q T : Type} (view : Q → List T) (len : Q → Result Std.Usize) : Prop :=
   ∀ q, ∃ n, len q = ok n ∧ n.val = (view q).length
 
-/-- Law for `VecDeque::is_empty` (register record
-`ks2-ext-alloc-collections-vec-deque-vecdeque-is-empty`).
+/-- Law for `VecDeque::is_empty` (the register record is on `ZVecQueueIsEmptyLaw`).
 `is_empty` never panics. It returns `true` exactly when the queue has no element. -/
 def VecDequeIsEmptyLaw {Q T : Type} (view : Q → List T) (is_empty : Q → Result Bool) : Prop :=
   ∀ q, ∃ b, is_empty q = ok b ∧ (b = true ↔ view q = [])
 
-/-- Law for `VecDeque::clear` (register record
-`ks2-ext-alloc-collections-vec-deque-vecdeque-clear`).
+/-- Law for `VecDeque::clear` (the register record is on `ZVecQueueClearLaw`).
 `clear` never panics. The queue it returns is empty. The Lean function returns the new queue.
 Idealisation: destruction never panics. `clear` drops the elements, and a destructor may panic
 in general. The element type in the verified code is `ZVec`, whose `drop` overwrites the buffer
@@ -295,8 +297,7 @@ most `2 * 2^57 * 24 < 2^63` bytes, so the bound is safe. For an element of `s` b
 would have to be at most `isize::MAX / (2 * s)`: a larger element type needs a smaller one. -/
 def queueBound : Nat := Std.Usize.max / 128
 
-/-- Law for `VecDeque::push_back` (register record
-`ks2-ext-alloc-collections-vec-deque-vecdeque-push-back`).
+/-- Law for `VecDeque::push_back` (the register record is on `ZVecQueuePushBackLaw`).
 If the queue has fewer than `queueBound` elements, `push_back q x` never panics, and the queue
 it returns holds the old elements and then `x`. Nothing is said for longer queues: Rust panics
 on capacity overflow there. The bound keeps the laws consistent with `len`, which returns a
@@ -310,8 +311,7 @@ def VecDequePushBackLaw {Q T : Type} (view : Q → List T) (push_back : Q → T 
   ∀ q x, (view q).length < queueBound →
     ∃ q', push_back q x = ok q' ∧ view q' = view q ++ [x]
 
-/-- Law for `VecDeque::split_off` (register record
-`ks2-ext-alloc-collections-vec-deque-vecdeque-split-off`).
+/-- Law for `VecDeque::split_off` (the register record is on `ZVecQueueSplitOffLaw`).
 `split_off q n` splits the queue at index `n`. If `n` is larger than the length, it panics
 (`fail`). Otherwise it returns a pair. Following the Aeneas convention for `&mut self`, the first
 component is the value Rust returns: the elements from index `n`. The second component is the
@@ -337,27 +337,45 @@ open keystore2.alloc.collections.vec_deque
 abbrev ZVecQueue : Type :=
   VecDeque keystore2_crypto.zvec.ZVec alloc.alloc.Global
 
-/-- `VecDeque::new` for `ZVec`. -/
+/-- Law for `VecDeque::new` for `ZVec` (register record
+`ks2-ext-alloc-collections-vec-deque-vecdequetglobal-new`).
+It is `VecDequeNewLaw` at the real axiom;
+see that law for what it says. -/
 def ZVecQueueNewLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeNewLaw view (VecDequeTGlobal.new keystore2_crypto.zvec.ZVec)
 
-/-- `VecDeque::len` for `ZVec`. -/
+/-- Law for `VecDeque::len` for `ZVec` (register record
+`ks2-ext-alloc-collections-vec-deque-vecdeque-len`).
+It is `VecDequeLenLaw` at the real axiom;
+see that law for what it says. -/
 def ZVecQueueLenLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeLenLaw view VecDeque.len
 
-/-- `VecDeque::is_empty` for `ZVec`. -/
+/-- Law for `VecDeque::is_empty` for `ZVec` (register record
+`ks2-ext-alloc-collections-vec-deque-vecdeque-is-empty`).
+It is `VecDequeIsEmptyLaw` at the real axiom;
+see that law for what it says. -/
 def ZVecQueueIsEmptyLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeIsEmptyLaw view VecDeque.is_empty
 
-/-- `VecDeque::clear` for `ZVec`. -/
+/-- Law for `VecDeque::clear` for `ZVec` (register record
+`ks2-ext-alloc-collections-vec-deque-vecdeque-clear`).
+It is `VecDequeClearLaw` at the real axiom;
+see that law for what it says. -/
 def ZVecQueueClearLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeClearLaw view VecDeque.clear
 
-/-- `VecDeque::push_back` for `ZVec`. -/
+/-- Law for `VecDeque::push_back` for `ZVec` (register record
+`ks2-ext-alloc-collections-vec-deque-vecdeque-push-back`).
+It is `VecDequePushBackLaw` at the real axiom;
+see that law for what it says. -/
 def ZVecQueuePushBackLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequePushBackLaw view VecDeque.push_back
 
-/-- `VecDeque::split_off` for `ZVec`, with the clone instance of the global allocator. -/
+/-- Law for `VecDeque::split_off` for `ZVec` (register record
+`ks2-ext-alloc-collections-vec-deque-vecdeque-split-off`).
+It is `VecDequeSplitOffLaw` at the real axiom;
+see that law for what it says, with the clone instance of the global allocator. -/
 def ZVecQueueSplitOffLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal)
 
