@@ -11,7 +11,7 @@ open CoreCmpPartialOrdBootLevel renaming partial_cmp → bootLevelPartialCmp
 open keystore2.alloc.collections.vec_deque
 
 /-- exact: if the level is not accessible, `advance_boot_level` returns `Ok ()` and leaves the
-cache unchanged (it only logs). -/
+cache unchanged. In the Rust source this path only logs. -/
 theorem BootLevelKeyCache_advance_boot_level_not_accessible
     (s s' : BootLevelKeyCache) (L : BootLevel) (r : core.result.Result Unit anyhow.Error)
     (hacc : BootLevelKeyCache.level_accessible s L = ok false)
@@ -75,10 +75,14 @@ theorem BootLevelKeyCache_advance_boot_level_err (root : anyhow.Error → ErrRoo
 /-- conditional: if the level is accessible and `get_hkdf_key` returned `Ok` with the cache `s1`,
 then `advance_boot_level` returns `Ok ()` and a cache whose current level is the requested level
 and whose queue is the queue of `s1` without its first `L - current` entries (`current` is that
-of `s1`). Hypotheses: the outcome of `get_hkdf_key` (`hget`); that the cache `s1` has current
-level at most `L` (`hle`) and at least `L - current` entries (`hlen`), which is what makes the
-subtraction and the split succeed (the queue left may be empty);
-the shared law for `VecDeque::split_off`; `ContextKeyLaw`; the laws `format` and
+of `s1`). The bound `hlen` is not strict, which is what `split_off` accepts (an offset equal to
+the length is allowed), so this statement does not exclude an empty retained queue. Excluding it
+needs a fact about `get_hkdf_key`, whose Rust body the translation leaves opaque: it is blocked by
+extraction. The theorem `advance_boot_level_ok_retained` below adds the outcome of the lookup as
+a hypothesis and concludes that the queue is not empty. Hypotheses: the outcome of
+`get_hkdf_key` (`hget`); that the cache `s1` has current level at most `L` (`hle`) and at least
+`L - current` entries (`hlen`), which is what makes the subtraction and the split succeed; the
+shared law for `VecDeque::split_off`; `ContextKeyLaw`; the laws `format` and
 `from_str_nonconst`. -/
 theorem BootLevelKeyCache_advance_boot_level_ok (view : View) (root : anyhow.Error → ErrRoot)
     (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
@@ -91,6 +95,31 @@ theorem BootLevelKeyCache_advance_boot_level_ok (view : View) (root : anyhow.Err
     (hlen : L.val - s1.current.val ≤ (view s1.cache).length) :
     ∃ s', BootLevelKeyCache.advance_boot_level s L = ok (ROk (), s') ∧
       s'.current = L ∧ view s'.cache = (view s1.cache).drop (L.val - s1.current.val) := by
+  sorry
+
+/-- conditional: as `advance_boot_level_ok`, with one more hypothesis about the lookup: the queue
+of the cache `s1` that `get_hkdf_key` returned has more than `L - current` entries (`hlong`).
+Then the queue that `advance_boot_level` keeps is not empty, and its first element is the entry
+of the queue of `s1` at the offset `L - current`. In the Rust source the lookup grows the queue
+until it has an element at the requested offset, and the split keeps the elements from that
+offset; the translation leaves `get_hkdf_key` opaque, so `hlong` is a hypothesis here, not a
+consequence (blocked by extraction). The statement does not relate the returned key `o` to the
+retained entry, for the same reason. Hypotheses: the outcome of `get_hkdf_key` (`hget`); that
+the cache `s1` has current level at most `L` (`hle`); `hlong`; the shared law for
+`VecDeque::split_off`; `ContextKeyLaw`; the laws `format` and `from_str_nonconst`. -/
+theorem BootLevelKeyCache_advance_boot_level_ok_retained (view : View)
+    (root : anyhow.Error → ErrRoot)
+    (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
+    (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec)
+    (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)
+    (hacc : BootLevelKeyCache.level_accessible s L = ok true)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk o, s1))
+    (hle : s1.current.val ≤ L.val)
+    (hlong : L.val - s1.current.val < (view s1.cache).length) :
+    ∃ s', BootLevelKeyCache.advance_boot_level s L = ok (ROk (), s') ∧
+      s'.current = L ∧ view s'.cache ≠ [] ∧
+      (view s'.cache).head? = (view s1.cache)[L.val - s1.current.val]? := by
   sorry
 
 end Keystore2Verify.BootLevelKeys

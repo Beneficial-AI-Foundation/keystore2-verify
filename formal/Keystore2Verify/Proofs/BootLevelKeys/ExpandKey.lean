@@ -24,9 +24,10 @@ theorem BootLevelKeyCache_expand_key_state
   sorry
 
 /-- conditional: if `get_hkdf_key` returned `Err e` with the cache `s1`, then `expand_key`
-returns an `Err` with the same root cause and the cache `s1`, and does not call `hkdf_expand`.
-Hypotheses: the outcome of `get_hkdf_key` (`hget`); the shared law `ResultContextLaw` for
-`Result::context` (`ContextKeyLaw`); the laws `format` and `from_str_nonconst`. -/
+returns an `Err` with the same root cause and the cache `s1`. In the Rust source this path
+returns before `hkdf_expand` is called; the statement does not say that. Hypotheses: the
+outcome of `get_hkdf_key` (`hget`); the shared law `ResultContextLaw` for `Result::context`
+(`ContextKeyLaw`); the laws `format` and `from_str_nonconst`. -/
 theorem BootLevelKeyCache_expand_key_err_lookup (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
@@ -38,8 +39,9 @@ theorem BootLevelKeyCache_expand_key_err_lookup (root : anyhow.Error → ErrRoot
   sorry
 
 /-- conditional: if `get_hkdf_key` returned `Ok None` (the level is not accessible) with the
-cache `s1`, then `expand_key` returns `Ok None` and the cache `s1`, and does not call
-`hkdf_expand`. Hypotheses: the outcome of `get_hkdf_key` (`hget`); `ContextKeyLaw` and
+cache `s1`, then `expand_key` returns `Ok None` and the cache `s1`. In the Rust source the
+`Option::map` of this path has no key to pass to `hkdf_expand`; the statement does not say that.
+Hypotheses: the outcome of `get_hkdf_key` (`hget`); `ContextKeyLaw` and
 `ContextCryptoLaw` (an `Ok` stays `Ok`); the laws `format` and `from_str_nonconst`. -/
 theorem BootLevelKeyCache_expand_key_none (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hcc : ContextCryptoLaw root) (hfmt : AllocFmtFormatSpec)

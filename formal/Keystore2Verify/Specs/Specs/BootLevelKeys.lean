@@ -107,6 +107,20 @@ recall BootLevelKeyCache_advance_boot_level_ok (view : View) (root : anyhow.Erro
     ∃ s', BootLevelKeyCache.advance_boot_level s L = ok (ROk (), s') ∧
       s'.current = L ∧ view s'.cache = (view s1.cache).drop (L.val - s1.current.val)
 
+recall BootLevelKeyCache_advance_boot_level_ok_retained (view : View)
+    (root : anyhow.Error → ErrRoot)
+    (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
+    (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec)
+    (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)
+    (hacc : BootLevelKeyCache.level_accessible s L = ok true)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk o, s1))
+    (hle : s1.current.val ≤ L.val)
+    (hlong : L.val - s1.current.val < (view s1.cache).length) :
+    ∃ s', BootLevelKeyCache.advance_boot_level s L = ok (ROk (), s') ∧
+      s'.current = L ∧ view s'.cache ≠ [] ∧
+      (view s'.cache).head? = (view s1.cache)[L.val - s1.current.val]?
+
 recall BootLevelKeyCache_finish_current (s s' : BootLevelKeyCache)
     (h : BootLevelKeyCache.finish s = ok s') : s'.current = s.current
 
