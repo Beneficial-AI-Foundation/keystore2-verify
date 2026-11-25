@@ -137,11 +137,11 @@ theorem export_key_err_algorithm (root : anyhow.Error → ErrRoot) (hlaw : BlobE
 
 /-- conditional: for an AES, triple DES or HMAC key, `export_key` returns `Ok` of the format
 `RAW`, the key material of the blob without change, and the two parameter lists joined (hardware
-enforced first). The curve is not read. Hypotheses: as for `export_key_err_no_algorithm`, with
-`get_tag_value` returning `Algorithm(a)` for a `RawAlgorithm a`, and the law
-`KeyParameterCloneLaw`. The bound in `hfit` is that of the Aeneas vector model (see
-`CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this statement
-describes the model and is not a capacity guarantee for the Rust code. -/
+enforced first). In the Rust source this branch does not look up the curve. Hypotheses: as for
+`export_key_err_no_algorithm`, with `get_tag_value` returning `Algorithm(a)` for a
+`RawAlgorithm a`, and the law `KeyParameterCloneLaw`. The bound in `hfit` is that of the Aeneas
+vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this
+statement describes the model and is not a capacity guarantee for the Rust code. -/
 theorem export_key_ok_raw (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
     (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
     (hp : ParsesTo data params (ok (.Ok kb))) (comb : Slice KeyParam)
@@ -228,11 +228,12 @@ theorem export_key_err_curve (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFm
   sorry
 
 /-- conditional: for an EC key on Curve25519, `export_key` returns `Ok` of the format `PKCS8`, the
-key material of the blob without change (it is neither checked nor wrapped), and the two parameter
-lists joined. Hypotheses: as for `export_key_err_no_curve`, with `get_tag_value comb EC_CURVE`
-returning `EcCurve(CURVE_25519)`. The bound in `hfit` is that of the Aeneas vector model (see
-`CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this statement
-describes the model and is not a capacity guarantee for the Rust code. -/
+key material of the blob without change, and the two parameter lists joined. In the Rust source
+this branch neither checks nor wraps the key material. Hypotheses: as for
+`export_key_err_no_curve`, with `get_tag_value comb EC_CURVE` returning `EcCurve(CURVE_25519)`.
+The bound in `hfit` is that of the Aeneas vector model (see `CombinedFits`): Rust's limit of
+`isize::MAX` bytes is reached earlier, so this statement describes the model and is not a capacity
+guarantee for the Rust code. -/
 theorem export_key_ok_curve25519 (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
     (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
     (hp : ParsesTo data params (ok (.Ok kb))) (comb : Slice KeyParam)

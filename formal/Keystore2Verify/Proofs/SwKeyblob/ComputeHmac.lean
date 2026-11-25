@@ -33,8 +33,8 @@ theorem compute_hmac_ok_length (htrunc : AllocVecTruncateSpec)
   sorry
 
 /-- conditional: if `serialize_params hidden` returns `Err e`, then `compute_hmac` returns an
-error with the same root cause, and does not call `hmac_sha256`. Hypothesis: the outcome of
-`serialize_params`. -/
+error with the same root cause. In the Rust source this path returns before `hmac_sha256` is
+called. Hypothesis: the outcome of `serialize_params`. -/
 theorem compute_hmac_err_serialize (root : anyhow.Error → ErrRoot) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (e : anyhow.Error)
     (hser : sw_keyblob.serialize_params hidden = ok (.Err e)) :
