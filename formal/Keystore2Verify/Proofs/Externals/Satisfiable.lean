@@ -16,11 +16,12 @@ list of at most `Std.Usize.max` elements for the queue (`push_back` fails past `
 identity, so that `expand n _ _` returns `Ok` of `n` bytes, `extract` returns `Ok` of 32 bytes and
 the salt is `Ok` of 16 bytes.
 
-The laws of the queue and error families, and the byte-reading laws, already say that each call
-returns a value. The length laws of the crypto family only say what a successful result looks
-like, so a model in which every call fails would satisfy them. The statement for them also asks
-for one successful call of each function, so that two length laws that contradict each other on a
-successful result would be exposed.
+The laws of the queue and error families, and the byte-reading laws, already force
+successful calls on the inputs they are stated for (their valid-input domains), so a model in
+which every call fails cannot satisfy them. The length laws of the crypto family only say what a
+successful result looks like, so a model in which every call fails would satisfy them. The
+statement for them also asks for one successful call of each function, so that two length laws
+that contradict each other on a successful result would be exposed.
 -/
 
 theorem vecdeque_laws_satisfiable (T : Type) :

@@ -152,7 +152,9 @@ The model of formatting is small. In the Aeneas library `core.fmt.Arguments` and
 `core.fmt.rt.Argument` are `Unit`, and the argument constructors (`Argument.new_debug`,
 `new_display` and the others) drop the `Debug` or `Display` implementation they receive. So the
 translated code never calls a `fmt` function of any type. The text that formatting produces, and
-every effect of formatting, are outside the model, and no law can say anything about them.
+every effect of formatting, are outside the model. The laws here do not constrain the output text.
+Because the arguments are erased, no law can state the relation between the Rust input and the
+text.
 
 The only formatting assumptions that a statement can need are that `alloc::fmt::format` and
 `Arguments::from_str_nonconst` do not panic, because the translated code calls both. The law for
