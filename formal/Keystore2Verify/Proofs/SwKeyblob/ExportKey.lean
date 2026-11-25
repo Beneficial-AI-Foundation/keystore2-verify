@@ -12,7 +12,7 @@ enforced parameters followed by the software enforced ones, and the tag lookups 
 `get_tag_value` on `comb`. The outcomes of the opaque functions `hidden_params`,
 `deserialize_params`, `serialize_params` and `get_tag_value` are hypotheses. -/
 
-/-- conditional: if `hidden_params` panics, `export_key` panics in the same way. The translated
+/-- conditional: if `hidden_params` panics, `export_key` returns the same `fail x`. The translated
 `hidden_params` returns a vector, never `Err`, so there is no error case to state. It is the
 first call of `export_key`. Hypothesis: the panic `x` as the outcome of `hidden_params` on
 `params` and the software root of trust. -/
@@ -67,20 +67,22 @@ theorem export_key_err_parse (data : Slice Std.U8)
     sw_keyblob.export_key data params = ok (.Err e) := by
   sorry
 
-/-- conditional: if the parser panics, then `export_key` panics in the same way. Hypothesis:
+/-- conditional: if the parser panics, then `export_key` returns the same `fail x`. Hypothesis:
 `ParsesTo` with the panic `x`. -/
 theorem export_key_fail_parse (data : Slice Std.U8) (params : Slice KeyParam) (x : Error)
     (hp : ParsesTo data params (fail x)) :
     sw_keyblob.export_key data params = fail x := by
   sorry
 
-/-- conditional: a blob with a good MAC can still make `export_key` panic. If both parameter
-lists parse and fewer than 8 bytes are left, the slice `data[8..]` in the parser is out of range
-and `export_key` panics (`sw_keyblob.rs:255`). The parser reads from the whole blob, the MAC
-bytes included. Hypotheses: `HiddenOf`, `PastKey` (the MAC is good, the version is 0, and the
-key material fits), both calls of `deserialize_params` return `Ok`, the slice `d4` that is left
-is shorter than 8 bytes, and the laws `CoreMemSizeOfSpec`, `Shared0SliceNeSpec`,
-`CoreSliceFirstSpec` and `CoreNumU32FromNeBytesSpec`. -/
+/-- conditional: if both parameter lists parse and the remaining slice is shorter than the MAC,
+the parser's outer failure propagates to `export_key`. A reading of the Rust source shows that
+this panic is reachable (`data[8..]` in `sw_keyblob.rs:255`, where the parser reads from the
+whole blob, the MAC bytes included). The Lean statement assumes the hidden parameters, the
+parser outcomes and the length of the remainder. Hypotheses: `HiddenOf`, `PastKey` (the MAC is
+good, the version is 0, and the key material fits), both calls of `deserialize_params` return
+`Ok`, the slice `d4` that is left is shorter than 8 bytes, and the laws
+`CoreMemSizeOfSpec`, `Shared0SliceNeSpec`, `CoreSliceFirstSpec` and
+`CoreNumU32FromNeBytesSpec`. -/
 theorem export_key_fail_rest (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (params hidden : Slice KeyParam) (hid : HiddenOf params hidden)
@@ -152,8 +154,9 @@ theorem export_key_ok_raw (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
         = ok (.Ok (KeyFormat.KeyFormat.RAW, kb.key_material, c)) ∧ c.val = comb.val := by
   sorry
 
-/-- conditional: for an RSA key, `export_key` returns an error whose root cause is
-`INVALID_KEY_BLOB`: the format is `PKCS8` but no arm handles it. An RSA key never succeeds.
+/-- conditional: when the algorithm lookup returns `Algorithm(RSA)`, the branch selects `PKCS8`
+and rejects the pair. Under the hypotheses below, `export_key` returns an error with root cause
+`INVALID_KEY_BLOB`.
 Hypotheses: as for `export_key_ok_raw`, with `Algorithm(RSA)`, and `BlobErrFmtLaws`. The bound in
 `hfit` is that of the Aeneas vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes
 is reached earlier, so this statement describes the model and is not a capacity guarantee for the
@@ -181,7 +184,7 @@ theorem export_key_err_no_curve (root : anyhow.Error → ErrRoot) (hlaw : BlobEr
     ∃ e, sw_keyblob.export_key data params = ok (.Err e) ∧ IsBlobErr root e := by
   sorry
 
-/-- conditional: if `get_tag_value comb ALGORITHM` panics, `export_key` panics in the same way.
+/-- conditional: if `get_tag_value comb ALGORITHM` panics, `export_key` returns the same `fail x`.
 The translated `get_tag_value` returns an `Option`, never `Err`, so there is no error case to
 state. Hypotheses: `ParsesTo` with `Ok kb`, `comb` is the two lists joined, they fit, the panic
 `x` as the outcome of `get_tag_value`, and the law `KeyParameterCloneLaw`. The bound in `hfit` is
@@ -196,8 +199,8 @@ theorem export_key_fail_get_algorithm (hclone : KeyParameterCloneLaw) (data : Sl
     sw_keyblob.export_key data params = fail x := by
   sorry
 
-/-- conditional: for an EC key, if `get_tag_value comb EC_CURVE` panics, `export_key` panics in
-the same way. Hypotheses: as for `export_key_fail_get_algorithm`, with `Algorithm(EC)` as the
+/-- conditional: for an EC key, if `get_tag_value comb EC_CURVE` panics, `export_key` returns
+the same `fail x`. Hypotheses: as for `export_key_fail_get_algorithm`, with `Algorithm(EC)` as the
 outcome of the first lookup and the panic `x` as the outcome of the second. The bound in `hfit`
 is that of the Aeneas vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is
 reached earlier, so this statement describes the model and is not a capacity guarantee for the

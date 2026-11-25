@@ -41,8 +41,8 @@ theorem compute_hmac_err_serialize (data : Slice Std.U8)
     sw_keyblob.KeyBlob.compute_hmac data hidden = ok (.Err e) := by
   sorry
 
-/-- conditional: if `serialize_params hidden` panics, then `compute_hmac` panics in the same
-way. Hypothesis: the outcome of `serialize_params`. -/
+/-- conditional: if `serialize_params hidden` panics, then `compute_hmac` returns the same
+`fail x`. Hypothesis: the outcome of `serialize_params`. -/
 theorem compute_hmac_fail_serialize (data : Slice Std.U8) (hidden : Slice KeyParam) (x : Error)
     (hser : sw_keyblob.serialize_params hidden = fail x) :
     sw_keyblob.KeyBlob.compute_hmac data hidden = fail x := by
@@ -64,8 +64,8 @@ theorem compute_hmac_err_hmac (root : anyhow.Error → ErrRoot) (hfrom : CryptoF
   sorry
 
 /-- conditional: if `serialize_params hidden` returns `Ok hd` and `hmac_sha256` panics on the
-message `data ++ hd`, then `compute_hmac` panics in the same way. Hypotheses: the two outcomes,
-and `msg` is the bytes `data ++ hd`. -/
+message `data ++ hd`, then `compute_hmac` returns the same `fail x`.
+Hypotheses: the two outcomes, and `msg` is the bytes `data ++ hd`. -/
 theorem compute_hmac_fail_hmac (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hd : alloc.vec.Vec Std.U8) (msg : Slice Std.U8) (x : Error)
     (hser : sw_keyblob.serialize_params hidden = ok (.Ok hd))

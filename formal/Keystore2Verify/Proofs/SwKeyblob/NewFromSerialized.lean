@@ -28,7 +28,7 @@ theorem new_from_serialized_err_hmac
   sorry
 
 /-- conditional: if the blob has at least 21 bytes and `compute_hmac` on all bytes but the last 8
-panics, then `new_from_serialized` panics in the same way. Hypotheses: the outcome of
+panics, then `new_from_serialized` returns the same `fail x`. Hypotheses: the outcome of
 `compute_hmac`, and the law `CoreMemSizeOfSpec`. -/
 theorem new_from_serialized_fail_hmac (hsize : CoreMemSizeOfSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (h : minBlobLen ≤ data.val.length) (s : Slice Std.U8)
@@ -94,7 +94,7 @@ theorem new_from_serialized_err_hw
   sorry
 
 /-- conditional: if all checks before the parameter lists pass and the first `deserialize_params`
-panics, then `new_from_serialized` panics in the same way. Hypotheses: as for
+panics, then `new_from_serialized` returns the same `fail x`. Hypotheses: as for
 `new_from_serialized_err_hw`, without `d3`, with the panic `x` as the
 outcome of `deserialize_params d2`. -/
 theorem new_from_serialized_fail_hw (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
@@ -122,8 +122,8 @@ theorem new_from_serialized_err_sw
   sorry
 
 /-- conditional: if all checks before the parameter lists pass, the first `deserialize_params`
-returns `Ok` and the second panics, then `new_from_serialized` panics in the same way. Hypotheses:
-as for `new_from_serialized_err_sw`, without `d4`, with the panic `x`
+returns `Ok` and the second panics, then `new_from_serialized` returns the same `fail x`.
+Hypotheses: as for `new_from_serialized_err_sw`, without `d4`, with the panic `x`
 as the outcome of the second call. -/
 theorem new_from_serialized_fail_sw (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
@@ -135,10 +135,10 @@ theorem new_from_serialized_fail_sw (hsize : CoreMemSizeOfSpec) (hne : Shared0Sl
     sw_keyblob.KeyBlob.new_from_serialized data hidden = fail x := by
   sorry
 
-/-- conditional: both parameter lists parse and fewer than 8 bytes are left, so the slice
-`data[8..]` is out of range and `new_from_serialized` panics. The parser reads from the whole
-blob, the MAC bytes included, so a blob with a good MAC can reach this case: it is a reachable
-panic, not an error. Hypotheses: all checks before the lists pass (`PastKey`), both calls of
+/-- conditional: if both parameter lists parse and the remaining slice is shorter than the MAC,
+`new_from_serialized` ends in an outer failure. A reading of the Rust source shows that the slice
+panic (`data[8..]`) is reachable. The Lean statement assumes the parser outcomes and the length
+of the remainder. Hypotheses: all checks before the lists pass (`PastKey`), both calls of
 `deserialize_params` return `Ok`, the slice `d4` that is left is shorter than 8 bytes, and the
 laws `CoreMemSizeOfSpec`, `Shared0SliceNeSpec`, `CoreSliceFirstSpec` and
 `CoreNumU32FromNeBytesSpec`. -/
