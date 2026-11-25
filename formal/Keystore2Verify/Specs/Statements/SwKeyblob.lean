@@ -645,6 +645,19 @@ recall compute_hmac_ok (htrunc : AllocVecTruncateSpec) (data : Slice Std.U8)
     ∃ t, sw_keyblob.KeyBlob.compute_hmac data hidden = ok (.Ok t) ∧
       t.val = tag.val.take 8
 
+/-- info: 'Keystore2Verify.SwKeyblob.compute_hmac_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.serialize_params,
+ Vec.truncate,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms compute_hmac_ok
+
 recall compute_hmac_ok_length (htrunc : AllocVecTruncateSpec)
     (hlen : KeystoreCryptoHmacSha256Spec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hd tag : alloc.vec.Vec Std.U8) (msg : Slice Std.U8)
@@ -654,14 +667,53 @@ recall compute_hmac_ok_length (htrunc : AllocVecTruncateSpec)
       = ok (.Ok tag)) :
     ∃ t, sw_keyblob.KeyBlob.compute_hmac data hidden = ok (.Ok t) ∧ t.val.length = 8
 
+/-- info: 'Keystore2Verify.SwKeyblob.compute_hmac_ok_length' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.serialize_params,
+ Vec.truncate,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms compute_hmac_ok_length
+
 recall compute_hmac_err_serialize (data : Slice Std.U8)
     (hidden : Slice KeyParam) (e : anyhow.Error)
     (hser : sw_keyblob.serialize_params hidden = ok (.Err e)) :
     sw_keyblob.KeyBlob.compute_hmac data hidden = ok (.Err e)
 
+/-- info: 'Keystore2Verify.SwKeyblob.compute_hmac_err_serialize' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.serialize_params,
+ Vec.truncate,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms compute_hmac_err_serialize
+
 recall compute_hmac_fail_serialize (data : Slice Std.U8) (hidden : Slice KeyParam) (x : Error)
     (hser : sw_keyblob.serialize_params hidden = fail x) :
     sw_keyblob.KeyBlob.compute_hmac data hidden = fail x
+
+/-- info: 'Keystore2Verify.SwKeyblob.compute_hmac_fail_serialize' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.serialize_params,
+ Vec.truncate,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms compute_hmac_fail_serialize
 
 recall compute_hmac_err_hmac (root : anyhow.Error → ErrRoot) (hfrom : CryptoFromLaw root)
     (data : Slice Std.U8) (hidden : Slice KeyParam) (hd : alloc.vec.Vec Std.U8)
@@ -673,6 +725,21 @@ recall compute_hmac_err_hmac (root : anyhow.Error → ErrRoot) (hfrom : CryptoFr
     ∃ e', sw_keyblob.KeyBlob.compute_hmac data hidden = ok (.Err e') ∧
       root e' = ErrRoot.crypto x
 
+/-- info: 'Keystore2Verify.SwKeyblob.compute_hmac_err_hmac' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.serialize_params,
+ Vec.truncate,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms compute_hmac_err_hmac
+
 recall compute_hmac_fail_hmac (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hd : alloc.vec.Vec Std.U8) (msg : Slice Std.U8) (x : Error)
     (hser : sw_keyblob.serialize_params hidden = ok (.Ok hd))
@@ -680,10 +747,36 @@ recall compute_hmac_fail_hmac (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hhmac : keystore2_crypto.hmac_sha256 sw_keyblob.KeyBlob.LEGACY_HMAC_KEY msg = fail x) :
     sw_keyblob.KeyBlob.compute_hmac data hidden = fail x
 
+/-- info: 'Keystore2Verify.SwKeyblob.compute_hmac_fail_hmac' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.serialize_params,
+ Vec.truncate,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms compute_hmac_fail_hmac
+
 recall compute_hmac_fail_capacity (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hd : alloc.vec.Vec Std.U8) (hser : sw_keyblob.serialize_params hidden = ok (.Ok hd))
     (hover : Std.Usize.max < data.val.length + hd.val.length) :
     sw_keyblob.KeyBlob.compute_hmac data hidden = fail .panic
+
+/-- info: 'Keystore2Verify.SwKeyblob.compute_hmac_fail_capacity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.serialize_params,
+ Vec.truncate,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms compute_hmac_fail_capacity
 
 recall compute_hmac_ok_of_result (htrunc : AllocVecTruncateSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (t : alloc.vec.Vec Std.U8)
@@ -694,16 +787,69 @@ recall compute_hmac_ok_of_result (htrunc : AllocVecTruncateSpec) (data : Slice S
       keystore2_crypto.hmac_sha256 sw_keyblob.KeyBlob.LEGACY_HMAC_KEY msg = ok (.Ok tag) ∧
       t.val = tag.val.take 8
 
+/-- info: 'Keystore2Verify.SwKeyblob.compute_hmac_ok_of_result' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.serialize_params,
+ Vec.truncate,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms compute_hmac_ok_of_result
+
 recall compute_hmac_ok_length_of_result (htrunc : AllocVecTruncateSpec)
     (hlen : KeystoreCryptoHmacSha256Spec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (t : alloc.vec.Vec Std.U8) (h : sw_keyblob.KeyBlob.compute_hmac data hidden = ok (.Ok t)) :
     t.val.length = 8
+
+/-- info: 'Keystore2Verify.SwKeyblob.compute_hmac_ok_length_of_result' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.serialize_params,
+ Vec.truncate,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms compute_hmac_ok_length_of_result
 
 recall new_from_serialized_err_short (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.U32 4) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (h : data.val.length < minBlobLen) :
     ∃ e, sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) ∧
       IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_err_short' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_err_short
 
 recall new_from_serialized_err_hmac
     (hsize : SizeOfLaw Std.U32 4) (data : Slice Std.U8) (hidden : Slice KeyParam)
@@ -712,11 +858,65 @@ recall new_from_serialized_err_hmac
     (hmac : sw_keyblob.KeyBlob.compute_hmac s hidden = ok (.Err e)) :
     sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e)
 
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_err_hmac' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_err_hmac
+
 recall new_from_serialized_fail_hmac (hsize : SizeOfLaw Std.U32 4) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (h : minBlobLen ≤ data.val.length) (s : Slice Std.U8)
     (hs : s.val = data.val.take (data.val.length - 8)) (x : Error)
     (hmac : sw_keyblob.KeyBlob.compute_hmac s hidden = fail x) :
     sw_keyblob.KeyBlob.new_from_serialized data hidden = fail x
+
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_fail_hmac' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_fail_hmac
 
 recall new_from_serialized_err_mac (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
     (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec) (data : Slice Std.U8)
@@ -727,12 +927,66 @@ recall new_from_serialized_err_mac (root : anyhow.Error → ErrRoot) (hlaw : Blo
     ∃ e, sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) ∧
       IsBlobErr root e
 
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_err_mac' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_err_mac
+
 recall new_from_serialized_err_version (root : anyhow.Error → ErrRoot)
     (hlaw : BlobErrFmtLaws root) (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hmac : MacOk data hidden) (v : Std.U8) (hv : data.val.head? = some v) (hv0 : v.val ≠ 0) :
     ∃ e, sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) ∧
       IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_err_version' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_err_version
 
 recall new_from_serialized_err_key_len (root : anyhow.Error → ErrRoot)
     (hlaw : BlobErrFmtLaws root) (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec)
@@ -742,6 +996,33 @@ recall new_from_serialized_err_key_len (root : anyhow.Error → ErrRoot)
     ∃ e, sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) ∧
       IsBlobErr root e
 
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_err_key_len' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_err_key_len
+
 recall new_from_serialized_err_hw
     (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec) (hfirst : CoreSliceFirstSpec)
     (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
@@ -750,12 +1031,66 @@ recall new_from_serialized_err_hw
     (d3 : Slice Std.U8) (hdes : sw_keyblob.deserialize_params d2 = ok (.Err e, d3)) :
     sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e)
 
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_err_hw' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_err_hw
+
 recall new_from_serialized_fail_hw (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (hpast : PastKey data hidden) (d2 : Slice Std.U8)
     (hd2 : d2.val = data.val.drop (5 + u32At data.val 1)) (x : Error)
     (hdes : sw_keyblob.deserialize_params d2 = fail x) :
     sw_keyblob.KeyBlob.new_from_serialized data hidden = fail x
+
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_fail_hw' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_fail_hw
 
 recall new_from_serialized_err_sw
     (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec) (hfirst : CoreSliceFirstSpec)
@@ -767,6 +1102,33 @@ recall new_from_serialized_err_sw
     (d4 : Slice Std.U8) (hdes2 : sw_keyblob.deserialize_params d3 = ok (.Err e, d4)) :
     sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e)
 
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_err_sw' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_err_sw
+
 recall new_from_serialized_fail_sw (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (hpast : PastKey data hidden) (d2 : Slice Std.U8)
@@ -775,6 +1137,33 @@ recall new_from_serialized_fail_sw (hsize : SizeOfLaw Std.U32 4) (hne : Shared0S
     (hdes1 : sw_keyblob.deserialize_params d2 = ok (.Ok hw, d3)) (x : Error)
     (hdes2 : sw_keyblob.deserialize_params d3 = fail x) :
     sw_keyblob.KeyBlob.new_from_serialized data hidden = fail x
+
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_fail_sw' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_fail_sw
 
 recall new_from_serialized_fail_rest (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
@@ -786,6 +1175,33 @@ recall new_from_serialized_fail_rest (hsize : SizeOfLaw Std.U32 4) (hne : Shared
     (hdes2 : sw_keyblob.deserialize_params d3 = ok (.Ok sw, d4))
     (hrest : d4.val.length < 8) :
     ∃ x, sw_keyblob.KeyBlob.new_from_serialized data hidden = fail x
+
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_fail_rest' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_fail_rest
 
 recall new_from_serialized_err_extra (root : anyhow.Error → ErrRoot)
     (hlaw : BlobErrFmtLaws root) (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec)
@@ -800,6 +1216,33 @@ recall new_from_serialized_err_extra (root : anyhow.Error → ErrRoot)
     ∃ e, sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) ∧
       IsBlobErr root e
 
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_err_extra' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_err_extra
+
 recall new_from_serialized_ok (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (hpast : PastKey data hidden) (d2 : Slice Std.U8)
@@ -813,10 +1256,64 @@ recall new_from_serialized_ok (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceN
       kb.key_material.val = (data.val.drop 5).take (u32At data.val 1) ∧
       kb.hw_enforced = hw ∧ kb.sw_enforced = sw
 
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_ok
+
 recall new_from_serialized_ok_mac (hsize : SizeOfLaw Std.U32 4) (hne : Shared0SliceNeSpec)
     (data : Slice Std.U8) (hidden : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
     (h : sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Ok kb)) :
     MacOk data hidden
+
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_ok_mac' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_ok_mac
 
 recall new_from_serialized_ok_layout_of_result (hsize : SizeOfLaw Std.U32 4)
     (hne : Shared0SliceNeSpec) (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec)
@@ -826,6 +1323,34 @@ recall new_from_serialized_ok_layout_of_result (hsize : SizeOfLaw Std.U32 4)
       ∃ d2 d3 d4, d2.val = data.val.drop (5 + u32At data.val 1) ∧
         sw_keyblob.deserialize_params d2 = ok (.Ok kb.hw_enforced, d3) ∧
         sw_keyblob.deserialize_params d3 = ok (.Ok kb.sw_enforced, d4) ∧ d4.val.length = 8
+
+/-- info: 'Keystore2Verify.SwKeyblob.new_from_serialized_ok_layout_of_result'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hmac_sha256,
+ sw_keyblob.deserialize_params,
+ sw_keyblob.serialize_params,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Shared0Slice.Insts.CoreCmpPartialEqVec.ne,
+ Vec.truncate,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.num.U32.from_ne_bytes,
+ core.slice.Slice.first,
+ anyhow.Error.Insts.CoreConvertFrom.from,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms new_from_serialized_ok_layout_of_result
 
 recall export_key_fail_hidden (data : Slice Std.U8) (params : Slice KeyParam) (x : Error)
     (hh : sw_keyblob.hidden_params params
