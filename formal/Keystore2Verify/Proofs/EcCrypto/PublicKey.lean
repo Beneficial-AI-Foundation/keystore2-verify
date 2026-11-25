@@ -17,7 +17,11 @@ theorem public_key_ok (root : anyhow.Error → ErrRoot)
     (hpt : keystore2_crypto.BorrowedECPoint.get_point pt = ok eps)
     (hoct : keystore2_crypto.ec_point_point_to_oct eps = ok (.Ok v)) :
     ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok v) := by
-  sorry
+  obtain ⟨a, ha⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:48: marshalling failed")
+  obtain ⟨s, hs⟩ := hfmt a
+  unfold ec_crypto.ECDHPrivateKey.public_key
+  simp [hkey, hpt, hoct, ha, hs, core.hint.must_use]
+  exact hctx.1 _ _
 
 /-- conditional: under the hypotheses of `public_key_ok` and the length law `EcPointPointToOctSpec`,
 `public_key` returns `Ok v` and `v` has between 1 and 133 bytes. -/
@@ -31,7 +35,8 @@ theorem public_key_ok_length (root : anyhow.Error → ErrRoot)
     (hoct : keystore2_crypto.ec_point_point_to_oct eps = ok (.Ok v)) :
     ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok v) ∧
       1 ≤ v.val.length ∧ v.val.length ≤ 133 := by
-  sorry
+  exact ⟨public_key_ok root hargs hfmt hctx self pt eps v hkey hpt hoct,
+    hlen _ _ hoct⟩
 
 /-- conditional: if `ec_key_get0_public_key` gives the point `pt`, `get_point` gives `eps` and
 `ec_point_point_to_oct eps` returns `Err e`, then `public_key` returns an error whose root cause is
@@ -46,7 +51,13 @@ theorem public_key_err (root : anyhow.Error → ErrRoot)
     (hoct : keystore2_crypto.ec_point_point_to_oct eps = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.public_key self = ok (.Err e') ∧
       root e' = ErrRoot.crypto e := by
-  sorry
+  obtain ⟨a, ha⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:48: marshalling failed")
+  obtain ⟨s, hs⟩ := hfmt a
+  obtain ⟨e', h1, h2⟩ := hctx.2 e s
+  refine ⟨e', ?_, h2⟩
+  unfold ec_crypto.ECDHPrivateKey.public_key
+  simp [hkey, hpt, hoct, ha, hs, core.hint.must_use]
+  exact h1
 
 /-- conditional: if `get_point` returns `fail x` on the point of the key, then
 `public_key` returns the same `fail x`. In the Rust source `ec_point_point_to_oct` follows
@@ -57,14 +68,16 @@ theorem public_key_fail_get_point (self : ec_crypto.ECDHPrivateKey)
     (hkey : keystore2_crypto.ec_key_get0_public_key self = ok pt)
     (hpt : keystore2_crypto.BorrowedECPoint.get_point pt = fail x) :
     ec_crypto.ECDHPrivateKey.public_key self = fail x := by
-  sorry
+  unfold ec_crypto.ECDHPrivateKey.public_key
+  simp [hkey, hpt]
 
 /-- conditional: if `ec_key_get0_public_key` fails, then `public_key` returns the same `fail x`.
 Hypothesis: the outcome of this call. No law is needed. -/
 theorem public_key_fail_get0_public_key (self : ec_crypto.ECDHPrivateKey) (x : Error)
     (hkey : keystore2_crypto.ec_key_get0_public_key self = fail x) :
     ec_crypto.ECDHPrivateKey.public_key self = fail x := by
-  sorry
+  unfold ec_crypto.ECDHPrivateKey.public_key
+  simp [hkey]
 
 /-- conditional: if `ec_key_get0_public_key` and `get_point` succeed and `ec_point_point_to_oct`
 fails, then `public_key` returns the same `fail x`. Hypotheses: the outcomes of the three calls. No
@@ -76,7 +89,8 @@ theorem public_key_fail_point_to_oct (self : ec_crypto.ECDHPrivateKey)
     (hpt : keystore2_crypto.BorrowedECPoint.get_point pt = ok eps)
     (hoct : keystore2_crypto.ec_point_point_to_oct eps = fail x) :
     ec_crypto.ECDHPrivateKey.public_key self = fail x := by
-  sorry
+  unfold ec_crypto.ECDHPrivateKey.public_key
+  simp [hkey, hpt, hoct]
 
 
 /-- Length bounds on the public key bytes returned to the caller. -/
@@ -85,6 +99,36 @@ theorem public_key_ok_length_of_result (root : anyhow.Error → ErrRoot)
     (self : ec_crypto.ECDHPrivateKey) (v : alloc.vec.Vec Std.U8)
     (h : ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok v)) :
     1 ≤ v.val.length ∧ v.val.length ≤ 133 := by
-  sorry
+  unfold ec_crypto.ECDHPrivateKey.public_key at h
+  cases hk : keystore2_crypto.ec_key_get0_public_key self with
+  | ret pt =>
+    cases hp : keystore2_crypto.BorrowedECPoint.get_point pt with
+    | ret eps =>
+      cases ho : keystore2_crypto.ec_point_point_to_oct eps with
+      | ret r =>
+        open core.fmt.Arguments in
+        cases hA : from_str_nonconst (toStr
+            "keystore2/src/ec_crypto.rs:48: marshalling failed") with
+        | ret a =>
+          cases hF : alloc.fmt.format a with
+          | ret s =>
+            cases r with
+            | Ok v' =>
+              simp [hk, hp, ho, hA, hF, core.hint.must_use, hctx.1] at h
+              subst h
+              exact hlen _ _ ho
+            | Err e =>
+              obtain ⟨e', h1, _⟩ := hctx.2 e s
+              simp [hk, hp, ho, hA, hF, core.hint.must_use, h1] at h
+          | vis i k => simp [hk, hp, ho, hA, hF] at h
+          | div => simp [hk, hp, ho, hA, hF] at h
+        | vis i k => simp [hk, hp, ho, hA] at h
+        | div => simp [hk, hp, ho, hA] at h
+      | vis i k => simp [hk, hp, ho] at h
+      | div => simp [hk, hp, ho] at h
+    | vis i k => simp [hk, hp] at h
+    | div => simp [hk, hp] at h
+  | vis i k => simp [hk] at h
+  | div => simp [hk] at h
 
 end Keystore2Verify.EcCrypto

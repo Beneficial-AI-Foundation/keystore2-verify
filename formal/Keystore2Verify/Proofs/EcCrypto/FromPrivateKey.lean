@@ -14,7 +14,13 @@ theorem from_private_key_ok (root : anyhow.Error → ErrRoot)
     (buf : Slice Std.U8) (k : keystore2_crypto.ECKey)
     (hparse : keystore2_crypto.ec_key_parse_private_key buf = ok (.Ok k)) :
     ec_crypto.ECDHPrivateKey.from_private_key buf = ok (.Ok k) := by
-  sorry
+  obtain ⟨a, ha⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:37: parsing failed")
+  obtain ⟨s, hs⟩ := hfmt a
+  unfold ec_crypto.ECDHPrivateKey.from_private_key
+  open core.result.Result P.Insts.CoreOpsFunctionFnOnceTupleECKeyECDHPrivateKey in
+  simp [hparse, ha, hs, map, core.hint.must_use, ec_crypto.ECDHPrivateKey.constructor,
+    call_once]
+  exact hctx.1 _ _
 
 /-- conditional: if `ec_key_parse_private_key buf` returns `Err e`, then `from_private_key buf`
 returns an error whose root cause is the crypto error `e`. Hypotheses: the same laws as
@@ -26,13 +32,22 @@ theorem from_private_key_err (root : anyhow.Error → ErrRoot)
     (hparse : keystore2_crypto.ec_key_parse_private_key buf = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.from_private_key buf = ok (.Err e') ∧
       root e' = ErrRoot.crypto e := by
-  sorry
+  obtain ⟨a, ha⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:37: parsing failed")
+  obtain ⟨s, hs⟩ := hfmt a
+  obtain ⟨e', h1, h2⟩ := hctx.2 e s
+  refine ⟨e', ?_, h2⟩
+  unfold ec_crypto.ECDHPrivateKey.from_private_key
+  open core.result.Result P.Insts.CoreOpsFunctionFnOnceTupleECKeyECDHPrivateKey in
+  simp [hparse, ha, hs, map, core.hint.must_use, ec_crypto.ECDHPrivateKey.constructor,
+    call_once]
+  exact h1
 
 /-- conditional: if `ec_key_parse_private_key buf` fails, then `from_private_key buf` returns the
 same `fail x`. Hypothesis: the outcome of the call. No law is needed. -/
 theorem from_private_key_fail (buf : Slice Std.U8) (x : Error)
     (hparse : keystore2_crypto.ec_key_parse_private_key buf = fail x) :
     ec_crypto.ECDHPrivateKey.from_private_key buf = fail x := by
-  sorry
+  unfold ec_crypto.ECDHPrivateKey.from_private_key
+  simp [hparse]
 
 end Keystore2Verify.EcCrypto

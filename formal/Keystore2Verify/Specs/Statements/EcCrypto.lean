@@ -22,6 +22,16 @@ recall generate_ok (root : anyhow.Error → ErrRoot)
     (hgen : keystore2_crypto.ec_key_generate_key = ok (.Ok k)) :
     ec_crypto.ECDHPrivateKey.generate = ok (.Ok k)
 
+/-- info: 'Keystore2Verify.EcCrypto.generate_ok' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_generate_key, alloc.fmt.format,
+core.fmt.Arguments.from_str_nonconst, alloc.string.String.Insts.CoreFmtDisplay.fmt,
+anyhow.context.ext.StdError.Blanket.ext_context, core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms generate_ok
+
 recall generate_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : CryptoCtxLaw root ec_crypto.ECDHPrivateKey)
@@ -29,9 +39,29 @@ recall generate_err (root : anyhow.Error → ErrRoot)
     (hgen : keystore2_crypto.ec_key_generate_key = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.generate = ok (.Err e') ∧ root e' = ErrRoot.crypto e
 
+/-- info: 'Keystore2Verify.EcCrypto.generate_err' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_generate_key, alloc.fmt.format,
+core.fmt.Arguments.from_str_nonconst, alloc.string.String.Insts.CoreFmtDisplay.fmt,
+anyhow.context.ext.StdError.Blanket.ext_context, core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms generate_err
+
 recall generate_fail (x : Error)
     (hgen : keystore2_crypto.ec_key_generate_key = fail x) :
     ec_crypto.ECDHPrivateKey.generate = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.generate_fail' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.ECKey,
+keystore2_crypto.ec_key_generate_key, alloc.fmt.format, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms generate_fail
 
 recall from_private_key_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -39,6 +69,16 @@ recall from_private_key_ok (root : anyhow.Error → ErrRoot)
     (buf : Slice Std.U8) (k : keystore2_crypto.ECKey)
     (hparse : keystore2_crypto.ec_key_parse_private_key buf = ok (.Ok k)) :
     ec_crypto.ECDHPrivateKey.from_private_key buf = ok (.Ok k)
+
+/-- info: 'Keystore2Verify.EcCrypto.from_private_key_ok' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_parse_private_key, alloc.fmt.format,
+core.fmt.Arguments.from_str_nonconst, alloc.string.String.Insts.CoreFmtDisplay.fmt,
+anyhow.context.ext.StdError.Blanket.ext_context, core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms from_private_key_ok
 
 recall from_private_key_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -48,9 +88,29 @@ recall from_private_key_err (root : anyhow.Error → ErrRoot)
     ∃ e', ec_crypto.ECDHPrivateKey.from_private_key buf = ok (.Err e') ∧
       root e' = ErrRoot.crypto e
 
+/-- info: 'Keystore2Verify.EcCrypto.from_private_key_err' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_parse_private_key, alloc.fmt.format,
+core.fmt.Arguments.from_str_nonconst, alloc.string.String.Insts.CoreFmtDisplay.fmt,
+anyhow.context.ext.StdError.Blanket.ext_context, core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms from_private_key_err
+
 recall from_private_key_fail (buf : Slice Std.U8) (x : Error)
     (hparse : keystore2_crypto.ec_key_parse_private_key buf = fail x) :
     ec_crypto.ECDHPrivateKey.from_private_key buf = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.from_private_key_fail' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.ECKey,
+keystore2_crypto.ec_key_parse_private_key, alloc.fmt.format,
+core.fmt.Arguments.from_str_nonconst, alloc.string.String.Insts.CoreFmtDisplay.fmt,
+anyhow.context.ext.StdError.Blanket.ext_context, core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms from_private_key_fail
 
 recall private_key_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -58,6 +118,17 @@ recall private_key_ok (root : anyhow.Error → ErrRoot)
     (self : ec_crypto.ECDHPrivateKey) (z : keystore2_crypto.zvec.ZVec)
     (hm : keystore2_crypto.ec_key_marshal_private_key self = ok (.Ok z)) :
     ec_crypto.ECDHPrivateKey.private_key self = ok (.Ok z)
+
+/-- info: 'Keystore2Verify.EcCrypto.private_key_ok' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_marshal_private_key, alloc.fmt.format,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms private_key_ok
 
 recall private_key_ok_length (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -68,6 +139,18 @@ recall private_key_ok_length (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.private_key self = ok (.Ok z) ∧
       ∃ s, zvecDeref z = ok s ∧ s.length = 73
 
+/-- info: 'Keystore2Verify.EcCrypto.private_key_ok_length' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_marshal_private_key, alloc.fmt.format,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms private_key_ok_length
+
 recall private_key_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
@@ -76,15 +159,48 @@ recall private_key_err (root : anyhow.Error → ErrRoot)
     ∃ e', ec_crypto.ECDHPrivateKey.private_key self = ok (.Err e') ∧
       root e' = ErrRoot.crypto e
 
+/-- info: 'Keystore2Verify.EcCrypto.private_key_err' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_marshal_private_key, alloc.fmt.format,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms private_key_err
+
 recall private_key_fail (self : ec_crypto.ECDHPrivateKey) (x : Error)
     (hm : keystore2_crypto.ec_key_marshal_private_key self = fail x) :
     ec_crypto.ECDHPrivateKey.private_key self = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.private_key_fail' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.ECKey,
+keystore2_crypto.ec_key_marshal_private_key, alloc.fmt.format, keystore2_crypto.zvec.ZVec,
+core.fmt.Arguments.from_str_nonconst, alloc.string.String.Insts.CoreFmtDisplay.fmt,
+anyhow.context.ext.StdError.Blanket.ext_context, core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms private_key_fail
 
 recall private_key_ok_length_of_result (root : anyhow.Error → ErrRoot)
     (hctx : CryptoCtxLaw root keystore2_crypto.zvec.ZVec) (hlen : EcKeyMarshalPrivateKeySpec)
     (self : ec_crypto.ECDHPrivateKey) (z : keystore2_crypto.zvec.ZVec)
     (h : ec_crypto.ECDHPrivateKey.private_key self = ok (.Ok z)) :
     ∃ s, zvecDeref z = ok s ∧ s.length = 73
+
+/-- info: 'Keystore2Verify.EcCrypto.private_key_ok_length_of_result' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_marshal_private_key, alloc.fmt.format,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms private_key_ok_length_of_result
 
 recall public_key_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -95,6 +211,19 @@ recall public_key_ok (root : anyhow.Error → ErrRoot)
     (hpt : keystore2_crypto.BorrowedECPoint.get_point pt = ok eps)
     (hoct : keystore2_crypto.ec_point_point_to_oct eps = ok (.Ok v)) :
     ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok v)
+
+/-- info: 'Keystore2Verify.EcCrypto.public_key_ok' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey,
+keystore2_crypto.ec_key_get0_public_key, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms public_key_ok
 
 recall public_key_ok_length (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -107,6 +236,19 @@ recall public_key_ok_length (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok v) ∧
       1 ≤ v.val.length ∧ v.val.length ≤ 133
 
+/-- info: 'Keystore2Verify.EcCrypto.public_key_ok_length' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey,
+keystore2_crypto.ec_key_get0_public_key, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms public_key_ok_length
+
 recall public_key_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
@@ -118,15 +260,52 @@ recall public_key_err (root : anyhow.Error → ErrRoot)
     ∃ e', ec_crypto.ECDHPrivateKey.public_key self = ok (.Err e') ∧
       root e' = ErrRoot.crypto e
 
+/-- info: 'Keystore2Verify.EcCrypto.public_key_err' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey,
+keystore2_crypto.ec_key_get0_public_key, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms public_key_err
+
 recall public_key_fail_get_point (self : ec_crypto.ECDHPrivateKey)
     (pt : keystore2_crypto.BorrowedECPoint) (x : Error)
     (hkey : keystore2_crypto.ec_key_get0_public_key self = ok pt)
     (hpt : keystore2_crypto.BorrowedECPoint.get_point pt = fail x) :
     ec_crypto.ECDHPrivateKey.public_key self = fail x
 
+/-- info: 'Keystore2Verify.EcCrypto.public_key_fail_get_point' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.BorrowedECPoint,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_point_to_oct, keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms public_key_fail_get_point
+
 recall public_key_fail_get0_public_key (self : ec_crypto.ECDHPrivateKey) (x : Error)
     (hkey : keystore2_crypto.ec_key_get0_public_key self = fail x) :
     ec_crypto.ECDHPrivateKey.public_key self = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.public_key_fail_get0_public_key' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.BorrowedECPoint,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_point_to_oct, keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms public_key_fail_get0_public_key
 
 recall public_key_fail_point_to_oct (self : ec_crypto.ECDHPrivateKey)
     (pt : keystore2_crypto.BorrowedECPoint) (eps : keystore2_crypto_bindgen.ec_point_st)
@@ -136,11 +315,36 @@ recall public_key_fail_point_to_oct (self : ec_crypto.ECDHPrivateKey)
     (hoct : keystore2_crypto.ec_point_point_to_oct eps = fail x) :
     ec_crypto.ECDHPrivateKey.public_key self = fail x
 
+/-- info: 'Keystore2Verify.EcCrypto.public_key_fail_point_to_oct' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.BorrowedECPoint,
+keystore2_crypto.ECKey, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_point_to_oct, keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms public_key_fail_point_to_oct
+
 recall public_key_ok_length_of_result (root : anyhow.Error → ErrRoot)
     (hctx : CryptoCtxLaw root (alloc.vec.Vec Std.U8)) (hlen : EcPointPointToOctSpec)
     (self : ec_crypto.ECDHPrivateKey) (v : alloc.vec.Vec Std.U8)
     (h : ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok v)) :
     1 ≤ v.val.length ∧ v.val.length ≤ 133
+
+/-- info: 'Keystore2Verify.EcCrypto.public_key_ok_length_of_result' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey,
+keystore2_crypto.ec_key_get0_public_key, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, core.fmt.Arguments.from_str_nonconst,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms public_key_ok_length_of_result
 
 recall agree_key_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
