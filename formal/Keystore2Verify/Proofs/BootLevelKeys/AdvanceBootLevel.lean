@@ -24,7 +24,7 @@ theorem BootLevelKeyCache_advance_boot_level_not_accessible
 `Level` comparison, `loc`, `log`) and for `VecDeque::len`, for the view `view` of the queue. -/
 theorem BootLevelKeyCache_advance_boot_level_not_accessible_ok (view : View)
     (hmax : LogMaxLevelSpec) (hcmp : LogLevelPartialCmpSpec) (hloc : LogLocSpec)
-    (hlog : LogPrivateApiLogSpec) (hlen : VecDequeLenLaw view VecDeque.len)
+    (hlog : LogPrivateApiLogSpec) (hlen : ZVecQueueLenLaw view)
     (s : BootLevelKeyCache) (L : BootLevel)
     (hacc : BootLevelKeyCache.level_accessible s L = ok false) :
     BootLevelKeyCache.advance_boot_level s L = ok (ROk (), s) := by
@@ -35,7 +35,7 @@ returns `Ok ()` and the same cache, without a change. Hypotheses: the shared law
 `advance_boot_level_not_accessible_ok`. -/
 theorem BootLevelKeyCache_advance_boot_level_below (view : View)
     (hmax : LogMaxLevelSpec) (hcmp : LogLevelPartialCmpSpec) (hloc : LogLocSpec)
-    (hlog : LogPrivateApiLogSpec) (hlen : VecDequeLenLaw view VecDeque.len)
+    (hlog : LogPrivateApiLogSpec) (hlen : ZVecQueueLenLaw view)
     (s : BootLevelKeyCache) (L : BootLevel) (hlt : L.val < s.current.val) :
     BootLevelKeyCache.advance_boot_level s L = ok (ROk (), s) := by
   sorry
@@ -85,7 +85,7 @@ a hypothesis and concludes that the queue is not empty. Hypotheses: the outcome 
 shared law for `VecDeque::split_off`; `ContextKeyLaw`; the laws `format` and
 `from_str_nonconst`. -/
 theorem BootLevelKeyCache_advance_boot_level_ok (view : View) (root : anyhow.Error → ErrRoot)
-    (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
+    (hsplit : ZVecQueueSplitOffLaw view)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
     (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)
@@ -109,7 +109,7 @@ the cache `s1` has current level at most `L` (`hle`); `hlong`; the shared law fo
 `VecDeque::split_off`; `ContextKeyLaw`; the laws `format` and `from_str_nonconst`. -/
 theorem BootLevelKeyCache_advance_boot_level_ok_retained (view : View)
     (root : anyhow.Error → ErrRoot)
-    (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
+    (hsplit : ZVecQueueSplitOffLaw view)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
     (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)
@@ -122,7 +122,7 @@ theorem BootLevelKeyCache_advance_boot_level_ok_retained (view : View)
       (view s'.cache).head? = (view s1.cache)[L.val - s1.current.val]? := by
   sorry
 
-/-- conditional: if the level is accessible and `get_hkdf_key` panics (returns `fail x`), then
+/-- conditional: if the level is accessible and `get_hkdf_key` fails (returns `fail x`), then
 `advance_boot_level` fails with the same `x`. Hypotheses: the level is accessible (`hacc`) and
 the outcome of `get_hkdf_key` (`hget`). No law is needed. -/
 theorem BootLevelKeyCache_advance_boot_level_fail_get_hkdf_key
@@ -160,7 +160,7 @@ has grown the queue to hold an element at the requested offset), so the Rust cod
 this failure. -/
 theorem BootLevelKeyCache_advance_boot_level_fail_split_off (view : View)
     (root : anyhow.Error → ErrRoot)
-    (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
+    (hsplit : ZVecQueueSplitOffLaw view)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
     (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)

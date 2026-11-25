@@ -62,7 +62,7 @@ theorem BootLevelKeyCache_aes_key_len (root : anyhow.Error → ErrRoot)
     ∃ sl, zvecDeref z = ok sl ∧ sl.length = 32 := by
   sorry
 
-/-- conditional: if `expand_key` (called with `AES_256_KEY_LENGTH` and `HKDF_AES`) panics
+/-- conditional: if `expand_key` (called with `AES_256_KEY_LENGTH` and `HKDF_AES`) fails
 (returns `fail x`), then `aes_key` fails with the same `x`. Hypothesis: the outcome of
 `expand_key` (`hexp`). No law is needed. -/
 theorem BootLevelKeyCache_aes_key_fail_expand_key
@@ -72,7 +72,7 @@ theorem BootLevelKeyCache_aes_key_fail_expand_key
     BootLevelKeyCache.aes_key s L = fail x := by
   sorry
 
-/-- conditional: if `get_hkdf_key` panics (returns `fail x`), then `aes_key` fails with the same
+/-- conditional: if `get_hkdf_key` fails (returns `fail x`), then `aes_key` fails with the same
 `x`. Hypothesis: the outcome of `get_hkdf_key` (`hget`). No law is needed. -/
 theorem BootLevelKeyCache_aes_key_fail_get_hkdf_key
     (s : BootLevelKeyCache) (L : BootLevel) (x : Error)
@@ -81,7 +81,7 @@ theorem BootLevelKeyCache_aes_key_fail_get_hkdf_key
   sorry
 
 /-- conditional: if `get_hkdf_key` returned `Ok (some k)`, and `hkdf_expand` on `k` with
-`AES_256_KEY_LENGTH` and `HKDF_AES` panics (returns `fail x`), then `aes_key` fails with the same
+`AES_256_KEY_LENGTH` and `HKDF_AES` fails (returns `fail x`), then `aes_key` fails with the same
 `x`. Hypotheses: the outcome of `get_hkdf_key` (`hget`); the view of `k` as a slice `sl`
 (`hderef`) and the outcome of `hkdf_expand` on it (`hexp`); `ContextKeyLaw`; the laws `format`
 and `from_str_nonconst`. -/
@@ -98,7 +98,7 @@ theorem BootLevelKeyCache_aes_key_fail_expand (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if `get_hkdf_key` returned `Ok (some k)`, and the view of `k` as a slice
-(`zvecDeref k`) panics (returns `fail x`), then `aes_key` fails with the same `x`.
+(`zvecDeref k`) fails (returns `fail x`), then `aes_key` fails with the same `x`.
 Hypotheses: the outcome of `get_hkdf_key` (`hget`); the outcome of the view (`hderef`);
 `ContextKeyLaw`; the laws `format` and `from_str_nonconst`. -/
 theorem BootLevelKeyCache_aes_key_fail_deref (root : anyhow.Error → ErrRoot)

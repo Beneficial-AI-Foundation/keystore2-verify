@@ -28,8 +28,7 @@ it covers the runs in which the repeated check gives the same answer each time (
 which the policy answer changes between the two calls is outside the model. The statement about an
 error of the final check assumes `perm ≠ ManageBlob`, because otherwise its hypotheses contradict
 each other (the same call would return `Ok` and an error).
-Where a statement says that an outcome is `fail x`, the generated function returns `fail x` at once
-(a Rust panic). The statements about `fail` for the lookup and for `getcon` need no law: the
+Where a statement says that an outcome is `fail x`, the generated function returns `fail x` at once. The statements about `fail` for the lookup and for `getcon` need no law: the
 generated body binds these results first. -/
 
 /-- exact: the access vector is `some av` and `av` includes the bit set of `perm`. The result is
@@ -102,7 +101,7 @@ theorem check_key_permission_lookup_err (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: the access vector does not cover `perm`, the domain is `APP`, the caller uid
-equals the namespace, and `getcon` fails with `x` (a Rust panic). The result is `fail x`.
+equals the namespace, and `getcon` fails with `x`. The result is `fail x`.
 Hypothesis: the outcome of `getcon`. No law is needed. -/
 theorem check_key_permission_app_getcon_fail
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
@@ -114,7 +113,7 @@ theorem check_key_permission_app_getcon_fail
   sorry
 
 /-- conditional: the access vector does not cover `perm`, the domain is `SELINUX` or `BLOB`, and
-the lookup of the namespace fails with `x` (a Rust panic: the backend initialisation unwraps its
+the lookup of the namespace fails with `x` (an outer failure: the backend initialisation unwraps its
 result). The result is `fail x`. Hypothesis: the outcome of the lookup. No law is needed. -/
 theorem check_key_permission_lookup_fail
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
@@ -278,7 +277,6 @@ theorem check_key_permission_blob_check_err (root : anyhow.Error → ErrRoot)
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
     (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
     (hnc : ¬ Covers perm access_vector) (hdom : key.domain = domainBlob)
-    (hperm : perm ≠ permission.KeyPerm.ManageBlob)
     (ctx : keystore2_selinux.Context) (c : CStr)
     (hlook : permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))
     (hc : contextCStr ctx = ok c)
@@ -293,7 +291,7 @@ theorem check_key_permission_blob_check_err (root : anyhow.Error → ErrRoot)
 
 /-- conditional: the access vector does not cover `perm`, the target is `ctx` (`APP` with the uid
 equal to the namespace and `getcon` returning `ctx`, or `SELINUX` with the lookup returning
-`ctx`), and the view of `ctx` as a `CStr` fails with `x` (a Rust panic). The result is `fail x`.
+`ctx`), and the view of `ctx` as a `CStr` fails with `x`. The result is `fail x`.
 Hypotheses: the `from_str_nonconst` and `format` laws and the `context` law of
 `check_key_permission_app_getcon_err` (the message is built before the view, and the `context`
 keeps an `Ok`), and the outcomes of `getcon` or the lookup and of the view. -/
@@ -313,7 +311,7 @@ theorem check_key_permission_app_selinux_deref_fail (root : anyhow.Error → Err
   sorry
 
 /-- conditional: the same as `check_key_permission_app_selinux_check_ok`, but the check of `perm`
-fails with `x` (a Rust panic). The result is `fail x`. Hypotheses: the same. -/
+fails with `x`. The result is `fail x`. Hypotheses: the same. -/
 theorem check_key_permission_app_selinux_check_fail (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
@@ -332,7 +330,7 @@ theorem check_key_permission_app_selinux_check_fail (root : anyhow.Error → Err
   sorry
 
 /-- conditional: the access vector does not cover `perm`, the domain is `BLOB`, the lookup returns
-`ctx`, and the view of `ctx` as a `CStr` fails with `x` (a Rust panic). The result is `fail x`.
+`ctx`, and the view of `ctx` as a `CStr` fails with `x`. The result is `fail x`.
 Hypotheses: the laws of `check_key_permission_app_selinux_deref_fail`, and the outcomes of the
 lookup and of the view. -/
 theorem check_key_permission_blob_deref_fail (root : anyhow.Error → ErrRoot)
@@ -348,7 +346,7 @@ theorem check_key_permission_blob_deref_fail (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: the access vector does not cover `perm`, the domain is `BLOB`, the lookup returns
-`ctx`, and the check of `ManageBlob` against the view `c` of `ctx` fails with `x` (a Rust panic).
+`ctx`, and the check of `ManageBlob` against the view `c` of `ctx` fails with `x`.
 The result is `fail x`. Hypotheses: the laws of `check_key_permission_app_selinux_deref_fail`,
 and the outcomes of the lookup, of the view of `ctx`, and of `check_permission` for
 `ManageBlob`. -/
@@ -367,7 +365,7 @@ theorem check_key_permission_blob_manage_fail (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: the same as `check_key_permission_blob_check_err`, but the check of `perm` fails
-with `x` (a Rust panic). The result is `fail x`. `perm` is not `ManageBlob`: otherwise `hmanage`
+with `x`. The result is `fail x`. `perm` is not `ManageBlob`: otherwise `hmanage`
 and `hcheck` would contradict each other. Hypotheses: the same. -/
 theorem check_key_permission_blob_check_fail (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -375,7 +373,6 @@ theorem check_key_permission_blob_check_fail (root : anyhow.Error → ErrRoot)
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
     (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
     (hnc : ¬ Covers perm access_vector) (hdom : key.domain = domainBlob)
-    (hperm : perm ≠ permission.KeyPerm.ManageBlob)
     (ctx : keystore2_selinux.Context) (c : CStr)
     (hlook : permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))
     (hc : contextCStr ctx = ok c)

@@ -22,15 +22,13 @@ theorem boot_level_eq (a b : BootLevel) :
 
 /-- exact: `cmp` on boot levels never fails and orders them as their `usize` values. -/
 theorem boot_level_cmp (a b : BootLevel) :
-    ∃ o, bootLevelCmp a b = ok o ∧
-      (o = .lt ↔ a.val < b.val) ∧ (o = .eq ↔ a.val = b.val) ∧ (o = .gt ↔ b.val < a.val) := by
+    bootLevelCmp a b = ok (compare a.val b.val) := by
   sorry
 
 /-- exact: `partial_cmp` on boot levels never fails, is never `None`, and orders them as their
 `usize` values. -/
 theorem boot_level_partial_cmp (a b : BootLevel) :
-    ∃ o, bootLevelPartialCmp a b = ok (some o) ∧
-      (o = .lt ↔ a.val < b.val) ∧ (o = .eq ↔ a.val = b.val) ∧ (o = .gt ↔ b.val < a.val) := by
+    bootLevelPartialCmp a b = ok (some (compare a.val b.val)) := by
   sorry
 
 end Keystore2Verify.BootLevelKeys

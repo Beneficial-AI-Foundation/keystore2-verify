@@ -20,8 +20,8 @@ function for each of the seven external calls, such that `TotalLaw deref`, `Hkdf
 `HkdfExtractLenLaw`, `SaltLenLaw` and the four laws `EcKeyMarshalLenLaw`, `PointToOctLenLaw`,
 `AesGcmEncryptLenLaw` and `AesGcmDecryptLenLaw` hold together. The functions `expand`, `extract`,
 `salt`, `enc` and `dec` have a call that returns `Ok`. `marshal` and `to_oct` return `Ok` on every
-input, so every call that can be made succeeds; whether their opaque argument types have an element
-is not something Lean can show. The model is `Z := Slice U8` with `deref` the identity: every
+input of their inhabited abstract carrier `Unit`. This does not assume an inhabitant or a
+reachable successful call for either extracted input type. The model is `Z := Slice U8` with `deref` the identity: every
 function always returns `Ok`, with a vector of zeros of the length that its law asks for (the
 ciphertext of the encryption is the message, and the plaintext of the decryption is the ciphertext).
 -/
@@ -32,9 +32,9 @@ theorem ec_crypto_laws_satisfiable :
       (extract : Slice Std.U8 → Slice Std.U8 →
         Result (core.result.Result Z keystore2_crypto.error.Error))
       (salt : Result (core.result.Result (alloc.vec.Vec Std.U8) keystore2_crypto.error.Error))
-      (marshal : keystore2_crypto.ECKey →
+      (marshal : Unit →
         Result (core.result.Result Z keystore2_crypto.error.Error))
-      (to_oct : keystore2_crypto_bindgen.ec_point_st →
+      (to_oct : Unit →
         Result (core.result.Result (alloc.vec.Vec Std.U8) keystore2_crypto.error.Error))
       (enc : Slice Std.U8 → Slice Std.U8 → Result (core.result.Result
         (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8)

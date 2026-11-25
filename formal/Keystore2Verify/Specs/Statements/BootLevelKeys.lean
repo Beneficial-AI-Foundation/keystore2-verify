@@ -26,14 +26,13 @@ recall boot_level_eq (a b : BootLevel) :
     ∃ r, bootLevelEq a b = ok r ∧ (r = true ↔ a.val = b.val)
 
 recall boot_level_cmp (a b : BootLevel) :
-    ∃ o, bootLevelCmp a b = ok o ∧
-      (o = .lt ↔ a.val < b.val) ∧ (o = .eq ↔ a.val = b.val) ∧ (o = .gt ↔ b.val < a.val)
+    bootLevelCmp a b = ok (compare a.val b.val)
 
 recall boot_level_partial_cmp (a b : BootLevel) :
-    ∃ o, bootLevelPartialCmp a b = ok (some o) ∧
-      (o = .lt ↔ a.val < b.val) ∧ (o = .eq ↔ a.val = b.val) ∧ (o = .gt ↔ b.val < a.val)
+    bootLevelPartialCmp a b = ok (some (compare a.val b.val))
 
-recall hkdf_advance_bytes : BytesAre BootLevelKeyCache.HKDF_ADVANCE.val "Advance KDF one step"
+recall hkdf_advance_bytes :
+    BytesAre BootLevelKeyCache.HKDF_ADVANCE.val "Advance KDF one step"
 
 recall hkdf_aes_bytes : BytesAre BootLevelKeyCache.HKDF_AES.val "Generate AES-256-GCM key"
 
@@ -43,8 +42,8 @@ recall BootLevelKeyCache_new_current (k : keystore2_crypto.zvec.ZVec) (s : BootL
     (h : BootLevelKeyCache.new k = ok s) : s.current.val = 0
 
 recall BootLevelKeyCache_new_ok (view : View)
-    (hnew : VecDequeNewLaw view (VecDequeTGlobal.new keystore2_crypto.zvec.ZVec))
-    (hpush : VecDequePushBackLaw view VecDeque.push_back)
+    (hnew : ZVecQueueNewLaw view)
+    (hpush : ZVecQueuePushBackLaw view)
     (k : keystore2_crypto.zvec.ZVec) :
     ∃ s, BootLevelKeyCache.new k = ok s ∧ s.current.val = 0 ∧ view s.cache = [k]
 
@@ -52,7 +51,7 @@ recall BootLevelKeyCache_level_accessible_lt (s : BootLevelKeyCache) (L : BootLe
     (h : L.val < s.current.val) : BootLevelKeyCache.level_accessible s L = ok false
 
 recall BootLevelKeyCache_level_accessible_iff (view : View)
-    (hempty : VecDequeIsEmptyLaw view VecDeque.is_empty) (s : BootLevelKeyCache)
+    (hempty : ZVecQueueIsEmptyLaw view) (s : BootLevelKeyCache)
     (L : BootLevel) :
     ∃ b, BootLevelKeyCache.level_accessible s L = ok b ∧
       (b = true ↔ s.current.val ≤ L.val ∧ view s.cache ≠ [])
@@ -65,14 +64,14 @@ recall BootLevelKeyCache_advance_boot_level_not_accessible
 
 recall BootLevelKeyCache_advance_boot_level_not_accessible_ok (view : View)
     (hmax : LogMaxLevelSpec) (hcmp : LogLevelPartialCmpSpec) (hloc : LogLocSpec)
-    (hlog : LogPrivateApiLogSpec) (hlen : VecDequeLenLaw view VecDeque.len)
+    (hlog : LogPrivateApiLogSpec) (hlen : ZVecQueueLenLaw view)
     (s : BootLevelKeyCache) (L : BootLevel)
     (hacc : BootLevelKeyCache.level_accessible s L = ok false) :
     BootLevelKeyCache.advance_boot_level s L = ok (ROk (), s)
 
 recall BootLevelKeyCache_advance_boot_level_below (view : View)
     (hmax : LogMaxLevelSpec) (hcmp : LogLevelPartialCmpSpec) (hloc : LogLocSpec)
-    (hlog : LogPrivateApiLogSpec) (hlen : VecDequeLenLaw view VecDeque.len)
+    (hlog : LogPrivateApiLogSpec) (hlen : ZVecQueueLenLaw view)
     (s : BootLevelKeyCache) (L : BootLevel) (hlt : L.val < s.current.val) :
     BootLevelKeyCache.advance_boot_level s L = ok (ROk (), s)
 
@@ -96,7 +95,7 @@ recall BootLevelKeyCache_advance_boot_level_err (root : anyhow.Error → ErrRoot
       root e' = root e
 
 recall BootLevelKeyCache_advance_boot_level_ok (view : View) (root : anyhow.Error → ErrRoot)
-    (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
+    (hsplit : ZVecQueueSplitOffLaw view)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
     (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)
@@ -109,7 +108,7 @@ recall BootLevelKeyCache_advance_boot_level_ok (view : View) (root : anyhow.Erro
 
 recall BootLevelKeyCache_advance_boot_level_ok_retained (view : View)
     (root : anyhow.Error → ErrRoot)
-    (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
+    (hsplit : ZVecQueueSplitOffLaw view)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
     (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)
@@ -138,7 +137,7 @@ recall BootLevelKeyCache_advance_boot_level_fail_sub (root : anyhow.Error → Er
 
 recall BootLevelKeyCache_advance_boot_level_fail_split_off (view : View)
     (root : anyhow.Error → ErrRoot)
-    (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
+    (hsplit : ZVecQueueSplitOffLaw view)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
     (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)
@@ -152,7 +151,7 @@ recall BootLevelKeyCache_finish_current (s s' : BootLevelKeyCache)
     (h : BootLevelKeyCache.finish s = ok s') : s'.current = s.current
 
 recall BootLevelKeyCache_finish_ok (view : View)
-    (hclear : VecDequeClearLaw view VecDeque.clear) (s : BootLevelKeyCache) :
+    (hclear : ZVecQueueClearLaw view) (s : BootLevelKeyCache) :
     ∃ s', BootLevelKeyCache.finish s = ok s' ∧ s'.current = s.current ∧ view s'.cache = []
 
 recall BootLevelKeyCache_expand_key_state

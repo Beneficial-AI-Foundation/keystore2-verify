@@ -48,7 +48,7 @@ theorem public_key_err (root : anyhow.Error → ErrRoot)
       root e' = ErrRoot.crypto e := by
   sorry
 
-/-- conditional: if `get_point` panics on the point of the key (in Rust: the pointer is null), then
+/-- conditional: if `get_point` fails on the point of the key (in Rust: the pointer is null), then
 `public_key` returns the same `fail x`. In the Rust source `ec_point_point_to_oct` follows
 `get_point`. Hypotheses: the outcomes of `ec_key_get0_public_key` and `get_point`. No law is needed.
 -/
@@ -59,7 +59,7 @@ theorem public_key_fail_get_point (self : ec_crypto.ECDHPrivateKey)
     ec_crypto.ECDHPrivateKey.public_key self = fail x := by
   sorry
 
-/-- conditional: if `ec_key_get0_public_key` panics, then `public_key` returns the same `fail x`.
+/-- conditional: if `ec_key_get0_public_key` fails, then `public_key` returns the same `fail x`.
 Hypothesis: the outcome of this call. No law is needed. -/
 theorem public_key_fail_get0_public_key (self : ec_crypto.ECDHPrivateKey) (x : Error)
     (hkey : keystore2_crypto.ec_key_get0_public_key self = fail x) :
@@ -67,7 +67,7 @@ theorem public_key_fail_get0_public_key (self : ec_crypto.ECDHPrivateKey) (x : E
   sorry
 
 /-- conditional: if `ec_key_get0_public_key` and `get_point` succeed and `ec_point_point_to_oct`
-panics, then `public_key` returns the same `fail x`. Hypotheses: the outcomes of the three calls. No
+fails, then `public_key` returns the same `fail x`. Hypotheses: the outcomes of the three calls. No
 law is needed. -/
 theorem public_key_fail_point_to_oct (self : ec_crypto.ECDHPrivateKey)
     (pt : keystore2_crypto.BorrowedECPoint) (eps : keystore2_crypto_bindgen.ec_point_st)
@@ -76,6 +76,15 @@ theorem public_key_fail_point_to_oct (self : ec_crypto.ECDHPrivateKey)
     (hpt : keystore2_crypto.BorrowedECPoint.get_point pt = ok eps)
     (hoct : keystore2_crypto.ec_point_point_to_oct eps = fail x) :
     ec_crypto.ECDHPrivateKey.public_key self = fail x := by
+  sorry
+
+
+/-- Length bounds on the public key bytes returned to the caller. -/
+theorem public_key_ok_length_of_result (root : anyhow.Error → ErrRoot)
+    (hctx : CryptoCtxLaw root (alloc.vec.Vec Std.U8)) (hlen : EcPointPointToOctSpec)
+    (self : ec_crypto.ECDHPrivateKey) (v : alloc.vec.Vec Std.U8)
+    (h : ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok v)) :
+    1 ≤ v.val.length ∧ v.val.length ≤ 133 := by
   sorry
 
 end Keystore2Verify.EcCrypto

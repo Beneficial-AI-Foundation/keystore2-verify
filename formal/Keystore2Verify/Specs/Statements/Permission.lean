@@ -180,6 +180,10 @@ recall includes_key_perm_set (self other : permission.KeyPermSet) :
         (core.convert.IntoFrom (core.convert.FromSame permission.KeyPermSet)) self other = ok b ∧
       (b = true ↔ Includes self other)
 
+recall includes_div {T : Type} (inst : core.convert.Into T permission.KeyPermSet)
+    (self : permission.KeyPermSet) (other : T) (h : inst.into other = .div) :
+    permission.KeyPermSet.includes inst self other = .div
+
 end Includes
 
 section IntoIter
@@ -259,6 +263,14 @@ recall check_keystore_permission_deref_fail (root : anyhow.Error → ErrRoot)
     (ctx : keystore2_selinux.Context) (x : Error)
     (hget : keystore2_selinux.getcon = ok (.Ok ctx)) (hc : contextCStr ctx = fail x) :
     permission.check_keystore_permission caller_ctx perm = fail x
+
+recall check_keystore_permission_ok_of_result (root : anyhow.Error → ErrRoot)
+    (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
+    (caller_ctx : CStr) (perm : permission.KeystorePerm)
+    (h : permission.check_keystore_permission caller_ctx perm = ok (.Ok ())) :
+    ∃ ctx c, keystore2_selinux.getcon = ok (.Ok ctx) ∧ contextCStr ctx = ok c ∧
+      keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c perm =
+        ok (.Ok ())
 
 end CheckKeystorePermission
 
@@ -425,8 +437,6 @@ recall check_grant_permission_loop_err (root : anyhow.Error → ErrRoot)
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ()))
     (kp : permission.KeyPerm) (hkp : keyPermFromI32 (bitVal i) = ok kp)
-    (hfirst : ∀ j, j < i → HasBit access_vec j → ∀ kpj, keyPermFromI32 (bitVal j) = ok kpj →
-      kpj ≠ kp)
     (e : anyhow.Error)
     (hbad : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
       ok (.Err e)) :
@@ -452,8 +462,6 @@ recall check_grant_permission_loop_fail (root : anyhow.Error → ErrRoot)
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ()))
     (kp : permission.KeyPerm) (hkp : keyPermFromI32 (bitVal i) = ok kp)
-    (hfirst : ∀ j, j < i → HasBit access_vec j → ∀ kpj, keyPermFromI32 (bitVal j) = ok kpj →
-      kpj ≠ kp)
     (x : Error)
     (hbad : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
       fail x) :
@@ -649,7 +657,6 @@ recall check_key_permission_blob_check_err (root : anyhow.Error → ErrRoot)
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
     (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
     (hnc : ¬ Covers perm access_vector) (hdom : key.domain = domainBlob)
-    (hperm : perm ≠ permission.KeyPerm.ManageBlob)
     (ctx : keystore2_selinux.Context) (c : CStr)
     (hlook : permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))
     (hc : contextCStr ctx = ok c)
@@ -721,7 +728,6 @@ recall check_key_permission_blob_check_fail (root : anyhow.Error → ErrRoot)
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
     (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
     (hnc : ¬ Covers perm access_vector) (hdom : key.domain = domainBlob)
-    (hperm : perm ≠ permission.KeyPerm.ManageBlob)
     (ctx : keystore2_selinux.Context) (c : CStr)
     (hlook : permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))
     (hc : contextCStr ctx = ok c)

@@ -26,7 +26,7 @@ theorem generate_err (root : anyhow.Error → ErrRoot)
     ∃ e', ec_crypto.ECDHPrivateKey.generate = ok (.Err e') ∧ root e' = ErrRoot.crypto e := by
   sorry
 
-/-- conditional: if `ec_key_generate_key` panics, then `generate` returns the same `fail x`.
+/-- conditional: if `ec_key_generate_key` fails, then `generate` returns the same `fail x`.
 Hypothesis: the outcome of the call. No law is needed. -/
 theorem generate_fail (x : Error)
     (hgen : keystore2_crypto.ec_key_generate_key = fail x) :

@@ -44,7 +44,7 @@ def keyPermValue : permission.KeyPerm → Int
   | .ConvertStorageKeyToEphemeral => 2048
 
 /-- The numbers that `KeyPerm::from` maps to a variant other than `None`, and 0. -/
-def keyPermNumbers : List Int := [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 2048]
+def keyPermNumbers : Set Int := Set.range keyPermValue
 
 /-- The number of a `KeystorePerm`: 0 for `None`, then the bits 0 to 14 in declaration order. -/
 def keystorePermValue : permission.KeystorePerm → Int
@@ -66,8 +66,7 @@ def keystorePermValue : permission.KeystorePerm → Int
   | .GetLastAuthTime => 16384
 
 /-- The numbers that `KeystorePerm::from` maps to a variant other than `None`, and 0. -/
-def keystorePermNumbers : List Int :=
-  [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384]
+def keystorePermNumbers : Set Int := Set.range keystorePermValue
 
 /-! ## Bit sets -/
 
@@ -132,13 +131,10 @@ abbrev AnyhowStrCtxLaw (root : anyhow.Error → ErrRoot) (T : Type) : Prop :=
     (context (T := T) AnyhowExtStdError
       (Shared0T.Insts.CoreFmtDisplay Str.Insts.CoreFmtDisplay))
 
-open core.result.Result.Insts.AnyhowContext in
 /-- A call `r.context(s)` with a `String` message on a result that holds an `anyhow::Error` and
 a `T`. The new error has the root cause of the old one. -/
 abbrev AnyhowStringCtxLaw (root : anyhow.Error → ErrRoot) (T : Type) : Prop :=
-  ResultContextLaw root root
-    (context (T := T) AnyhowExtStdError
-      StringDisplay)
+  AnyCtxLaw root T
 
 open core.result.Result.Insts.AnyhowContext in
 /-- A call `Err(selinux_error).context("..")`. The root cause of the new error is the SELinux

@@ -26,14 +26,12 @@ two calls with the same arguments have the same outcome in every statement. The 
 that are no `KeyPerm` as `KeyPerm::None`, so two such bits make two identical calls. The success
 statements cover these access vectors too: they cover the runs in which the repeated check gives the
 same answer each time. A run in which the policy answer changes between the two calls is outside
-the model. The loop error statement has the hypothesis `hfirst`, so that its hypotheses stay
-consistent.
+the model.
 
 In the generated loop, the message of `check_permission failed` is built (`alloc.fmt.format`)
 before `context` is applied, in every iteration, also when the check returns `Ok`. So the
 statements that run the loop at least once take the `format` law (`AllocFmtFormatSpec`).
-Where a statement says that an outcome is `fail x`, the generated function returns `fail x` at once
-(a Rust panic). -/
+Where a statement says that an outcome is `fail x`, the generated function returns `fail x` at once. -/
 
 /-- conditional: the domain is `APP` and the caller uid differs from the namespace. The result is
 an error whose root cause is `selinux::Error::PermissionDenied`. Hypothesis: the `context` law for
@@ -75,7 +73,7 @@ theorem check_grant_permission_selinux_lookup_err (root : anyhow.Error → ErrRo
   sorry
 
 /-- conditional: the domain is `APP`, the caller uid equals the namespace, and `getcon` fails with
-`x` (a Rust panic). The result is `fail x`. Hypothesis: the outcome of `getcon`. No law is
+`x`. The result is `fail x`. Hypothesis: the outcome of `getcon`. No law is
 needed. -/
 theorem check_grant_permission_app_getcon_fail
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
@@ -85,8 +83,8 @@ theorem check_grant_permission_app_getcon_fail
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x := by
   sorry
 
-/-- conditional: the domain is `SELINUX` and the lookup of the namespace fails with `x` (a Rust
-panic: the backend initialisation unwraps its result). The result is `fail x`. Hypothesis: the
+/-- conditional: the domain is `SELINUX` and the lookup of the namespace fails with `x`.
+The result is `fail x`; this equation does not identify the cause of the opaque failure. Hypothesis: the
 outcome of the lookup. No law is needed. -/
 theorem check_grant_permission_selinux_lookup_fail
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
@@ -131,8 +129,8 @@ theorem check_grant_permission_grant_check_err (root : anyhow.Error → ErrRoot)
         ok (.Err e') ∧ root e' = root e := by
   sorry
 
-/-- conditional: the target is `ctx` and the view of `ctx` as a `CStr` fails with `x` (a Rust
-panic). The result is `fail x`, whatever `access_vec` is. Hypotheses: the `context` law for a
+/-- conditional: the target is `ctx` and the view of `ctx` as a `CStr` fails with `x`.
+The result is `fail x`, whatever `access_vec` is. Hypotheses: the `context` law for a
 context value (`AnyhowStrCtxLaw`, it keeps an `Ok`), and the outcomes that `htarget` names and of
 the view. -/
 theorem check_grant_permission_deref_fail (root : anyhow.Error → ErrRoot)
@@ -148,7 +146,7 @@ theorem check_grant_permission_deref_fail (root : anyhow.Error → ErrRoot)
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x := by
   sorry
 
-/-- conditional: the target is `c` and the check of `Grant` fails with `x` (a Rust panic). The
+/-- conditional: the target is `c` and the check of `Grant` fails with `x`. The
 result is `fail x`, whatever `access_vec` is. Hypotheses: the `context` law for a context value
 (`AnyhowStrCtxLaw`), and the outcomes that `htarget` names, of the view of `ctx` and of
 `check_permission` for `Grant`. -/
@@ -245,7 +243,7 @@ theorem check_grant_permission_ok (root : anyhow.Error → ErrRoot)
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, bit 3 of `access_vec` is not
 set, `i` is a set bit, the checks of the permissions of the set bits below `i` return `Ok`, and the
 check of the permission of bit `i` returns an error `e`. No earlier check is for the same
-permission (`hfirst`): otherwise the failing call would repeat an earlier call with the same
+permission: otherwise the failing call would repeat an earlier call with the same
 arguments, and the model gives both calls the same outcome, so `hlow` and `hbad` would contradict
 each other. For a bit that is no `KeyPerm`, this says `i` is the
 lowest such set bit. The result is an error with the same root
@@ -273,8 +271,6 @@ theorem check_grant_permission_loop_err (root : anyhow.Error → ErrRoot)
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ()))
     (kp : permission.KeyPerm) (hkp : keyPermFromI32 (bitVal i) = ok kp)
-    (hfirst : ∀ j, j < i → HasBit access_vec j → ∀ kpj, keyPermFromI32 (bitVal j) = ok kpj →
-      kpj ≠ kp)
     (e : anyhow.Error)
     (hbad : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
       ok (.Err e)) :
@@ -283,10 +279,7 @@ theorem check_grant_permission_loop_err (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, bit 3 of `access_vec` is not
-set, `i` is a set bit, the checks of the permissions of the set bits below `i` return `Ok`, no
-earlier check is for the same permission as bit `i` (`hfirst`, as in
-`check_grant_permission_loop_err`), and the check of the permission of bit `i` fails with `x` (a
-Rust panic). The result is `fail x`. Hypotheses: the `context` laws of
+set, `i` is a set bit, the checks of the permissions of the set bits below `i` return `Ok`, and the check of the permission of bit `i` fails with `x`. The result is `fail x`. Hypotheses: the `context` laws of
 `check_grant_permission_ok`, the `format` law (`AllocFmtFormatSpec`, the iterations below `i` build
 a message before `context`; the law is used only when a lower bit is set), and the outcomes that
 `htarget` names, of the view of `ctx` and of the calls of `check_permission`. -/
@@ -309,8 +302,6 @@ theorem check_grant_permission_loop_fail (root : anyhow.Error → ErrRoot)
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ()))
     (kp : permission.KeyPerm) (hkp : keyPermFromI32 (bitVal i) = ok kp)
-    (hfirst : ∀ j, j < i → HasBit access_vec j → ∀ kpj, keyPermFromI32 (bitVal j) = ok kpj →
-      kpj ≠ kp)
     (x : Error)
     (hbad : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
       fail x) :

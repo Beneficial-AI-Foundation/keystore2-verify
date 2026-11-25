@@ -80,6 +80,12 @@ recall private_key_fail (self : ec_crypto.ECDHPrivateKey) (x : Error)
     (hm : keystore2_crypto.ec_key_marshal_private_key self = fail x) :
     ec_crypto.ECDHPrivateKey.private_key self = fail x
 
+recall private_key_ok_length_of_result (root : anyhow.Error → ErrRoot)
+    (hctx : CryptoCtxLaw root keystore2_crypto.zvec.ZVec) (hlen : EcKeyMarshalPrivateKeySpec)
+    (self : ec_crypto.ECDHPrivateKey) (z : keystore2_crypto.zvec.ZVec)
+    (h : ec_crypto.ECDHPrivateKey.private_key self = ok (.Ok z)) :
+    ∃ s, zvecDeref z = ok s ∧ s.length = 73
+
 recall public_key_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
@@ -129,6 +135,12 @@ recall public_key_fail_point_to_oct (self : ec_crypto.ECDHPrivateKey)
     (hpt : keystore2_crypto.BorrowedECPoint.get_point pt = ok eps)
     (hoct : keystore2_crypto.ec_point_point_to_oct eps = fail x) :
     ec_crypto.ECDHPrivateKey.public_key self = fail x
+
+recall public_key_ok_length_of_result (root : anyhow.Error → ErrRoot)
+    (hctx : CryptoCtxLaw root (alloc.vec.Vec Std.U8)) (hlen : EcPointPointToOctSpec)
+    (self : ec_crypto.ECDHPrivateKey) (v : alloc.vec.Vec Std.U8)
+    (h : ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok v)) :
+    1 ≤ v.val.length ∧ v.val.length ≤ 133
 
 recall agree_key_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -421,7 +433,7 @@ recall agree_key_fail_deref_recipient_prk (root : anyhow.Error → ErrRoot)
     (hoct : keystore2_crypto.ec_point_oct_to_point other = ok (.Ok p))
     (hgp : keystore2_crypto.OwnedECPoint.get_point p = ok eps)
     (hecdh : keystore2_crypto.ecdh_compute_key eps self version = ok (.Ok sec))
-    (ss s2 : Slice Std.U8) (x : Error)
+    (ss : Slice Std.U8) (x : Error)
     (hds : zvecDeref sec = ok ss) (hd2 : zvecDeref k2 = fail x) :
     ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x
 
@@ -496,6 +508,13 @@ recall agree_key_fail_expand (root : anyhow.Error → ErrRoot)
     (hexp : keystore2_crypto.hkdf_expand keystore2_crypto.AES_256_KEY_LENGTH s3 aesKeyInfo =
       fail x) :
     ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x
+
+recall agree_key_ok_length_of_result (root : anyhow.Error → ErrRoot)
+    (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec) (hlen : KeystoreCryptoHkdfExpandSpec)
+    (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
+    (version : keystore2_crypto.EcdhComputeKeyVersion) (key : keystore2_crypto.zvec.ZVec)
+    (h : ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version =
+      ok (.Ok key)) : ∃ s, zvecDeref key = ok s ∧ s.length = 32
 
 recall encrypt_message_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -976,9 +995,9 @@ recall ec_crypto_laws_satisfiable :
       (extract : Slice Std.U8 → Slice Std.U8 →
         Result (core.result.Result Z keystore2_crypto.error.Error))
       (salt : Result (core.result.Result (alloc.vec.Vec Std.U8) keystore2_crypto.error.Error))
-      (marshal : keystore2_crypto.ECKey →
+      (marshal : Unit →
         Result (core.result.Result Z keystore2_crypto.error.Error))
-      (to_oct : keystore2_crypto_bindgen.ec_point_st →
+      (to_oct : Unit →
         Result (core.result.Result (alloc.vec.Vec Std.U8) keystore2_crypto.error.Error))
       (enc : Slice Std.U8 → Slice Std.U8 → Result (core.result.Result
         (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8)

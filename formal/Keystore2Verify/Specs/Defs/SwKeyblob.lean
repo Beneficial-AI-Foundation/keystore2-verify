@@ -135,7 +135,9 @@ def NistCurve (curve : EcCurve.EcCurve) : Prop := ∃ alg, NistAlgId curve alg
 
 /-! ## Blobs -/
 
-/-- The least length of a blob: the version byte, three 4 byte lengths and the 8 byte MAC. -/
+/-- Threshold for starting the MAC check. The Rust layout needs at least 37 bytes:
+1 version + 4 key length + two 12-byte parameter headers + 8 MAC. The extraction leaves the
+parameter reader opaque, so passing the 21-byte guard does not establish that layout. -/
 def minBlobLen : Nat := 21
 
 /-- The shared outcome of the first checks of `new_from_serialized`, up to the MAC check. The

@@ -84,4 +84,15 @@ theorem check_keystore_permission_deref_fail (root : anyhow.Error → ErrRoot)
     permission.check_keystore_permission caller_ctx perm = fail x := by
   sorry
 
+
+/-- Successful authorization used the returned context and a successful check of this permission. -/
+theorem check_keystore_permission_ok_of_result (root : anyhow.Error → ErrRoot)
+    (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
+    (caller_ctx : CStr) (perm : permission.KeystorePerm)
+    (h : permission.check_keystore_permission caller_ctx perm = ok (.Ok ())) :
+    ∃ ctx c, keystore2_selinux.getcon = ok (.Ok ctx) ∧ contextCStr ctx = ok c ∧
+      keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c perm =
+        ok (.Ok ()) := by
+  sorry
+
 end Keystore2Verify.Permission

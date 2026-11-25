@@ -206,7 +206,7 @@ theorem encrypt_message_err_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
       root e' = ErrRoot.crypto e := by
   sorry
 
-/-- conditional: if `generate` returns `Ok` and `public_key` panics, then `encrypt_message` returns
+/-- conditional: if `generate` returns `Ok` and `public_key` fails, then `encrypt_message` returns
 the same `fail x`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context`
 law at line 82, and the outcomes of `generate` and `public_key`. -/
 theorem encrypt_message_fail_public_key (root : anyhow.Error → ErrRoot)
@@ -220,7 +220,7 @@ theorem encrypt_message_fail_public_key (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
   sorry
 
-/-- conditional: if the first three steps return `Ok` and `agree_key` panics, then `encrypt_message`
+/-- conditional: if the first three steps return `Ok` and `agree_key` fails, then `encrypt_message`
 returns the same `fail x`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the
 `context` laws at lines 82, 83 and 84, and the outcomes of the earlier calls and of this one. -/
 theorem encrypt_message_fail_agree_key (root : anyhow.Error → ErrRoot)
@@ -242,14 +242,14 @@ theorem encrypt_message_fail_agree_key (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
   sorry
 
-/-- conditional: if `generate` panics, then `encrypt_message` returns the same `fail x`. Hypothesis:
+/-- conditional: if `generate` fails, then `encrypt_message` returns the same `fail x`. Hypothesis:
 the outcome of this call. No law is needed. -/
 theorem encrypt_message_fail_generate (recipient message : Slice Std.U8)
     (x : Error)
     (hg : ec_crypto.ECDHPrivateKey.generate = fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
   sorry
-/-- conditional: if `generate` and `public_key` return `Ok` and `generate_salt` panics, then
+/-- conditional: if `generate` and `public_key` return `Ok` and `generate_salt` fails, then
 `encrypt_message` returns the same `fail x`. Hypotheses: the shared laws for `from_str_nonconst` and
 `format`, the `context` laws at lines 82 and 83, and the outcomes of the earlier calls and of this
 one. -/
@@ -266,7 +266,7 @@ theorem encrypt_message_fail_generate_salt (root : anyhow.Error → ErrRoot)
     (hs : keystore2_crypto.generate_salt = fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
   sorry
-/-- conditional: if `deref` of the derived key panics, then `encrypt_message` returns the same
+/-- conditional: if `deref` of the derived key fails, then `encrypt_message` returns the same
 `fail x`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` laws at
 lines 82, 83, 84 and 93, and the outcomes of the earlier calls and of this one. -/
 theorem encrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
@@ -290,7 +290,7 @@ theorem encrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     (hd : zvecDeref key = fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
   sorry
-/-- conditional: if `aes_gcm_encrypt` panics, then `encrypt_message` returns the same `fail x`.
+/-- conditional: if `aes_gcm_encrypt` fails, then `encrypt_message` returns the same `fail x`.
 Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` laws at lines 82,
 83, 84 and 93, and the outcomes of the earlier calls and of this one. -/
 theorem encrypt_message_fail_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)

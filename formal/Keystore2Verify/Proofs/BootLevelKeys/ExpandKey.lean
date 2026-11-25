@@ -94,7 +94,7 @@ theorem BootLevelKeyCache_expand_key_len (root : anyhow.Error → ErrRoot)
     ∃ sl, zvecDeref z = ok sl ∧ sl.length = n.val := by
   sorry
 
-/-- conditional: if `get_hkdf_key` panics (returns `fail x`), then `expand_key` fails with the same
+/-- conditional: if `get_hkdf_key` fails (returns `fail x`), then `expand_key` fails with the same
 `x`. Hypothesis: the outcome of `get_hkdf_key` (`hget`). No law is needed. -/
 theorem BootLevelKeyCache_expand_key_fail_get_hkdf_key
     (s : BootLevelKeyCache) (L : BootLevel) (n : Std.Usize) (info : Slice Std.U8) (x : Error)
@@ -102,7 +102,7 @@ theorem BootLevelKeyCache_expand_key_fail_get_hkdf_key
     BootLevelKeyCache.expand_key s L n info = fail x := by
   sorry
 
-/-- conditional: if `get_hkdf_key` returned `Ok (some k)`, and `hkdf_expand n k info` panics
+/-- conditional: if `get_hkdf_key` returned `Ok (some k)`, and `hkdf_expand n k info` fails
 (returns `fail x`), then `expand_key` fails with the same `x`. Hypotheses: the outcome of
 `get_hkdf_key` (`hget`); the view of `k` as a slice `sl` (`hderef`) and the outcome of
 `hkdf_expand` on it (`hexp`); `ContextKeyLaw`; the laws `format` and `from_str_nonconst`. -/
@@ -118,7 +118,7 @@ theorem BootLevelKeyCache_expand_key_fail_expand (root : anyhow.Error → ErrRoo
   sorry
 
 /-- conditional: if `get_hkdf_key` returned `Ok (some k)`, and the view of `k` as a slice
-(`zvecDeref k`) panics (returns `fail x`), then `expand_key` fails with the same `x`.
+(`zvecDeref k`) fails (returns `fail x`), then `expand_key` fails with the same `x`.
 Hypotheses: the outcome of `get_hkdf_key` (`hget`); the outcome of the view (`hderef`);
 `ContextKeyLaw`; the laws `format` and `from_str_nonconst`. -/
 theorem BootLevelKeyCache_expand_key_fail_deref (root : anyhow.Error → ErrRoot)

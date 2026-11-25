@@ -19,8 +19,8 @@ theorem BootLevelKeyCache_new_current (k : keystore2_crypto.zvec.ZVec) (s : Boot
 hypotheses are the shared laws for `VecDeque::new` and `VecDeque::push_back`, for the view `view`
 of the queue. -/
 theorem BootLevelKeyCache_new_ok (view : View)
-    (hnew : VecDequeNewLaw view (VecDequeTGlobal.new keystore2_crypto.zvec.ZVec))
-    (hpush : VecDequePushBackLaw view VecDeque.push_back)
+    (hnew : ZVecQueueNewLaw view)
+    (hpush : ZVecQueuePushBackLaw view)
     (k : keystore2_crypto.zvec.ZVec) :
     ∃ s, BootLevelKeyCache.new k = ok s ∧ s.current.val = 0 ∧ view s.cache = [k] := by
   sorry

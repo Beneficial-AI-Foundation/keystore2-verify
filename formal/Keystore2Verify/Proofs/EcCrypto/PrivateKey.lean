@@ -40,11 +40,20 @@ theorem private_key_err (root : anyhow.Error → ErrRoot)
       root e' = ErrRoot.crypto e := by
   sorry
 
-/-- conditional: if `ec_key_marshal_private_key key` panics, then `private_key key` returns the same
+/-- conditional: if `ec_key_marshal_private_key key` fails, then `private_key key` returns the same
 `fail x`. Hypothesis: the outcome of the call. No law is needed. -/
 theorem private_key_fail (self : ec_crypto.ECDHPrivateKey) (x : Error)
     (hm : keystore2_crypto.ec_key_marshal_private_key self = fail x) :
     ec_crypto.ECDHPrivateKey.private_key self = fail x := by
+  sorry
+
+
+/-- Length of the private key bytes returned to the caller. -/
+theorem private_key_ok_length_of_result (root : anyhow.Error → ErrRoot)
+    (hctx : CryptoCtxLaw root keystore2_crypto.zvec.ZVec) (hlen : EcKeyMarshalPrivateKeySpec)
+    (self : ec_crypto.ECDHPrivateKey) (z : keystore2_crypto.zvec.ZVec)
+    (h : ec_crypto.ECDHPrivateKey.private_key self = ok (.Ok z)) :
+    ∃ s, zvecDeref z = ok s ∧ s.length = 73 := by
   sorry
 
 end Keystore2Verify.EcCrypto

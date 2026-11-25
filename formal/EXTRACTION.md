@@ -17,6 +17,12 @@ The crate `keystore2` of this workspace, with the two patches of `translation-pa
 to a copy of the tree (the checkout is never edited). Cargo arguments:
 `--locked --lib --package keystore2 --no-default-features`.
 
+The publication records neither the host triple nor the effective Cargo target; it also does not
+record whether the macOS-only clock patch was applied. A successful build on another host does
+not recover that information. For regeneration, record `rustc -vV`, the effective target
+(including Cargo configuration and environment), and the applied patch list, then compare both
+output hashes with `Extraction/.fvs-publication.json`.
+
 ## Charon arguments
 
 ```
@@ -110,6 +116,23 @@ generated file as well: 91 axioms in all. A statement that depends on one of the
 An external call is a Lean function application. Equal arguments (including any explicit state) give
 the same result; policy, randomness or resource outcomes that change between identical calls are not
 represented. This is a limit of the model, not a determinism claim about a running Android system.
+
+## What the statement milestone leaves open
+
+* Boot advancement splits the cache returned by the opaque `get_hkdf_key`. No law relates that
+  queue to the *input* cache, identifies its entries with a derivation history, or equates the
+  retained entry to the returned key. The suffix statements refer to the post-lookup queue only.
+* Successful export identifies its returned bytes, format and ordered parameter lists relative to
+  the observed parse and tag lookups. The parameter decoder is opaque: its values and remaining
+  slices are call results, not a specification of which values particular bytes encode. The
+  lookup is not specified to return the first matching tag. No independent DER decoder is modeled.
+* The EC length and wiring statements do not imply a round trip. A current-version round trip
+  through the recipient's serialized private key needs marshal/parse and public-point agreement,
+  equal derived key bytes at the sender and recipient, and inverse AES operations on those bytes.
+  The present length contracts supply none of these identities.
+
+The theorem origins use `sorry` at this milestone. Building the recalls checks their types, not
+that the statements are true or their external hypotheses hold on Android.
 
 `Extraction/translation.json` maps each Rust item to its Lean name. `Extraction/.fvs-publication.json`
 records the hashes of the published files.

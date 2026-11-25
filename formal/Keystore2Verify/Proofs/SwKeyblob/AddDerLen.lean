@@ -27,7 +27,7 @@ Rust code. -/
 theorem add_der_len_fail_capacity (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
     (hlen : len.val ≤ 0xffff)
     (hover : Std.Usize.max < buf.val.length + (derLen len.val).length) :
-    ∃ x, sw_keyblob.add_der_len buf len = fail x := by
+    sw_keyblob.add_der_len buf len = fail .maximumSizeExceeded := by
   sorry
 
 /-- conditional: for a length above `0xffff`, `add_der_len` returns an error whose root cause is

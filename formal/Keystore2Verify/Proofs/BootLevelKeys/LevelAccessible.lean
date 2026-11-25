@@ -20,7 +20,7 @@ at least the current level and the queue is not empty. This covers a level equal
 level, a level above it, an empty queue after `finish`, and a fresh cache (current level 0).
 The hypothesis is the shared law for `VecDeque::is_empty`, for the view `view` of the queue. -/
 theorem BootLevelKeyCache_level_accessible_iff (view : View)
-    (hempty : VecDequeIsEmptyLaw view VecDeque.is_empty) (s : BootLevelKeyCache)
+    (hempty : ZVecQueueIsEmptyLaw view) (s : BootLevelKeyCache)
     (L : BootLevel) :
     ∃ b, BootLevelKeyCache.level_accessible s L = ok b ∧
       (b = true ↔ s.current.val ≤ L.val ∧ view s.cache ≠ []) := by

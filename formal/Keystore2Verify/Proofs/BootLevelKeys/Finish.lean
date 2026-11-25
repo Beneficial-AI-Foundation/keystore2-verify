@@ -18,7 +18,7 @@ theorem BootLevelKeyCache_finish_current (s s' : BootLevelKeyCache)
 /-- conditional: `finish` returns a cache with the same current level and an empty queue. The
 hypothesis is the shared law for `VecDeque::clear`, for the view `view` of the queue. -/
 theorem BootLevelKeyCache_finish_ok (view : View)
-    (hclear : VecDequeClearLaw view VecDeque.clear) (s : BootLevelKeyCache) :
+    (hclear : ZVecQueueClearLaw view) (s : BootLevelKeyCache) :
     ∃ s', BootLevelKeyCache.finish s = ok s' ∧ s'.current = s.current ∧ view s'.cache = [] := by
   sorry
 

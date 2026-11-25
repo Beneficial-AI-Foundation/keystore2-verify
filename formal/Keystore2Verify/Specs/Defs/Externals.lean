@@ -1,4 +1,5 @@
 import Keystore2Verify.Extraction.Keystore2
+import Mathlib.Data.Nat.Digits.Defs
 
 /-!
 # Laws about external functions
@@ -7,15 +8,16 @@ The translation of keystore2 declares some functions only by their type (an `axi
 nothing about what such a function returns. This file states what we assume about them. It
 contains definitions only: nothing here is an axiom and nothing is proved.
 
-Each law is a `Prop` about one external function, written over that function as a parameter.
+Each law is a `Prop`. Some are parameterized by a function; others constrain a concrete symbol.
 A theorem about keystore2 takes the laws it needs as explicit hypotheses.
 
 * A law that needs a shared observation of an opaque type takes it as a parameter: a view
   `VecDeque → List` for the queue, a classifier `root` for `anyhow::Error`. Such a law has no
   closed instance.
-* A law that needs no observation also has a closed instance for the real axiom, named `...Spec`.
+* Closed instances named `...Spec` refer to the corresponding extracted symbols.
 
-Every law holds for the real Rust function, with these labels:
+The comments distinguish Rust behavior on valid inputs from target assumptions and stronger
+model idealisations. These hypotheses have not been discharged for a running system:
 
 * **idealisation: allocation never fails.** The real process aborts when memory runs out. A law
   with this label says the call does not fail.
@@ -32,8 +34,9 @@ give the same result; policy, randomness or resource outcomes that change betwee
 are not represented. This is a limit of the model, not a determinism claim about a running
 Android system.
 
-A Lean value has the form `Result (core.result.Result T E)`. The outer layer `fail` is a Rust
-panic. The inner layer `Err` is a Rust error. Each law says what it means for each layer.
+For `Result (core.result.Result T E)`, `ok (.Err e)` returns a Rust error; `fail x` is an
+outer Aeneas failure. Its source interpretation depends on the operation and constructor. An
+unconstrained opaque failure need not represent a Rust panic. Neither case is divergence.
 -/
 
 open Aeneas Aeneas.Std Result keystore2
@@ -54,8 +57,6 @@ open keystore2.alloc.vec.Vec renaming truncate → vecTruncate
 open keystore2.Shared0Slice.Insts.CoreCmpPartialEqVec renaming ne → sliceVecNe
 open keystore2.keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8 renaming
   deref → zvecDeref
-open keystore2.keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr renaming
-  deref → contextDeref
 
 /-! ## Shapes shared by several laws -/
 
@@ -104,7 +105,7 @@ Idealisation: allocation never fails. Source: `anyhow` `impl From<E> for Error`,
 `Error::from_std`. -/
 def ErrorFromLaw {Err E : Type} (root : Err → ErrRoot) (wrap : E → ErrRoot)
     (from_ : E → Result Err) : Prop :=
-  ∀ x, ∃ e, from_ x = ok e ∧ root e = wrap x
+  ErrorNewLaw root wrap from_
 
 /-- Law for `anyhow::Error::context` (register record `ks2-ext-anyhow-error-error-context`).
 `context e c` never panics. The new error has the same root cause as `e`.
@@ -124,7 +125,7 @@ Only the joint consistency statement `anyhow_laws_satisfiable` uses this law. Th
 the four Rust files take no hypothesis about this method. -/
 def ExtContextErrorLaw {Err C : Type} (root : Err → ErrRoot)
     (ext_context : Err → C → Result Err) : Prop :=
-  ∀ e c, ∃ e', ext_context e c = ok e' ∧ root e' = root e
+  ErrorContextLaw root ext_context
 
 /-- Law for `StdError::ext_context` on a standard error type (register record
 `ks2-ext-anyhow-context-ext-stderror-blanket-ext-context`).
@@ -256,8 +257,8 @@ def queueBound : Nat := Std.Usize.max / 128
 
 /-- Law for `VecDeque::push_back` (the register record is on `ZVecQueuePushBackLaw`).
 If the queue has fewer than `queueBound` elements, `push_back q x` never panics, and the queue
-it returns holds the old elements and then `x`. Nothing is said for longer queues: Rust panics
-on capacity overflow there. The bound keeps the laws consistent with `len`, which returns a
+it returns holds the old elements and then `x`. Nothing is said for longer queues: capacity overflow is possible
+outside this sufficient bound. The bound keeps the laws consistent with `len`, which returns a
 `usize`. Idealisation: allocation never fails.
 The law is asserted of the real `push_back` only at the element type of the verified code,
 `ZVec` with the global allocator (see `ZVecQueuePushBackLaw`). For a larger element type the
@@ -297,48 +298,42 @@ abbrev ZVecQueue : Type :=
 /-- Law for `VecDeque::new` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdequetglobal-new`).
 It is `VecDequeNewLaw` at the real axiom;
-see that law for what it says.
-No statement takes this law as a hypothesis. -/
+see that law for what it says. -/
 def ZVecQueueNewLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeNewLaw view (VecDequeTGlobal.new keystore2_crypto.zvec.ZVec)
 
 /-- Law for `VecDeque::len` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-len`).
 It is `VecDequeLenLaw` at the real axiom;
-see that law for what it says.
-No statement takes this law as a hypothesis. -/
+see that law for what it says. -/
 def ZVecQueueLenLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeLenLaw view VecDeque.len
 
 /-- Law for `VecDeque::is_empty` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-is-empty`).
 It is `VecDequeIsEmptyLaw` at the real axiom;
-see that law for what it says.
-No statement takes this law as a hypothesis. -/
+see that law for what it says. -/
 def ZVecQueueIsEmptyLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeIsEmptyLaw view VecDeque.is_empty
 
 /-- Law for `VecDeque::clear` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-clear`).
 It is `VecDequeClearLaw` at the real axiom;
-see that law for what it says.
-No statement takes this law as a hypothesis. -/
+see that law for what it says. -/
 def ZVecQueueClearLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeClearLaw view VecDeque.clear
 
 /-- Law for `VecDeque::push_back` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-push-back`).
 It is `VecDequePushBackLaw` at the real axiom;
-see that law for what it says.
-No statement takes this law as a hypothesis. -/
+see that law for what it says. -/
 def ZVecQueuePushBackLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequePushBackLaw view VecDeque.push_back
 
 /-- Law for `VecDeque::split_off` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-split-off`).
 It is `VecDequeSplitOffLaw` at the real axiom;
-see that law for what it says, with the clone instance of the global allocator.
-No statement takes this law as a hypothesis. -/
+see that law for what it says, with the clone instance of the global allocator. -/
 def ZVecQueueSplitOffLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal)
 
@@ -347,48 +342,39 @@ end ZVecQueue
 /-! ## Standard library -/
 
 /-- The little-endian number of a list of bytes, first byte least significant. -/
-def leNat : List Std.U8 → Nat
-  | [] => 0
-  | b :: bs => b.val + 256 * leNat bs
+def leNat (bs : List Std.U8) : Nat := Nat.ofDigits 256 (bs.map (·.val))
 
 /-- Law for `core::mem::size_of` (register record `ks2-ext-core-mem-size-of`).
 For the types the code uses, the call never panics and gives the size in bytes: 4 for `u32`,
 4 for `i32`, 8 for `i64`. Nothing is said for other types. -/
-def CoreMemSizeOfSpec : Prop :=
-  (∃ n, core.mem.size_of Std.U32 = ok n ∧ n.val = 4) ∧
-  (∃ n, core.mem.size_of Std.I32 = ok n ∧ n.val = 4) ∧
-  (∃ n, core.mem.size_of Std.I64 = ok n ∧ n.val = 8)
+def SizeOfLaw (T : Type) (bytes : Nat) : Prop :=
+  ∃ n, core.mem.size_of T = ok n ∧ n.val = bytes
 
-/-- Law for `from_ne_bytes` on 4 bytes, as a shape: the call never panics and the value has the
+/-- Law for `from_ne_bytes` on `n` bytes, as a shape: the call never panics and the value has the
 little-endian bit pattern of the bytes. -/
-def FromNeBytes4Law {α : Type} (bv : α → BitVec 32) (f : Array Std.U8 4#usize → Result α) :
-    Prop :=
-  ∀ b, ∃ x, f b = ok x ∧ bv x = BitVec.ofNat 32 (leNat b.val)
-
-/-- Law for `from_ne_bytes` on 8 bytes. See `FromNeBytes4Law`. -/
-def FromNeBytes8Law {α : Type} (bv : α → BitVec 64) (f : Array Std.U8 8#usize → Result α) :
-    Prop :=
-  ∀ b, ∃ x, f b = ok x ∧ bv x = BitVec.ofNat 64 (leNat b.val)
+def FromNeBytesLaw {α : Type} (n : Std.Usize) (bv : α → BitVec (8 * n.val))
+    (f : Array Std.U8 n → Result α) : Prop :=
+  ∀ b, ∃ x, f b = ok x ∧ bv x = BitVec.ofNat (8 * n.val) (leNat b.val)
 
 /-- Law for `u32::from_ne_bytes` (register record `ks2-ext-core-num-u32-from-ne-bytes`).
 Target assumption (little-endian: aarch64 and x86_64 Android): the first byte is the least
 significant. The call never panics. -/
 def CoreNumU32FromNeBytesSpec : Prop :=
-  FromNeBytes4Law (fun x => x.bv) u32FromNeBytes
+  FromNeBytesLaw 4#usize (fun x => x.bv) u32FromNeBytes
 
 /-- Law for `i32::from_ne_bytes` (register record `ks2-ext-core-num-i32-from-ne-bytes`).
 Target assumption (little-endian: aarch64 and x86_64 Android): the first byte is the least
 significant, and the value is the two's complement reading of the bit pattern. The call never
 panics. -/
 def CoreNumI32FromNeBytesSpec : Prop :=
-  FromNeBytes4Law (fun x => x.bv) i32FromNeBytes
+  FromNeBytesLaw 4#usize (fun x => x.bv) i32FromNeBytes
 
 /-- Law for `i64::from_ne_bytes` (register record `ks2-ext-core-num-i64-from-ne-bytes`).
 Target assumption (little-endian: aarch64 and x86_64 Android): the first byte is the least
 significant, and the value is the two's complement reading of the bit pattern. The call never
 panics. -/
 def CoreNumI64FromNeBytesSpec : Prop :=
-  FromNeBytes8Law (fun x => x.bv) i64FromNeBytes
+  FromNeBytesLaw 8#usize (fun x => x.bv) i64FromNeBytes
 
 /-- Law for `<[T]>::first` (register record `ks2-ext-core-slice-slice-first`).
 For bytes: `first s` never panics. It returns the first byte, or `None` for an empty slice. -/
@@ -418,20 +404,17 @@ two calls, or about cryptographic strength: `generate_salt` and the key function
 data, and the helpers read the environment. Source: `keystore2/src/crypto/lib.rs`,
 `keystore2/src/crypto/zvec.rs`, `keystore2/src/crypto/crypto.cpp`. -/
 
-/-- Law for `ZVec::deref` (register record
+/- Deferred concrete contract for `ZVec::deref` (register record
 `ks2-ext-keystore2-crypto-zvec-zvec-insts-coreopsderefderefsliceu8-deref`).
 `deref` never panics: the slice `elems[0..len]` always fits, because `len` never exceeds the
 size of the buffer.
 No statement takes this law as a hypothesis. -/
-def ZVecDerefSpec : Prop := TotalLaw zvecDeref
 
-/-- Law for `Deref for keystore2_selinux::Context` (register record
+/- Deferred concrete contract for `Deref for keystore2_selinux::Context` (register record
 `ks2-ext-keystore2-selinux-context-insts-coreopsderefderefcstr-deref`).
-This law assumes total dereference for every Lean `Context`. For `Raw p`, Rust's `Deref for
+Total dereference would require a valid pointer. For `Raw p`, Rust's `Deref for
 Context` requires a pointer to a valid, live, NUL-terminated C string. The Lean constructor
-carries no proof of that condition. No statement assumes this law. -/
-def ContextDerefSpec : Prop :=
-  TotalLaw contextDeref
+carries no proof of that condition. No concrete totality law is assumed. -/
 
 /-- Law for `hkdf_expand`, over the observation `deref` of a secret vector as a slice.
 If `expand n prk info` returns `Ok z`, then `z` has exactly `n` bytes. Nothing is said when the
@@ -458,16 +441,13 @@ def HkdfExtractLenLaw {Z : Type} (deref : Z → Result (Slice Std.U8))
       Result (core.result.Result Z keystore2_crypto.error.Error)) : Prop :=
   ∀ secret salt z, extract secret salt = ok (.Ok z) → ∃ s, deref z = ok s ∧ s.length = 32
 
-/-- Law for `keystore2_crypto::hkdf_extract` (register record
+/- Deferred concrete contract for `keystore2_crypto::hkdf_extract` (register record
 `ks2-ext-keystore2-crypto-hkdf-extract`).
 If the call returns `Ok z`, then `z` has 32 bytes. The view of `z` as a slice is the `deref`
 axiom of `ZVec`. Source: `crypto/lib.rs`, `hkdf_extract`, which shortens the buffer to the length
 BoringSSL reports, and `crypto/crypto.cpp`, which fixes the digest to SHA-256. That the report
 is 32 is a fact about BoringSSL, not about this repository.
 No statement takes this law as a hypothesis. -/
-def KeystoreCryptoHkdfExtractSpec : Prop :=
-  HkdfExtractLenLaw zvecDeref
-    keystore2_crypto.hkdf_extract
 
 /-- Law for the result of a call that returns a salt. If the call returns `Ok s`, then `s`
 has 16 bytes (`SALT_LENGTH`). Nothing is said when it returns `Err` or panics. -/
@@ -487,5 +467,29 @@ the bytes or about the other outcomes. Source: `crypto/lib.rs`, `hmac_sha256`, w
 vector made as `vec![0; HMAC_SHA256_LEN]`. -/
 def KeystoreCryptoHmacSha256Spec : Prop :=
   ∀ key msg v, keystore2_crypto.hmac_sha256 key msg = ok (.Ok v) → v.val.length = 32
+
+section
+open alloc.string.String.Insts renaming CoreFmtDisplay → StringDisplay
+open core.result.Result.Insts.AnyhowContext
+open anyhow.Error.Insts
+open anyhow.context.ext.StdError
+open keystore2_crypto.error.Error.Insts
+
+/-- The `context` law at the call `result.context(..)` where `result` holds a crypto error and a
+value of type `T`. The root cause of the new error is that crypto error. -/
+abbrev CryptoCtxLaw (root : anyhow.Error → ErrRoot) (T : Type) : Prop :=
+  ResultContextLaw (fun x => ErrRoot.crypto x) root
+    (context (T := T)
+      (Blanket CoreErrorError)
+      StringDisplay)
+
+/-- The `context` law at the call `result.context(..)` where `result` holds an `anyhow::Error` and a
+value of type `T`. The root cause of the new error is the root cause of the old one. -/
+abbrev AnyCtxLaw (root : anyhow.Error → ErrRoot) (T : Type) : Prop :=
+  ResultContextLaw root root
+    (context (T := T)
+      AnyhowContextExtStdError StringDisplay)
+
+end
 
 end Keystore2Verify.Externals

@@ -10,31 +10,11 @@ derivation, and four laws about the lengths of crypto results. Nothing here is a
 namespace Keystore2Verify.EcCrypto
 open Aeneas Aeneas.Std Result keystore2
 open Keystore2Verify.Externals
-open alloc.string.String.Insts renaming CoreFmtDisplay → StringDisplay
-open core.result.Result.Insts.AnyhowContext
-open anyhow.Error.Insts
-open anyhow.context.ext.StdError
-open keystore2_crypto.error.Error.Insts
 open keystore2_crypto.zvec.ZVec.Insts
 
 /-- The view of a secret vector as a slice: the `deref` of `ZVec`. -/
 noncomputable abbrev zvecDeref : keystore2_crypto.zvec.ZVec → Result (Slice Std.U8) :=
   CoreOpsDerefDerefSliceU8.deref
-
-/-- The `context` law at the call `result.context(..)` where `result` holds a crypto error and a
-value of type `T`. The root cause of the new error is that crypto error. -/
-abbrev CryptoCtxLaw (root : anyhow.Error → ErrRoot) (T : Type) : Prop :=
-  ResultContextLaw (fun x => ErrRoot.crypto x) root
-    (context (T := T)
-      (Blanket CoreErrorError)
-      StringDisplay)
-
-/-- The `context` law at the call `result.context(..)` where `result` holds an `anyhow::Error` and a
-value of type `T`. The root cause of the new error is the root cause of the old one. -/
-abbrev AnyCtxLaw (root : anyhow.Error → ErrRoot) (T : Type) : Prop :=
-  ResultContextLaw root root
-    (context (T := T)
-      AnyhowContextExtStdError StringDisplay)
 
 /-- The `info` argument of the key derivation in `agree_key`: the 15 ASCII bytes of `AES-256-GCM
 key`, with no terminator. -/
@@ -46,8 +26,8 @@ def aesKeyInfo : Slice Std.U8 :=
 /-- Law for the length of a marshalled private key, over the observation `deref` of a secret vector
 as a slice. If `marshal key` returns `Ok z`, then `z` has 73 bytes. Nothing is said when the call
 returns `Err` or panics. -/
-def EcKeyMarshalLenLaw {Z : Type} (deref : Z → Result (Slice Std.U8))
-    (marshal : keystore2_crypto.ECKey →
+def EcKeyMarshalLenLaw {K Z : Type} (deref : Z → Result (Slice Std.U8))
+    (marshal : K →
       Result (core.result.Result Z keystore2_crypto.error.Error)) : Prop :=
   ∀ key z, marshal key = ok (.Ok z) → ∃ s, deref z = ok s ∧ s.length = 73
 
@@ -60,8 +40,8 @@ def EcKeyMarshalPrivateKeySpec : Prop :=
 
 /-- Law for the length of a point in octet form. If `to_oct p` returns `Ok v`, then `v` has at least
 1 and at most 133 bytes. Nothing is said when the call returns `Err` or panics. -/
-def PointToOctLenLaw
-    (to_oct : keystore2_crypto_bindgen.ec_point_st →
+def PointToOctLenLaw {P : Type}
+    (to_oct : P →
       Result (core.result.Result (alloc.vec.Vec Std.U8) keystore2_crypto.error.Error)) : Prop :=
   ∀ p v, to_oct p = ok (.Ok v) → 1 ≤ v.val.length ∧ v.val.length ≤ 133
 
