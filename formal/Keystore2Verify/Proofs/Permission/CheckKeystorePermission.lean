@@ -25,7 +25,8 @@ theorem check_keystore_permission_ok (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if `getcon` returns an error `e`, the function returns an error with the same
-root cause as `e`, and the check is not run. Hypotheses: the `context` law of
+root cause as `e`. In the Rust source this path returns before `check_permission` is called.
+Hypotheses: the `context` law of
 `check_keystore_permission_ok`, and the outcome of `getcon`. -/
 theorem check_keystore_permission_getcon_err (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -50,8 +51,9 @@ theorem check_keystore_permission_check_err (root : anyhow.Error → ErrRoot)
       root e' = root e := by
   sorry
 
-/-- conditional: if `getcon` panics, the function panics in the same way, and the check is not
-run. Hypothesis: the outcome of `getcon`. No law is needed. -/
+/-- conditional: if `getcon` panics, the function panics in the same way. In the Rust source this
+path returns before `check_permission` is called. Hypothesis: the outcome of `getcon`. No law is
+needed. -/
 theorem check_keystore_permission_getcon_fail (caller_ctx : CStr)
     (perm : permission.KeystorePerm) (x : Error)
     (hget : keystore2_selinux.getcon = fail x) :
@@ -69,6 +71,17 @@ theorem check_keystore_permission_check_fail (root : anyhow.Error → ErrRoot)
     (hget : keystore2_selinux.getcon = ok (.Ok ctx)) (hc : contextCStr ctx = ok c)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       perm = fail x) :
+    permission.check_keystore_permission caller_ctx perm = fail x := by
+  sorry
+
+/-- conditional: if `getcon` returns the context `ctx` and the view of `ctx` as a `CStr` panics,
+the function panics in the same way. Hypotheses: the `context` law of
+`check_keystore_permission_ok`, and the outcomes of `getcon` and of the view. -/
+theorem check_keystore_permission_deref_fail (root : anyhow.Error → ErrRoot)
+    (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
+    (caller_ctx : CStr) (perm : permission.KeystorePerm)
+    (ctx : keystore2_selinux.Context) (x : Error)
+    (hget : keystore2_selinux.getcon = ok (.Ok ctx)) (hc : contextCStr ctx = fail x) :
     permission.check_keystore_permission caller_ctx perm = fail x := by
   sorry
 
