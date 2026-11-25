@@ -25,7 +25,8 @@ recall tag_type_same_top_bits (t1 t2 : Tag.Tag) (h : t1.bv >>> 28 = t2.bv >>> 28
     ∃ r, sw_keyblob.tag_type t1 = ok r ∧ sw_keyblob.tag_type t2 = ok r
 
 recall add_der_len_ok (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
-    (hlen : len.val ≤ 0xffff) (hcap : buf.val.length + (derLen len.val).length ≤ Std.Usize.max) :
+    (hlen : len.val ≤ 0xffff)
+    (hcap : buf.val.length + (derLen len.val).length ≤ Std.Usize.max) :
     ∃ buf', sw_keyblob.add_der_len buf len = ok (.Ok (), buf') ∧
       nums buf'.val = nums buf.val ++ derLen len.val
 
@@ -334,6 +335,22 @@ recall new_from_serialized_ok (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeS
       kb.key_material.val = (data.val.drop 5).take (u32At data.val 1) ∧
       kb.hw_enforced = hw ∧ kb.sw_enforced = sw
 
+recall new_from_serialized_ok_mac (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
+    (data : Slice Std.U8) (hidden : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
+    (h : sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Ok kb)) :
+    MacOk data hidden
+
+recall export_key_fail_hidden (data : Slice Std.U8) (params : Slice KeyParam) (x : Error)
+    (hh : sw_keyblob.hidden_params params
+      (Array.to_slice (Array.make 1#usize [sw_keyblob.SOFTWARE_ROOT_OF_TRUST])) = fail x) :
+    sw_keyblob.export_key data params = fail x
+
+recall export_key_ok_mac (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
+    (data : Slice Std.U8) (params : Slice KeyParam)
+    (out : KeyFormat.KeyFormat × alloc.vec.Vec Std.U8 × alloc.vec.Vec KeyParam)
+    (h : sw_keyblob.export_key data params = ok (.Ok out)) :
+    ∃ hidden, HiddenOf params hidden ∧ MacOk data hidden
+
 recall export_key_err_short (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
     (hsize : CoreMemSizeOfSpec) (data : Slice Std.U8) (params hidden : Slice KeyParam)
     (hid : HiddenOf params hidden) (h : data.val.length < minBlobLen) :
@@ -412,6 +429,21 @@ recall export_key_err_no_curve (root : anyhow.Error → ErrRoot) (hlaw : BlobErr
     (hget : sw_keyblob.get_tag_value comb Tag.Tag.ALGORITHM = ok (some (algV algEC)))
     (hcurve : sw_keyblob.get_tag_value comb Tag.Tag.EC_CURVE = ok none) :
     ∃ e, sw_keyblob.export_key data params = ok (.Err e) ∧ IsBlobErr root e
+
+recall export_key_fail_get_algorithm (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
+    (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
+    (hp : ParsesTo data params (ok (.Ok kb))) (comb : Slice KeyParam)
+    (hcomb : CombinedOf kb comb) (hfit : CombinedFits kb) (x : Error)
+    (hget : sw_keyblob.get_tag_value comb Tag.Tag.ALGORITHM = fail x) :
+    sw_keyblob.export_key data params = fail x
+
+recall export_key_fail_get_curve (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
+    (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
+    (hp : ParsesTo data params (ok (.Ok kb))) (comb : Slice KeyParam)
+    (hcomb : CombinedOf kb comb) (hfit : CombinedFits kb) (x : Error)
+    (hget : sw_keyblob.get_tag_value comb Tag.Tag.ALGORITHM = ok (some (algV algEC)))
+    (hcurve : sw_keyblob.get_tag_value comb Tag.Tag.EC_CURVE = fail x) :
+    sw_keyblob.export_key data params = fail x
 
 recall export_key_err_curve (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
     (hclone : KeyParameterCloneLaw) (data : Slice Std.U8) (params : Slice KeyParam)

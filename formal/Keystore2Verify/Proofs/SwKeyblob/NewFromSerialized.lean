@@ -188,4 +188,16 @@ theorem new_from_serialized_ok (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNe
       kb.key_material.val = (data.val.drop 5).take (u32At data.val 1) ∧
       kb.hw_enforced = hw ∧ kb.sw_enforced = sw := by
   sorry
+
+/-- conditional: if `new_from_serialized` returns `Ok kb`, then the MAC check passed: the blob has
+at least 21 bytes, and its last 8 bytes equal the MAC that `compute_hmac` returns for all bytes
+but the last 8 and the hidden input that the function was given (`MacOk`). The outcome of
+`compute_hmac` is derived from the observed success, not assumed. This is a fact about the control
+flow of the function; it says nothing about the strength of the MAC. Hypotheses: the laws
+`CoreMemSizeOfSpec` and `Shared0SliceNeSpec`. -/
+theorem new_from_serialized_ok_mac (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
+    (data : Slice Std.U8) (hidden : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
+    (h : sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Ok kb)) :
+    MacOk data hidden := by
+  sorry
 end Keystore2Verify.SwKeyblob

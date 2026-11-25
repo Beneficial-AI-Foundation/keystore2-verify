@@ -166,7 +166,12 @@ enforced ones. -/
 def CombinedOf (kb : sw_keyblob.KeyBlob) (comb : Slice KeyParam) : Prop :=
   comb.val = kb.hw_enforced.val ++ kb.sw_enforced.val
 
-/-- The two parameter lists of `kb` fit together in one vector. -/
+/-- The two parameter lists of `kb` fit together in one vector, in the sense of the Aeneas vector
+model: the combined element count is at most `usize::MAX`. Rust is stricter. A `Vec` may hold at
+most `isize::MAX` bytes, a limit that is reached earlier, and for `KeyParameter` the element size
+lowers the count further. Between the two bounds the model returns a value where Rust panics with
+a capacity overflow. So the statements that use this definition describe the model. They are not
+a capacity guarantee for the Rust code. -/
 def CombinedFits (kb : sw_keyblob.KeyBlob) : Prop :=
   kb.hw_enforced.length + kb.sw_enforced.length ≤ Std.Usize.max
 

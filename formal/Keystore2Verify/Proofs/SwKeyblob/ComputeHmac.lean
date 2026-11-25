@@ -76,7 +76,9 @@ theorem compute_hmac_fail_hmac (data : Slice Std.U8) (hidden : Slice KeyParam)
 
 /-- conditional: if `serialize_params hidden` returns `Ok hd` and `data ++ hd` is longer than the
 largest vector, `compute_hmac` panics. Hypotheses: the outcome of `serialize_params`, and the
-total length is above `Usize.max`. -/
+total length is above `Usize.max`. That is the bound of the Aeneas vector model; in Rust the panic
+comes at the lower limit of `isize::MAX` bytes. So this statement describes the model and is not a
+capacity guarantee for the Rust code. -/
 theorem compute_hmac_fail_capacity (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hd : alloc.vec.Vec Std.U8) (hser : sw_keyblob.serialize_params hidden = ok (.Ok hd))
     (hover : Std.Usize.max < data.val.length + hd.val.length) :
