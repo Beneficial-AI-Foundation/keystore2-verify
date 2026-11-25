@@ -58,13 +58,13 @@ theorem export_key_err_mac (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws
     ∃ e, sw_keyblob.export_key data params = ok (.Err e) ∧ IsBlobErr root e := by
   sorry
 
-/-- conditional: if the parser returns `Err e`, then `export_key` returns an error with the same
-root cause. This covers every error of `new_from_serialized`. Hypothesis: `ParsesTo` with the
-result `Err e`. -/
-theorem export_key_err_parse (root : anyhow.Error → ErrRoot) (data : Slice Std.U8)
+/-- conditional: if the parser returns `Err e`, then `export_key` returns the same
+error `e`: the error value is passed through unchanged. This covers every error of
+`new_from_serialized`. Hypothesis: `ParsesTo` with the result `Err e`. -/
+theorem export_key_err_parse (data : Slice Std.U8)
     (params : Slice KeyParam) (e : anyhow.Error)
     (hp : ParsesTo data params (ok (.Err e))) :
-    ∃ e', sw_keyblob.export_key data params = ok (.Err e') ∧ root e' = root e := by
+    sw_keyblob.export_key data params = ok (.Err e) := by
   sorry
 
 /-- conditional: if the parser panics, then `export_key` panics in the same way. Hypothesis:

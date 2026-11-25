@@ -187,10 +187,10 @@ recall compute_hmac_ok_length (htrunc : AllocVecTruncateSpec)
       = ok (.Ok tag)) :
     ∃ t, sw_keyblob.KeyBlob.compute_hmac data hidden = ok (.Ok t) ∧ t.val.length = 8
 
-recall compute_hmac_err_serialize (root : anyhow.Error → ErrRoot) (data : Slice Std.U8)
+recall compute_hmac_err_serialize (data : Slice Std.U8)
     (hidden : Slice KeyParam) (e : anyhow.Error)
     (hser : sw_keyblob.serialize_params hidden = ok (.Err e)) :
-    ∃ e', sw_keyblob.KeyBlob.compute_hmac data hidden = ok (.Err e') ∧ root e' = root e
+    sw_keyblob.KeyBlob.compute_hmac data hidden = ok (.Err e)
 
 recall compute_hmac_fail_serialize (data : Slice Std.U8) (hidden : Slice KeyParam) (x : Error)
     (hser : sw_keyblob.serialize_params hidden = fail x) :
@@ -224,13 +224,12 @@ recall new_from_serialized_err_short (root : anyhow.Error → ErrRoot) (hlaw : B
     ∃ e, sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) ∧
       IsBlobErr root e
 
-recall new_from_serialized_err_hmac (root : anyhow.Error → ErrRoot)
+recall new_from_serialized_err_hmac
     (hsize : CoreMemSizeOfSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (h : minBlobLen ≤ data.val.length) (s : Slice Std.U8)
     (hs : s.val = data.val.take (data.val.length - 8)) (e : anyhow.Error)
     (hmac : sw_keyblob.KeyBlob.compute_hmac s hidden = ok (.Err e)) :
-    ∃ e', sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e') ∧
-      root e' = root e
+    sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e)
 
 recall new_from_serialized_fail_hmac (hsize : CoreMemSizeOfSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (h : minBlobLen ≤ data.val.length) (s : Slice Std.U8)
@@ -262,14 +261,13 @@ recall new_from_serialized_err_key_len (root : anyhow.Error → ErrRoot)
     ∃ e, sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) ∧
       IsBlobErr root e
 
-recall new_from_serialized_err_hw (root : anyhow.Error → ErrRoot)
+recall new_from_serialized_err_hw
     (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec) (hfirst : CoreSliceFirstSpec)
     (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hpast : PastKey data hidden) (d2 : Slice Std.U8)
     (hd2 : d2.val = data.val.drop (5 + u32At data.val 1)) (e : anyhow.Error)
     (d3 : Slice Std.U8) (hdes : sw_keyblob.deserialize_params d2 = ok (.Err e, d3)) :
-    ∃ e', sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e') ∧
-      root e' = root e
+    sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e)
 
 recall new_from_serialized_fail_hw (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
@@ -278,7 +276,7 @@ recall new_from_serialized_fail_hw (hsize : CoreMemSizeOfSpec) (hne : Shared0Sli
     (hdes : sw_keyblob.deserialize_params d2 = fail x) :
     sw_keyblob.KeyBlob.new_from_serialized data hidden = fail x
 
-recall new_from_serialized_err_sw (root : anyhow.Error → ErrRoot)
+recall new_from_serialized_err_sw
     (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec) (hfirst : CoreSliceFirstSpec)
     (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hpast : PastKey data hidden) (d2 : Slice Std.U8)
@@ -286,8 +284,7 @@ recall new_from_serialized_err_sw (root : anyhow.Error → ErrRoot)
     (hw : alloc.vec.Vec KeyParam) (d3 : Slice Std.U8)
     (hdes1 : sw_keyblob.deserialize_params d2 = ok (.Ok hw, d3)) (e : anyhow.Error)
     (d4 : Slice Std.U8) (hdes2 : sw_keyblob.deserialize_params d3 = ok (.Err e, d4)) :
-    ∃ e', sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e') ∧
-      root e' = root e
+    sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e)
 
 recall new_from_serialized_fail_sw (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
@@ -365,10 +362,10 @@ recall export_key_err_mac (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws 
     (hbad : data.val.drop (data.val.length - 8) ≠ m.val) :
     ∃ e, sw_keyblob.export_key data params = ok (.Err e) ∧ IsBlobErr root e
 
-recall export_key_err_parse (root : anyhow.Error → ErrRoot) (data : Slice Std.U8)
+recall export_key_err_parse (data : Slice Std.U8)
     (params : Slice KeyParam) (e : anyhow.Error)
     (hp : ParsesTo data params (ok (.Err e))) :
-    ∃ e', sw_keyblob.export_key data params = ok (.Err e') ∧ root e' = root e
+    sw_keyblob.export_key data params = ok (.Err e)
 
 recall export_key_fail_parse (data : Slice Std.U8) (params : Slice KeyParam) (x : Error)
     (hp : ParsesTo data params (fail x)) :

@@ -16,16 +16,15 @@ theorem new_from_serialized_err_short (root : anyhow.Error → ErrRoot) (hlaw : 
   sorry
 
 /-- conditional: if the blob has at least 21 bytes and `compute_hmac` on all bytes but the last 8
-returns `Err e`, then `new_from_serialized` returns an error with the same root cause.
-Hypotheses: the outcome of `compute_hmac` (`s` is the bytes of the blob but the last 8), and the
-law `CoreMemSizeOfSpec`. -/
-theorem new_from_serialized_err_hmac (root : anyhow.Error → ErrRoot)
+returns `Err e`, then `new_from_serialized` returns the same error `e`: the error value is
+passed through unchanged. Hypotheses: the outcome of `compute_hmac` (`s` is the bytes of the
+blob but the last 8), and the law `CoreMemSizeOfSpec`. -/
+theorem new_from_serialized_err_hmac
     (hsize : CoreMemSizeOfSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (h : minBlobLen ≤ data.val.length) (s : Slice Std.U8)
     (hs : s.val = data.val.take (data.val.length - 8)) (e : anyhow.Error)
     (hmac : sw_keyblob.KeyBlob.compute_hmac s hidden = ok (.Err e)) :
-    ∃ e', sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e') ∧
-      root e' = root e := by
+    sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) := by
   sorry
 
 /-- conditional: if the blob has at least 21 bytes and `compute_hmac` on all bytes but the last 8
@@ -80,23 +79,23 @@ theorem new_from_serialized_err_key_len (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if all checks before the parameter lists pass and the first `deserialize_params`
-returns `Err e`, then `new_from_serialized` returns an error with the same root cause.
-Hypotheses: `PastKey`, `d2` is the blob after the key material (`5 + u32At data 1` bytes
-dropped), the outcome of `deserialize_params d2`, and the laws `CoreMemSizeOfSpec`,
-`Shared0SliceNeSpec`, `CoreSliceFirstSpec` and `CoreNumU32FromNeBytesSpec`. -/
-theorem new_from_serialized_err_hw (root : anyhow.Error → ErrRoot)
+returns `Err e`, then `new_from_serialized` returns the same error `e`: the error value is
+passed through unchanged. Hypotheses: `PastKey`, `d2` is the blob after the key material
+(`5 + u32At data 1` bytes dropped), the outcome of `deserialize_params d2`, and the laws
+`CoreMemSizeOfSpec`, `Shared0SliceNeSpec`, `CoreSliceFirstSpec` and
+`CoreNumU32FromNeBytesSpec`. -/
+theorem new_from_serialized_err_hw
     (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec) (hfirst : CoreSliceFirstSpec)
     (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hpast : PastKey data hidden) (d2 : Slice Std.U8)
     (hd2 : d2.val = data.val.drop (5 + u32At data.val 1)) (e : anyhow.Error)
     (d3 : Slice Std.U8) (hdes : sw_keyblob.deserialize_params d2 = ok (.Err e, d3)) :
-    ∃ e', sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e') ∧
-      root e' = root e := by
+    sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) := by
   sorry
 
 /-- conditional: if all checks before the parameter lists pass and the first `deserialize_params`
 panics, then `new_from_serialized` panics in the same way. Hypotheses: as for
-`new_from_serialized_err_hw`, without `root` (no error value) and `d3`, with the panic `x` as the
+`new_from_serialized_err_hw`, without `d3`, with the panic `x` as the
 outcome of `deserialize_params d2`. -/
 theorem new_from_serialized_fail_hw (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
@@ -107,10 +106,11 @@ theorem new_from_serialized_fail_hw (hsize : CoreMemSizeOfSpec) (hne : Shared0Sl
   sorry
 
 /-- conditional: if all checks before the parameter lists pass, the first `deserialize_params`
-returns `Ok` and the second returns `Err e`, then `new_from_serialized` returns an error with the
-same root cause. Hypotheses: as for `new_from_serialized_err_hw`, with `d3` the slice that the
-first call leaves, and the outcomes of both calls. -/
-theorem new_from_serialized_err_sw (root : anyhow.Error → ErrRoot)
+returns `Ok` and the second returns `Err e`, then `new_from_serialized` returns the same error
+`e`: the error value is passed through unchanged. Hypotheses: as for
+`new_from_serialized_err_hw`, with `d3` the slice that the first call leaves, and the outcomes
+of both calls. -/
+theorem new_from_serialized_err_sw
     (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec) (hfirst : CoreSliceFirstSpec)
     (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hpast : PastKey data hidden) (d2 : Slice Std.U8)
@@ -118,13 +118,12 @@ theorem new_from_serialized_err_sw (root : anyhow.Error → ErrRoot)
     (hw : alloc.vec.Vec KeyParam) (d3 : Slice Std.U8)
     (hdes1 : sw_keyblob.deserialize_params d2 = ok (.Ok hw, d3)) (e : anyhow.Error)
     (d4 : Slice Std.U8) (hdes2 : sw_keyblob.deserialize_params d3 = ok (.Err e, d4)) :
-    ∃ e', sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e') ∧
-      root e' = root e := by
+    sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) := by
   sorry
 
 /-- conditional: if all checks before the parameter lists pass, the first `deserialize_params`
 returns `Ok` and the second panics, then `new_from_serialized` panics in the same way. Hypotheses:
-as for `new_from_serialized_err_sw`, without `root` (no error value) and `d4`, with the panic `x`
+as for `new_from_serialized_err_sw`, without `d4`, with the panic `x`
 as the outcome of the second call. -/
 theorem new_from_serialized_fail_sw (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
