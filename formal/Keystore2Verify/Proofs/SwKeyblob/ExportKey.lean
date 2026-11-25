@@ -248,9 +248,10 @@ theorem export_key_ok_curve25519 (hclone : KeyParameterCloneLaw) (data : Slice S
 long, `export_key` returns `Ok` of the format `PKCS8`, the PKCS#8 `PrivateKeyInfo` of the key
 material (`pkcs8Wrap`, built with the algorithm identifier `alg` of the curve), and the two
 parameter lists joined. `pkcs8_wrap_nist_key` is translated, so its outcome is derived, not
-assumed. Hypotheses: as for `export_key_err_no_curve`, with `get_tag_value comb EC_CURVE`
-returning `EcCurve(c)`, `alg` the identifier of `c`, and the length of the content `pkcs8Body alg
-key` at most `0xffff`. The bound in `hfit` is that of the Aeneas vector model (see
+assumed. The success path of `pkcs8_wrap_nist_key` evaluates no opaque call, and no push on it
+comes near the capacity bound. Hypotheses: as for `export_key_err_no_curve`, with `get_tag_value
+comb EC_CURVE` returning `EcCurve(c)`, `alg` the identifier of `c`, and the length of the content
+`pkcs8Body alg key` at most `0xffff`. The bound in `hfit` is that of the Aeneas vector model (see
 `CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this statement
 describes the model and is not a capacity guarantee for the Rust code. -/
 theorem export_key_ok_nist (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
@@ -288,12 +289,15 @@ theorem export_key_err_nist_key_len (root : anyhow.Error → ErrRoot)
 /-- conditional: for an EC key on a NIST curve, a key material of at most `0xffff` bytes and a
 wrapped content longer than `0xffff` bytes, `export_key` returns an error whose root cause is
 `INVALID_KEY_BLOB`. Together with `export_key_ok_nist` and `export_key_err_nist_key_len` this
-covers every outcome of `pkcs8_wrap_nist_key` on a NIST curve: the function has no panic outcome
-(every push is far below the capacity bound), and no other error. Hypotheses: as for
-`export_key_ok_nist`, with the key at most `0xffff` bytes, the content longer than `0xffff` bytes,
-and `BlobErrFmtLaws`. The bound in `hfit` is that of the Aeneas vector model (see `CombinedFits`):
-Rust's limit of `isize::MAX` bytes is reached earlier, so this statement describes the model and
-is not a capacity guarantee for the Rust code. -/
+covers every outcome of `pkcs8_wrap_nist_key` on a NIST curve, under `BlobErrFmtLaws`. Those laws
+keep the opaque calls that build the error (`Error::new`, `format`, `context`) from panicking;
+without them a panic is possible on the two error paths. The success path evaluates no opaque
+call: the generated body only pushes, extends, measures lengths and adds small numbers, and no
+push comes near the capacity bound. Hypotheses: as for `export_key_ok_nist`, with the key at most
+`0xffff` bytes, the content longer than `0xffff` bytes, and `BlobErrFmtLaws`. The bound in `hfit`
+is that of the Aeneas vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is
+reached earlier, so this statement describes the model and is not a capacity guarantee for the
+Rust code. -/
 theorem export_key_err_nist_body_len (root : anyhow.Error → ErrRoot)
     (hlaw : BlobErrFmtLaws root) (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
     (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
