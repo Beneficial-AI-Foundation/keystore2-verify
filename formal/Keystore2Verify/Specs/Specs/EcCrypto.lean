@@ -754,8 +754,6 @@ recall decrypt_message_ok_length (root : anyhow.Error → ErrRoot)
     (.Ok p) ∧ ∃ s, zvecDeref p = ok s ∧ s.length = ct.length
 
 recall decrypt_message_ok_length_of_result (root : anyhow.Error → ErrRoot)
-    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (hlen : AesGcmDecryptSpec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)

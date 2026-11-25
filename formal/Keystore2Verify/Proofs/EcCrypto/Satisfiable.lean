@@ -11,18 +11,20 @@ The laws about the secret vector are stated over one view `deref` of the vector 
 of laws that cannot hold together, or that hold only when no crypto call succeeds, would make
 every statement that assumes them empty. The statement below gives one carrier and one set of
 functions for which the shared length laws and the four laws of `Specs/Defs/EcCrypto.lean` hold
-together, and in which every function has a call that returns `Ok`.
+together, and in which five of the seven functions have a call that returns `Ok` and the other two
+(`marshal` and `to_oct`) return `Ok` on every input.
 -/
 
 /-- exact: there are a carrier `Z` for the secret vector, a view `deref` of it as a slice and one
-function for each of the eight external calls, such that `TotalLaw deref`, `HkdfExpandLenLaw`,
+function for each of the seven external calls, such that `TotalLaw deref`, `HkdfExpandLenLaw`,
 `HkdfExtractLenLaw`, `SaltLenLaw` and the four laws `EcKeyMarshalLenLaw`, `PointToOctLenLaw`,
-`AesGcmEncryptLenLaw` and `AesGcmDecryptLenLaw` hold together, and each function has a call that
-returns `Ok`. The model is `Z := Slice U8` with `deref` the identity: every function always returns
-`Ok`, with a vector of zeros of the length that its law asks for (the ciphertext of the encryption
-is the message, and the plaintext of the decryption is the ciphertext). For `marshal` and `to_oct`
-the statement asks for `Ok` on every input, because their argument types are opaque and Lean cannot
-show that they have an element. -/
+`AesGcmEncryptLenLaw` and `AesGcmDecryptLenLaw` hold together. The functions `expand`, `extract`,
+`salt`, `enc` and `dec` have a call that returns `Ok`. `marshal` and `to_oct` return `Ok` on every
+input, so every call that can be made succeeds; whether their opaque argument types have an element
+is not something Lean can show. The model is `Z := Slice U8` with `deref` the identity: every
+function always returns `Ok`, with a vector of zeros of the length that its law asks for (the
+ciphertext of the encryption is the message, and the plaintext of the decryption is the ciphertext).
+-/
 theorem ec_crypto_laws_satisfiable :
     ∃ (Z : Type) (deref : Z → Result (Slice Std.U8))
       (expand : Std.Usize → Slice Std.U8 → Slice Std.U8 →

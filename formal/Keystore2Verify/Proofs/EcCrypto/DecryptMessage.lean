@@ -73,12 +73,9 @@ theorem decrypt_message_ok_length (root : anyhow.Error → ErrRoot)
 
 /-- conditional: if `decrypt_message` returns `Ok p`, then `p` is as long as `ct`, whichever attempt
 returned the plaintext. The hypothesis is the returned value; the outcomes of `public_key`,
-`agree_key` and the two decryptions are not assumed. Hypotheses: the shared laws for
-`from_str_nonconst` and `format`, the `context` laws `AnyCtxLaw` at lines 117 and 129 and
-`CryptoCtxLaw` at line 131, the length law `AesGcmDecryptSpec`, and the returned value. -/
+`agree_key` and the two decryptions are not assumed. Hypotheses: the `context` law `CryptoCtxLaw`
+at line 131, the length law `AesGcmDecryptSpec`, and the returned value. -/
 theorem decrypt_message_ok_length_of_result (root : anyhow.Error → ErrRoot)
-    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (hlen : AesGcmDecryptSpec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
