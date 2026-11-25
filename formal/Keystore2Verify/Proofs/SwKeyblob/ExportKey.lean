@@ -122,10 +122,10 @@ theorem export_key_err_no_algorithm (root : anyhow.Error → ErrRoot) (hlaw : Bl
 /-- conditional: if the first `ALGORITHM` value is not `Algorithm` of AES, triple DES, HMAC, RSA
 or EC (ML-DSA, any other integer, or a value of another kind), `export_key` returns an error whose
 root cause is `INVALID_KEY_BLOB`. Hypotheses: as for `export_key_err_no_algorithm`, with
-`get_tag_value` returning `some v` and `v` not a `KnownAlgorithm`, and the law
-`KeyParameterCloneLaw`. The bound in `hfit` is that of the Aeneas vector model (see
-`CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this statement
-describes the model and is not a capacity guarantee for the Rust code. -/
+`BlobErrFmtLaws` in place of `BlobErrLaws`, `get_tag_value` returning `some v` and `v` not a
+`KnownAlgorithm`, and the law `KeyParameterCloneLaw`. The bound in `hfit` is that of the Aeneas
+vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this
+statement describes the model and is not a capacity guarantee for the Rust code. -/
 theorem export_key_err_algorithm (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hclone : KeyParameterCloneLaw) (data : Slice Std.U8) (params : Slice KeyParam)
     (kb : sw_keyblob.KeyBlob) (hp : ParsesTo data params (ok (.Ok kb)))
@@ -138,10 +138,10 @@ theorem export_key_err_algorithm (root : anyhow.Error → ErrRoot) (hlaw : BlobE
 /-- conditional: for an AES, triple DES or HMAC key, `export_key` returns `Ok` of the format
 `RAW`, the key material of the blob without change, and the two parameter lists joined (hardware
 enforced first). In the Rust source this branch does not look up the curve. Hypotheses: as for
-`export_key_err_no_algorithm`, with `get_tag_value` returning `Algorithm(a)` for a
-`RawAlgorithm a`, and the law `KeyParameterCloneLaw`. The bound in `hfit` is that of the Aeneas
-vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this
-statement describes the model and is not a capacity guarantee for the Rust code. -/
+`export_key_err_no_algorithm` without `BlobErrLaws`, with `get_tag_value` returning `Algorithm(a)`
+for a `RawAlgorithm a`, and the law `KeyParameterCloneLaw`. The bound in `hfit` is that of the
+Aeneas vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier,
+so this statement describes the model and is not a capacity guarantee for the Rust code. -/
 theorem export_key_ok_raw (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
     (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
     (hp : ParsesTo data params (ok (.Ok kb))) (comb : Slice KeyParam)
@@ -213,10 +213,11 @@ theorem export_key_fail_get_curve (hclone : KeyParameterCloneLaw) (data : Slice 
 
 /-- conditional: for an EC key whose first `EC_CURVE` value is not `EcCurve` of P-224, P-256,
 P-384, P-521 or Curve25519, `export_key` returns an error whose root cause is `INVALID_KEY_BLOB`.
-Hypotheses: as for `export_key_err_no_curve`, with `get_tag_value comb EC_CURVE` returning `some
-cv` and `cv` not a `KnownCurve`. The bound in `hfit` is that of the Aeneas vector model (see
-`CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this statement
-describes the model and is not a capacity guarantee for the Rust code. -/
+Hypotheses: as for `export_key_err_no_curve`, with `BlobErrFmtLaws` in place of `BlobErrLaws`,
+`get_tag_value comb EC_CURVE` returning `some cv` and `cv` not a `KnownCurve`. The bound in `hfit`
+is that of the Aeneas vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is
+reached earlier, so this statement describes the model and is not a capacity guarantee for the
+Rust code. -/
 theorem export_key_err_curve (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hclone : KeyParameterCloneLaw) (data : Slice Std.U8) (params : Slice KeyParam)
     (kb : sw_keyblob.KeyBlob) (hp : ParsesTo data params (ok (.Ok kb)))
@@ -230,10 +231,10 @@ theorem export_key_err_curve (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFm
 /-- conditional: for an EC key on Curve25519, `export_key` returns `Ok` of the format `PKCS8`, the
 key material of the blob without change, and the two parameter lists joined. In the Rust source
 this branch neither checks nor wraps the key material. Hypotheses: as for
-`export_key_err_no_curve`, with `get_tag_value comb EC_CURVE` returning `EcCurve(CURVE_25519)`.
-The bound in `hfit` is that of the Aeneas vector model (see `CombinedFits`): Rust's limit of
-`isize::MAX` bytes is reached earlier, so this statement describes the model and is not a capacity
-guarantee for the Rust code. -/
+`export_key_err_no_curve` without `BlobErrLaws`, with `get_tag_value comb EC_CURVE` returning
+`EcCurve(CURVE_25519)` in place of `none`. The bound in `hfit` is that of the Aeneas vector model
+(see `CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this statement
+describes the model and is not a capacity guarantee for the Rust code. -/
 theorem export_key_ok_curve25519 (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
     (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
     (hp : ParsesTo data params (ok (.Ok kb))) (comb : Slice KeyParam)
@@ -249,11 +250,12 @@ long, `export_key` returns `Ok` of the format `PKCS8`, the PKCS#8 `PrivateKeyInf
 material (`pkcs8Wrap`, built with the algorithm identifier `alg` of the curve), and the two
 parameter lists joined. `pkcs8_wrap_nist_key` is translated, so its outcome is derived, not
 assumed. The success path of `pkcs8_wrap_nist_key` evaluates no opaque call, and no push on it
-comes near the capacity bound. Hypotheses: as for `export_key_err_no_curve`, with `get_tag_value
-comb EC_CURVE` returning `EcCurve(c)`, `alg` the identifier of `c`, and the length of the content
-`pkcs8Body alg key` at most `0xffff`. The bound in `hfit` is that of the Aeneas vector model (see
-`CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier, so this statement
-describes the model and is not a capacity guarantee for the Rust code. -/
+comes near the capacity bound. Hypotheses: as for `export_key_err_no_curve` without `BlobErrLaws`,
+with `get_tag_value comb EC_CURVE` returning `EcCurve(c)` in place of `none`, `alg` the identifier
+of `c`, and the length of the content `pkcs8Body alg key` at most `0xffff`. The bound in `hfit` is
+that of the Aeneas vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is
+reached earlier, so this statement describes the model and is not a capacity guarantee for the
+Rust code. -/
 theorem export_key_ok_nist (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
     (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
     (hp : ParsesTo data params (ok (.Ok kb))) (comb : Slice KeyParam)
@@ -270,10 +272,11 @@ theorem export_key_ok_nist (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
 
 /-- conditional: for an EC key on a NIST curve and a key material longer than `0xffff` bytes,
 `export_key` returns an error whose root cause is `INVALID_KEY_BLOB` (`pkcs8_wrap_nist_key` cannot
-encode the length). Hypotheses: as for `export_key_ok_nist`, with `c` a `NistCurve`, the key
-material longer than `0xffff` bytes, and `BlobErrFmtLaws`. The bound in `hfit` is that of the
-Aeneas vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is reached earlier,
-so this statement describes the model and is not a capacity guarantee for the Rust code. -/
+encode the length). Hypotheses: as for `export_key_ok_nist`, with `c` a `NistCurve` in place of
+`alg` and the bound on the content, the key material longer than `0xffff` bytes, and
+`BlobErrFmtLaws`. The bound in `hfit` is that of the Aeneas vector model (see `CombinedFits`):
+Rust's limit of `isize::MAX` bytes is reached earlier, so this statement describes the model and
+is not a capacity guarantee for the Rust code. -/
 theorem export_key_err_nist_key_len (root : anyhow.Error → ErrRoot)
     (hlaw : BlobErrFmtLaws root) (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
     (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)
@@ -294,10 +297,10 @@ keep the opaque calls that build the error (`Error::new`, `format`, `context`) f
 without them a panic is possible on the two error paths. The success path evaluates no opaque
 call: the generated body only pushes, extends, measures lengths and adds small numbers, and no
 push comes near the capacity bound. Hypotheses: as for `export_key_ok_nist`, with the key at most
-`0xffff` bytes, the content longer than `0xffff` bytes, and `BlobErrFmtLaws`. The bound in `hfit`
-is that of the Aeneas vector model (see `CombinedFits`): Rust's limit of `isize::MAX` bytes is
-reached earlier, so this statement describes the model and is not a capacity guarantee for the
-Rust code. -/
+`0xffff` bytes, the content longer than `0xffff` bytes in place of the bound on it, and
+`BlobErrFmtLaws`. The bound in `hfit` is that of the Aeneas vector model (see `CombinedFits`):
+Rust's limit of `isize::MAX` bytes is reached earlier, so this statement describes the model and
+is not a capacity guarantee for the Rust code. -/
 theorem export_key_err_nist_body_len (root : anyhow.Error → ErrRoot)
     (hlaw : BlobErrFmtLaws root) (hclone : KeyParameterCloneLaw) (data : Slice Std.U8)
     (params : Slice KeyParam) (kb : sw_keyblob.KeyBlob)

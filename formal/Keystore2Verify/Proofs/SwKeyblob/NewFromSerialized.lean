@@ -96,7 +96,8 @@ theorem new_from_serialized_err_hw (root : anyhow.Error → ErrRoot)
 
 /-- conditional: if all checks before the parameter lists pass and the first `deserialize_params`
 panics, then `new_from_serialized` panics in the same way. Hypotheses: as for
-`new_from_serialized_err_hw`, with the panic `x` as the outcome of `deserialize_params d2`. -/
+`new_from_serialized_err_hw`, without `root` (no error value) and `d3`, with the panic `x` as the
+outcome of `deserialize_params d2`. -/
 theorem new_from_serialized_fail_hw (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (hpast : PastKey data hidden) (d2 : Slice Std.U8)
@@ -122,9 +123,9 @@ theorem new_from_serialized_err_sw (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if all checks before the parameter lists pass, the first `deserialize_params`
-returns `Ok` and the second panics, then `new_from_serialized` panics in the same way.
-Hypotheses: as for `new_from_serialized_err_sw`, with the panic `x` as the outcome of the second
-call. -/
+returns `Ok` and the second panics, then `new_from_serialized` panics in the same way. Hypotheses:
+as for `new_from_serialized_err_sw`, without `root` (no error value) and `d4`, with the panic `x`
+as the outcome of the second call. -/
 theorem new_from_serialized_fail_sw (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (hpast : PastKey data hidden) (d2 : Slice Std.U8)
