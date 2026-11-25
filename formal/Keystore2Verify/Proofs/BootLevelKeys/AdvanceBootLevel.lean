@@ -135,7 +135,10 @@ theorem BootLevelKeyCache_advance_boot_level_fail_get_hkdf_key
 /-- conditional: if the level is accessible, `get_hkdf_key` returned `Ok` with a cache `s1` whose
 current level is above `L`, then `advance_boot_level` fails with an integer overflow: the
 subtraction `L - current` underflows. Hypotheses: the outcome of `get_hkdf_key` (`hget`); the
-bound `hlt`; `ContextKeyLaw`; the laws `format` and `from_str_nonconst`. -/
+bound `hlt`; `ContextKeyLaw`; the laws `format` and `from_str_nonconst`. Model limit: this is a
+conditional check on an arbitrary state returned by the opaque `get_hkdf_key`. In the Rust source
+a successful lookup never returns such a state (the call is made only when `L` is at least
+`current`, and the lookup never changes `current`), so the Rust code cannot reach this failure. -/
 theorem BootLevelKeyCache_advance_boot_level_fail_sub (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
@@ -151,7 +154,10 @@ current level is at most `L`, and the queue of `s1` has fewer than `L - current`
 `advance_boot_level` panics: the shared law for `VecDeque::split_off` says the split fails when
 the offset is beyond the length. Hypotheses: the outcome of `get_hkdf_key` (`hget`); `hle`;
 `hover`; the law `VecDequeSplitOffLaw`; `ContextKeyLaw`; the laws `format` and
-`from_str_nonconst`. -/
+`from_str_nonconst`. Model limit: this is a conditional check on an arbitrary state returned by
+the opaque `get_hkdf_key`. In the Rust source a successful lookup never returns such a state (it
+has grown the queue to hold an element at the requested offset), so the Rust code cannot reach
+this failure. -/
 theorem BootLevelKeyCache_advance_boot_level_fail_split_off (view : View)
     (root : anyhow.Error → ErrRoot)
     (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
