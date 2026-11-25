@@ -159,6 +159,11 @@ recall includes_ok {T : Type} (inst : core.convert.Into T permission.KeyPermSet)
     ∃ b, permission.KeyPermSet.includes inst self other = ok b ∧
       (b = true ↔ Includes self o)
 
+recall includes_fail {T : Type} (inst : core.convert.Into T permission.KeyPermSet)
+    (self : permission.KeyPermSet) (other : T) (x : Error)
+    (h : inst.into other = fail x) :
+    permission.KeyPermSet.includes inst self other = fail x
+
 recall includes_key_perm (self : permission.KeyPermSet) (p : permission.KeyPerm) :
     ∃ o b, CoreConvertFromKeyPerm.from p = ok o ∧
       permission.KeyPermSet.includes

@@ -14,6 +14,15 @@ theorem includes_ok {T : Type} (inst : core.convert.Into T permission.KeyPermSet
       (b = true ↔ Includes self o) := by
   sorry
 
+/-- conditional: for any type `T` with a conversion into `KeyPermSet`, if the conversion of
+`other` fails with `x` (a Rust panic), `includes` fails with `x`. Hypothesis: the outcome of the
+conversion `inst.into other`. No law is needed. -/
+theorem includes_fail {T : Type} (inst : core.convert.Into T permission.KeyPermSet)
+    (self : permission.KeyPermSet) (other : T) (x : Error)
+    (h : inst.into other = fail x) :
+    permission.KeyPermSet.includes inst self other = fail x := by
+  sorry
+
 /-- exact: `includes` with a `KeyPerm` never fails. It is `true` exactly when the set contains
 every bit of the bit set of the permission. For `KeyPerm::None` that set is empty, so the result
 is `true`. -/
