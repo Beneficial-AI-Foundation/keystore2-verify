@@ -55,6 +55,8 @@ recall crypto_laws_satisfiable :
         Result (core.result.Result Z keystore2_crypto.error.Error))
       (salt : Result (core.result.Result (alloc.vec.Vec Std.U8) keystore2_crypto.error.Error)),
       TotalLaw deref ∧ HkdfExpandLenLaw deref expand ∧ HkdfExtractLenLaw deref extract ∧
-      SaltLenLaw salt
+      SaltLenLaw salt ∧
+      (∃ n a b z, expand n a b = ok (.Ok z)) ∧ (∃ a b z, extract a b = ok (.Ok z)) ∧
+      (∃ s, salt = ok (.Ok s))
 
 end Keystore2Verify.Externals

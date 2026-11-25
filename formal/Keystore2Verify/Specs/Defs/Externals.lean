@@ -20,8 +20,8 @@ Every law holds for the real Rust function, with these labels:
 * **idealisation: allocation never fails.** The real process aborts when memory runs out. A law
   with this label says the call does not fail.
 * **idealisation: formatting never panics.** No `Display` or `Debug` implementation reached by
-  the verified code returns an error or panics, and no writer panics. The laws are stated for
-  every implementation and every writer, which is stronger than the real library.
+  the verified code returns an error or panics, and no writer panics. The law is stated for
+  every argument, which is stronger than the real library.
 * **idealisation: destruction never panics.** Dropping an element or an unused context does not
   panic.
 * **idealisation: logging never panics.** Effects of logging are not modelled.
@@ -37,17 +37,7 @@ namespace Keystore2Verify.Externals
 
 /-! Short names for the axioms below, so that no identifier has more than two dots. -/
 
-open keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint
-open EcCurve.EcCurve.Insts.CoreFmtDebug renaming fmt → ecCurveDebugFmt
-open KeyFormat.KeyFormat.Insts.CoreFmtDebug renaming fmt → keyFormatDebugFmt
-open KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug renaming fmt → keyParameterValueDebugFmt
-open keystore2.android_system_keystore2.aidl.android.system.keystore2
-open Domain.Domain.Insts.CoreFmtDebug renaming fmt → domainDebugFmt
 open keystore2.core.fmt.Arguments renaming from_str_nonconst → argumentsFromStr
-open keystore2.Shared0T.Insts.CoreFmtDisplay renaming fmt → shared0TDisplayFmt
-open keystore2.Mut0T.Insts.CoreFmtDisplay renaming fmt → mut0TDisplayFmt
-open keystore2.Str.Insts.CoreFmtDisplay renaming fmt → strDisplayFmt
-open keystore2.alloc.string.String.Insts.CoreFmtDisplay renaming fmt → stringDisplayFmt
 open keystore2.log.Level.Insts.CoreCmpPartialOrdLevelFilter renaming partial_cmp → levelPartialCmp
 open keystore2.core.panic.location renaming Location → LogLocation
 open keystore2.log.__private_api.GlobalLogger.Insts renaming LogLog → globalLoggerLog
@@ -156,15 +146,21 @@ def ResultContextLaw {T E Err C : Type} (rootE : E → ErrRoot) (root : Err → 
 
 /-! ## Formatting
 
-Used by the `ks_err!` and `bloberr!` macros and by `format!`. The laws say that the calls do not
-panic. The text is out of scope. Source: Rust standard library documentation.
+Used by the `ks_err!` and `bloberr!` macros and by `format!`.
 
-Every law of this group except `from_str_nonconst` carries the label **idealisation: formatting
-never panics**. Real `format` panics when a `Display` or `Debug` implementation returns an error
-or panics, and a `fmt` call panics when its writer panics. The laws hold for every argument and
-every formatter, so they say more than the library does. They are true of the code under
-verification, where all implementations are derived or are those of integers, `str`, `String`
-and the error types, and the writer is a `String`. -/
+The model of formatting is small. In the Aeneas library `core.fmt.Arguments` and
+`core.fmt.rt.Argument` are `Unit`, and the argument constructors (`Argument.new_debug`,
+`new_display` and the others) drop the `Debug` or `Display` implementation they receive. So the
+translated code never calls a `fmt` function of any type. The text that formatting produces, and
+every effect of formatting, are outside the model, and no law can say anything about them.
+
+The only formatting assumptions that a statement can need are that `alloc::fmt::format` and
+`Arguments::from_str_nonconst` do not panic, because the translated code calls both. The law for
+`format` carries the label **idealisation: formatting never panics**. Real `format` panics when a
+`Display` or `Debug` implementation returns an error or panics. The law holds for every
+argument, so it says more than the library does. It is true of the code under verification, where
+all implementations are derived or are those of integers, `str`, `String` and the error types, and
+the writer is a `String`. -/
 
 /-- Law for `alloc::fmt::format` (register record `ks2-ext-alloc-fmt-format`).
 `format a` never panics.
@@ -175,57 +171,6 @@ def AllocFmtFormatSpec : Prop := TotalLaw alloc.fmt.format
 `ks2-ext-core-fmt-arguments-from-str-nonconst`).
 `from_str_nonconst s` never panics. It builds a value on the stack and does not allocate. -/
 def CoreFmtArgumentsFromStrNonconstSpec : Prop := TotalLaw argumentsFromStr
-
-/-- Law for `Display` of a reference `&T` (register record
-`ks2-ext-shared0t-insts-corefmtdisplay-fmt`).
-If `fmt` of `T` never panics, then `fmt` of `&T` never panics. The inner layer (`fmt::Error`)
-is left open.
-Idealisation: formatting never panics. Source: `core::fmt`, which forwards to `T`. -/
-def Shared0TDisplayFmtSpec : Prop :=
-  ∀ {T : Type} (D : core.fmt.Display T),
-    Total2Law D.fmt → Total2Law (shared0TDisplayFmt D)
-
-/-- Law for `Display` of a mutable reference `&mut T` (register record
-`ks2-ext-mut0t-insts-corefmtdisplay-fmt`).
-If `fmt` of `T` never panics, then `fmt` of `&mut T` never panics. The inner layer is left
-open.
-Idealisation: formatting never panics. Source: `core::fmt`, which forwards to `T`. -/
-def Mut0TDisplayFmtSpec : Prop :=
-  ∀ {T : Type} (D : core.fmt.Display T),
-    Total2Law D.fmt → Total2Law (mut0TDisplayFmt D)
-
-/-- Law for `Display` of `str` (register record `ks2-ext-str-insts-corefmtdisplay-fmt`).
-`fmt` never panics. The inner layer is left open. Idealisation: formatting never panics. -/
-def StrDisplayFmtSpec : Prop := Total2Law strDisplayFmt
-
-/-- Law for `Display` of `String` (register record
-`ks2-ext-alloc-string-string-insts-corefmtdisplay-fmt`).
-`fmt` never panics. The inner layer is left open. Idealisation: formatting never panics. -/
-def StringDisplayFmtSpec : Prop := Total2Law stringDisplayFmt
-
-/-- Law for `Debug` of `EcCurve` (register record
-`ks2-ext-android-hardware-security-keymint-aidl-android-hardware-security-keymint-eccurve-eccurve-insts-corefmtdebug-fmt`).
-`fmt` never panics. The inner layer is left open.
-Idealisation: formatting never panics. Source: derived `Debug` of an AIDL enum. -/
-def EcCurveDebugFmtSpec : Prop := Total2Law ecCurveDebugFmt
-
-/-- Law for `Debug` of `KeyFormat` (register record
-`ks2-ext-android-hardware-security-keymint-aidl-android-hardware-security-keymint-keyformat-keyformat-insts-corefmtdebug-fmt`).
-`fmt` never panics. The inner layer is left open.
-Idealisation: formatting never panics. Source: derived `Debug` of an AIDL enum. -/
-def KeyFormatDebugFmtSpec : Prop := Total2Law keyFormatDebugFmt
-
-/-- Law for `Debug` of `KeyParameterValue` (register record
-`ks2-ext-android-hardware-security-keymint-aidl-android-hardware-security-keymint-keyparametervalue-keyparametervalue-insts-corefmtdebug-fmt`).
-`fmt` never panics. The inner layer is left open.
-Idealisation: formatting never panics. Source: derived `Debug` of an AIDL union. -/
-def KeyParameterValueDebugFmtSpec : Prop := Total2Law keyParameterValueDebugFmt
-
-/-- Law for `Debug` of `Domain` (register record
-`ks2-ext-android-system-keystore2-aidl-android-system-keystore2-domain-domain-insts-corefmtdebug-fmt`).
-`fmt` never panics. The inner layer is left open.
-Idealisation: formatting never panics. Source: derived `Debug` of an AIDL enum. -/
-def DomainDebugFmtSpec : Prop := Total2Law domainDebugFmt
 
 /-! ## log
 

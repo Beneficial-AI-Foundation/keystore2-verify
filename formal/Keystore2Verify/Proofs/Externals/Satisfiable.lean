@@ -12,8 +12,15 @@ each family of laws that share a carrier, these statements give some carrier and
 for which all the laws hold. The proofs are `sorry`. The statements are for every element type
 of the queue and for every result type and context type of the error family. The models are a
 list of at most `Std.Usize.max` elements for the queue (`push_back` fails past `queueBound`),
-`ErrRoot × List String` for an error, and a singleton `Z` with an empty slice for the secret
-vector, where the calls that return `Ok` are allowed to be absent.
+`ErrRoot × List String` for an error, and, for the secret vector, `Z := Slice U8` with `deref` the
+identity, so that `expand n _ _` returns `Ok` of `n` bytes, `extract` returns `Ok` of 32 bytes and
+the salt is `Ok` of 16 bytes.
+
+The laws of the queue and error families, and the byte-reading laws, already say that each call
+returns a value. The length laws of the crypto family only say what a successful result looks
+like, so a model in which every call fails would satisfy them. The statement for them also asks
+for one successful call of each function, so that two length laws that contradict each other on a
+successful result would be exposed.
 -/
 
 theorem vecdeque_laws_satisfiable (T : Type) :
@@ -68,7 +75,9 @@ theorem crypto_laws_satisfiable :
         Result (core.result.Result Z keystore2_crypto.error.Error))
       (salt : Result (core.result.Result (alloc.vec.Vec Std.U8) keystore2_crypto.error.Error)),
       TotalLaw deref ∧ HkdfExpandLenLaw deref expand ∧ HkdfExtractLenLaw deref extract ∧
-      SaltLenLaw salt := by
+      SaltLenLaw salt ∧
+      (∃ n a b z, expand n a b = ok (.Ok z)) ∧ (∃ a b z, extract a b = ok (.Ok z)) ∧
+      (∃ s, salt = ok (.Ok s)) := by
   sorry
 
 end Keystore2Verify.Externals
