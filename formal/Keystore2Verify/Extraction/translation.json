@@ -1,0 +1,5632 @@
+{
+  "aeneas_version": "nightly-2026.11.09-5a392f4",
+  "charon_version": "0.1.315",
+  "crate": "keystore2",
+  "functions": [
+    {
+      "def_id": 96,
+      "lean_name": "keystore2.core.fmt.Arguments.from_str_nonconst",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::fmt::{core::fmt::Arguments<'a>}::from_str_nonconst",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/fmt/mod.rs",
+        "begin_line": 741,
+        "end_line": 741
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 234,
+      "lean_name": "keystore2.Shared0T.Insts.CoreFmtDisplay.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::fmt::{impl core::fmt::Display for &'_0 T}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/fmt/mod.rs",
+        "begin_line": 2882,
+        "end_line": 2882
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 337,
+      "lean_name": "keystore2.Mut0T.Insts.CoreFmtDisplay.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::fmt::{impl core::fmt::Display for &'_0 mut T}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/fmt/mod.rs",
+        "begin_line": 2882,
+        "end_line": 2882
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 235,
+      "lean_name": "keystore2.Str.Insts.CoreFmtDisplay.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::fmt::{impl core::fmt::Display for str}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/fmt/mod.rs",
+        "begin_line": 2965,
+        "end_line": 2965
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 268,
+      "lean_name": "keystore2.Usize.Insts.CoreHashHash.hash",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::hash::impls::{impl core::hash::Hash for usize}::hash",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/hash/mod.rs",
+        "begin_line": 831,
+        "end_line": 844
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 93,
+      "lean_name": "keystore2.core.hint.must_use",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::hint::must_use",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/hint.rs",
+        "begin_line": 613,
+        "end_line": 613
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 291,
+      "lean_name": "keystore2.core.mem.size_of",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::mem::size_of",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/mem/mod.rs",
+        "begin_line": 375,
+        "end_line": 375
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 141,
+      "lean_name": "keystore2.core.num.I32.from_ne_bytes",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::num::{i32}::from_ne_bytes",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/num/mod.rs",
+        "begin_line": 430,
+        "end_line": 449
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 142,
+      "lean_name": "keystore2.core.num.I64.from_ne_bytes",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::num::{i64}::from_ne_bytes",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/num/mod.rs",
+        "begin_line": 455,
+        "end_line": 474
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 140,
+      "lean_name": "keystore2.core.num.U32.from_ne_bytes",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::num::{u32}::from_ne_bytes",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/num/mod.rs",
+        "begin_line": 1292,
+        "end_line": 1316
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 122,
+      "lean_name": "keystore2.core.option.Option.ok_or_else",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::option::{core::option::Option<T>}::ok_or_else",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/option.rs",
+        "begin_line": 1361,
+        "end_line": 1363
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 283,
+      "lean_name": "keystore2.core.option.OptionResult.transpose",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::option::{core::option::Option<core::result::Result<T, E>>}::transpose",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/option.rs",
+        "begin_line": 2239,
+        "end_line": 2239
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 355,
+      "lean_name": "keystore2.core.result.Result.or_else",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::result::{core::result::Result<T, E>}::or_else",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/result.rs",
+        "begin_line": 1556,
+        "end_line": 1558
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 137,
+      "lean_name": "keystore2.core.slice.Slice.first",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::slice::{[T]}::first",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/slice/mod.rs",
+        "begin_line": 157,
+        "end_line": 157
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 272,
+      "lean_name": "keystore2.alloc.collections.vec_deque.VecDequeTGlobal.new",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::collections::vec_deque::{alloc::collections::vec_deque::VecDeque<T, alloc::alloc::Global>}::new",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/collections/vec_deque/mod.rs",
+        "begin_line": 851,
+        "end_line": 851
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 276,
+      "lean_name": "keystore2.alloc.collections.vec_deque.VecDeque.len",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::collections::vec_deque::{alloc::collections::vec_deque::VecDeque<T, A>}::len",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/collections/vec_deque/mod.rs",
+        "begin_line": 1808,
+        "end_line": 1808
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 274,
+      "lean_name": "keystore2.alloc.collections.vec_deque.VecDeque.is_empty",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::collections::vec_deque::{alloc::collections::vec_deque::VecDeque<T, A>}::is_empty",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/collections/vec_deque/mod.rs",
+        "begin_line": 1825,
+        "end_line": 1825
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 281,
+      "lean_name": "keystore2.alloc.collections.vec_deque.VecDeque.clear",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::collections::vec_deque::{alloc::collections::vec_deque::VecDeque<T, A>}::clear",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/collections/vec_deque/mod.rs",
+        "begin_line": 2098,
+        "end_line": 2098
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 273,
+      "lean_name": "keystore2.alloc.collections.vec_deque.VecDeque.push_back",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::collections::vec_deque::{alloc::collections::vec_deque::VecDeque<T, A>}::push_back",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/collections/vec_deque/mod.rs",
+        "begin_line": 2385,
+        "end_line": 2385
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 278,
+      "lean_name": "keystore2.alloc.collections.vec_deque.VecDeque.split_off",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::collections::vec_deque::{alloc::collections::vec_deque::VecDeque<T, A>}::split_off",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/collections/vec_deque/mod.rs",
+        "begin_line": 2719,
+        "end_line": 2721
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 92,
+      "lean_name": "keystore2.alloc.fmt.format",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::fmt::format",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/fmt.rs",
+        "begin_line": 651,
+        "end_line": 651
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 250,
+      "lean_name": "keystore2.alloc.string.String.Insts.CoreFmtDisplay.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::string::{impl core::fmt::Display for alloc::string::String}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/string.rs",
+        "begin_line": 2785,
+        "end_line": 2785
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 316,
+      "lean_name": "keystore2.alloc.vec.Vec.truncate",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::vec::{alloc::vec::Vec<T>}::truncate",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/vec/mod.rs",
+        "begin_line": 1816,
+        "end_line": 1816
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 293,
+      "lean_name": "keystore2.Shared0Slice.Insts.CoreCmpPartialEqVec.ne",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::vec::partial_eq::{impl core::cmp::PartialEq<alloc::vec::Vec<U>> for &'_0 [T]}::ne",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/vec/partial_eq.rs",
+        "begin_line": 25,
+        "end_line": 25
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 308,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{impl core::fmt::Debug for android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 100,
+        "end_line": 108
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 286,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::{impl core::fmt::Debug for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 363,
+        "end_line": 369
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 296,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter.Insts.CoreCloneClone.clone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::{impl core::clone::Clone for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter}::clone",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 405,
+        "end_line": 405
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 438,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter.Insts.CoreCmpPartialEqKeyParameter.eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::{impl core::cmp::PartialEq<android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter> for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter}::eq",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 405,
+        "end_line": 405
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 285,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameterValue::{impl core::fmt::Debug for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameterValue::KeyParameterValue}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 420,
+        "end_line": 420
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 241,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::Domain::{impl core::fmt::Debug for android_system_keystore2::aidl::android::system::keystore2::Domain::Domain}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 63,
+        "end_line": 71
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 243,
+      "lean_name": "keystore2.anyhow.context.ext.StdError.Blanket.ext_context",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::context::ext::{impl anyhow::context::ext::StdError for E}::ext_context",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/context.rs",
+        "begin_line": 23,
+        "end_line": 25
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 233,
+      "lean_name": "keystore2.anyhow.Error.Insts.AnyhowContextExtStdError.ext_context",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::context::ext::{impl anyhow::context::ext::StdError for anyhow::Error}::ext_context",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/context.rs",
+        "begin_line": 33,
+        "end_line": 35
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 83,
+      "lean_name": "keystore2.core.result.Result.Insts.AnyhowContext.context",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::context::{impl anyhow::Context<T, E> for core::result::Result<T, E>}::context",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/context.rs",
+        "begin_line": 46,
+        "end_line": 48
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 118,
+      "lean_name": "keystore2.anyhow.error.Error.new",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::error::{anyhow::Error}::new",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/error.rs",
+        "begin_line": 30,
+        "end_line": 32
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 123,
+      "lean_name": "keystore2.anyhow.error.Error.context",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::error::{anyhow::Error}::context",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/error.rs",
+        "begin_line": 357,
+        "end_line": 359
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 440,
+      "lean_name": "keystore2.anyhow.Error.Insts.CoreConvertFrom.from",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::error::{impl core::convert::From<E> for anyhow::Error}::from",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/error.rs",
+        "begin_line": 679,
+        "end_line": 679
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 476,
+      "lean_name": "keystore2.keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::error::{impl core::fmt::Debug for keystore2_crypto::error::Error}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/error.rs",
+        "begin_line": 19,
+        "end_line": 19
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 477,
+      "lean_name": "keystore2.keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::error::{impl core::fmt::Display for keystore2_crypto::error::Error}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/error.rs",
+        "begin_line": 19,
+        "end_line": 19
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 352,
+      "lean_name": "keystore2.keystore2_crypto.generate_salt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::generate_salt",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 68,
+        "end_line": 68
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 315,
+      "lean_name": "keystore2.keystore2_crypto.hmac_sha256",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::hmac_sha256",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 84,
+        "end_line": 84
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 354,
+      "lean_name": "keystore2.keystore2_crypto.aes_gcm_decrypt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::aes_gcm_decrypt",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 105,
+        "end_line": 105
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 353,
+      "lean_name": "keystore2.keystore2_crypto.aes_gcm_encrypt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::aes_gcm_encrypt",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 147,
+        "end_line": 147
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 346,
+      "lean_name": "keystore2.keystore2_crypto.hkdf_extract",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::hkdf_extract",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 250,
+        "end_line": 250
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 351,
+      "lean_name": "keystore2.keystore2_crypto.hkdf_expand",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::hkdf_expand",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 280,
+        "end_line": 280
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 349,
+      "lean_name": "keystore2.keystore2_crypto.OwnedECPoint.get_point",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::{keystore2_crypto::OwnedECPoint}::get_point",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 320,
+        "end_line": 320
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 344,
+      "lean_name": "keystore2.keystore2_crypto.BorrowedECPoint.get_point",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::{keystore2_crypto::BorrowedECPoint<'_0>}::get_point",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 328,
+        "end_line": 328
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 350,
+      "lean_name": "keystore2.keystore2_crypto.ecdh_compute_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::ecdh_compute_key",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 353,
+        "end_line": 357
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 338,
+      "lean_name": "keystore2.keystore2_crypto.ec_key_generate_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::ec_key_generate_key",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 385,
+        "end_line": 385
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 342,
+      "lean_name": "keystore2.keystore2_crypto.ec_key_marshal_private_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::ec_key_marshal_private_key",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 395,
+        "end_line": 395
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 341,
+      "lean_name": "keystore2.keystore2_crypto.ec_key_parse_private_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::ec_key_parse_private_key",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 410,
+        "end_line": 410
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 343,
+      "lean_name": "keystore2.keystore2_crypto.ec_key_get0_public_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::ec_key_get0_public_key",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 422,
+        "end_line": 422
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 345,
+      "lean_name": "keystore2.keystore2_crypto.ec_point_point_to_oct",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::ec_point_point_to_oct",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 429,
+        "end_line": 429
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 348,
+      "lean_name": "keystore2.keystore2_crypto.ec_point_oct_to_point",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::ec_point_oct_to_point",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 447,
+        "end_line": 447
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 347,
+      "lean_name": "keystore2.keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::zvec::{impl core::ops::deref::Deref<[u8]> for keystore2_crypto::zvec::ZVec}::deref",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/zvec.rs",
+        "begin_line": 95,
+        "end_line": 95
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 403,
+      "lean_name": "keystore2.keystore2_selinux.Error.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::{impl core::fmt::Debug for keystore2_selinux::Error}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 69,
+        "end_line": 69
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 404,
+      "lean_name": "keystore2.keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::{impl core::fmt::Display for keystore2_selinux::Error}::fmt",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 69,
+        "end_line": 69
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 91,
+      "lean_name": "keystore2.keystore2_selinux.Error.perm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::{keystore2_selinux::Error}::perm",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 81,
+        "end_line": 81
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 86,
+      "lean_name": "keystore2.keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::{impl core::ops::deref::Deref<core::ffi::c_str::CStr> for keystore2_selinux::Context}::deref",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 131,
+        "end_line": 131
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 82,
+      "lean_name": "keystore2.keystore2_selinux.getcon",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::getcon",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 232,
+        "end_line": 232
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 87,
+      "lean_name": "keystore2.keystore2_selinux.check_permission",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::check_permission",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 609,
+        "end_line": 609
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 418,
+      "lean_name": "keystore2.Tuple.Insts.Log__private_apiSealedKVs.into_kvs",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::{impl log::__private_api::sealed::KVs<'a> for ()}::into_kvs",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 30,
+        "end_line": 30
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 421,
+      "lean_name": "keystore2.log.__private_api.GlobalLogger.Insts.LogLog.flush",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::{impl log::Log for log::__private_api::GlobalLogger}::flush",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 50,
+        "end_line": 50
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 420,
+      "lean_name": "keystore2.log.__private_api.GlobalLogger.Insts.LogLog.log",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::{impl log::Log for log::__private_api::GlobalLogger}::log",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 46,
+        "end_line": 46
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 419,
+      "lean_name": "keystore2.log.__private_api.GlobalLogger.Insts.LogLog.enabled",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::{impl log::Log for log::__private_api::GlobalLogger}::enabled",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 42,
+        "end_line": 42
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 280,
+      "lean_name": "keystore2.log.__private_api.log",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::log",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 84,
+        "end_line": 92
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 279,
+      "lean_name": "keystore2.log.__private_api.loc",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::loc",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 108,
+        "end_line": 108
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 472,
+      "lean_name": "keystore2.log.Level.Insts.CoreCmpPartialEqLevelFilter.eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::{impl core::cmp::PartialEq<log::LevelFilter> for log::Level}::eq",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 503,
+        "end_line": 503
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 416,
+      "lean_name": "keystore2.log.Level.Insts.CoreCmpPartialOrdLevelFilter.partial_cmp",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::{impl core::cmp::PartialOrd<log::LevelFilter> for log::Level}::partial_cmp",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 510,
+        "end_line": 510
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 275,
+      "lean_name": "keystore2.log.max_level",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::max_level",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 1396,
+        "end_line": 1396
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 98,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCloneClone.clone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::clone::Clone for keystore2::boot_level_keys::BootLevel}::clone",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 99,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::fmt::Debug for keystore2::boot_level_keys::BootLevel}::fmt",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 100,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCmpPartialEqBootLevel.eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::PartialEq<keystore2::boot_level_keys::BootLevel> for keystore2::boot_level_keys::BootLevel}::eq",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 101,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCmpEq.assert_fields_are_eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::Eq for keystore2::boot_level_keys::BootLevel}::assert_fields_are_eq",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 103,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCmpOrd.cmp",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::Ord for keystore2::boot_level_keys::BootLevel}::cmp",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 102,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCmpPartialOrdBootLevel.partial_cmp",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::PartialOrd<keystore2::boot_level_keys::BootLevel> for keystore2::boot_level_keys::BootLevel}::partial_cmp",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 104,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreHashHash.hash",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::hash::Hash for keystore2::boot_level_keys::BootLevel}::hash",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 106,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::fmt::Debug for keystore2::boot_level_keys::DenyLaterStrategy}::fmt",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 38,
+        "end_line": 38
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 107,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy.Insts.CoreCmpPartialEqDenyLaterStrategy.eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::PartialEq<keystore2::boot_level_keys::DenyLaterStrategy> for keystore2::boot_level_keys::DenyLaterStrategy}::eq",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 38,
+        "end_line": 38
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 108,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy.Insts.CoreCloneClone.clone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::clone::Clone for keystore2::boot_level_keys::DenyLaterStrategy}::clone",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 38,
+        "end_line": 38
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 23,
+      "lean_name": "keystore2.boot_level_keys.lookup_level_zero_km_and_strategy",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::lookup_level_zero_km_and_strategy",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 55,
+        "end_line": 89
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 24,
+      "lean_name": "keystore2.boot_level_keys.get_level_zero_key_km_and_strategy",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::get_level_zero_key_km_and_strategy",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 91,
+        "end_line": 112
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 25,
+      "lean_name": "keystore2.boot_level_keys.get_level_zero_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::get_level_zero_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 117,
+        "end_line": 181
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 110,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.new",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::new",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 201,
+        "end_line": 205
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 111,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.level_accessible",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::level_accessible",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 208,
+        "end_line": 213
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 112,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.get_hkdf_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::get_hkdf_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 217,
+        "end_line": 237
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 113,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.advance_boot_level",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::advance_boot_level",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 241,
+        "end_line": 264
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 114,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.finish",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::finish",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 268,
+        "end_line": 270
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 422,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.expand_key.closure.Insts.CoreOpsFunctionFnOnceTupleShared0ZVecResultZVecError.call_once",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::expand_key::{impl core::ops::function::FnOnce<(&'_0 keystore2_crypto::zvec::ZVec,), core::result::Result<keystore2_crypto::zvec::ZVec, keystore2_crypto::error::Error>> for keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::expand_key::{closure}<'_0, '_1, '_2>}::call_once",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 280,
+        "end_line": 280
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 115,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.expand_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::expand_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 272,
+        "end_line": 283
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 116,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.aes_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::aes_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 286,
+        "end_line": 289
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 340,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.constructor",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::ECDHPrivateKey",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 27,
+        "end_line": 27
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 444,
+      "lean_name": "keystore2.P.Insts.CoreOpsFunctionFnOnceTupleECKeyECDHPrivateKey.call_once",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{impl core::ops::function::FnOnce<(keystore2_crypto::ECKey,), keystore2::ec_crypto::ECDHPrivateKey> for keystore2::ec_crypto::ECDHPrivateKey}::call_once",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 27,
+        "end_line": 27
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 144,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.generate",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::generate",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 31,
+        "end_line": 33
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 145,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.from_private_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::from_private_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 36,
+        "end_line": 38
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 146,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.private_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::private_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 41,
+        "end_line": 43
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 147,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.public_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::public_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 46,
+        "end_line": 49
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 148,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.agree_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::agree_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 54,
+        "end_line": 75
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 149,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.encrypt_message",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::encrypt_message",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 78,
+        "end_line": 97
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 448,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.decrypt_message.closure.Insts.CoreOpsFunctionFnOnceTupleErrorResultZVecError.call_once",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message::{impl core::ops::function::FnOnce<(keystore2_crypto::error::Error,), core::result::Result<keystore2_crypto::zvec::ZVec, anyhow::Error>> for keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message::{closure}<'_0, '_1, '_2, '_3, '_4, '_5, '_6>}::call_once",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 118,
+        "end_line": 132
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 150,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.decrypt_message",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 100,
+        "end_line": 133
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 405,
+      "lean_name": "keystore2.error.Error.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::error::{impl core::fmt::Debug for keystore2::error::Error}::fmt",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/error.rs",
+        "begin_line": 49,
+        "end_line": 49
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 406,
+      "lean_name": "keystore2.error.Error.Insts.CoreFmtDisplay.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::error::{impl core::fmt::Display for keystore2::error::Error}::fmt",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/error.rs",
+        "begin_line": 49,
+        "end_line": 49
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 90,
+      "lean_name": "keystore2.error.Error.sys",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::error::{keystore2::error::Error}::sys",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/error.rs",
+        "begin_line": 90,
+        "end_line": 92
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 19,
+      "lean_name": "keystore2.permission.lookup_keystore2_key_context",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::lookup_keystore2_key_context",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 50,
+        "end_line": 52
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 48,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreConvertFromI32.from",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 49,
+      "lean_name": "keystore2.I32.Insts.CoreConvertFromKeyPerm.from",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<keystore2::permission::KeyPerm> for i32}::from",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 51,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.Keystore2_selinuxClassPermission.class_name",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl keystore2_selinux::ClassPermission for keystore2::permission::KeyPerm}::class_name",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 50,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.Keystore2_selinuxClassPermission.name",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl keystore2_selinux::ClassPermission for keystore2::permission::KeyPerm}::name",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 42,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreCloneClone.clone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::clone::Clone for keystore2::permission::KeyPerm}::clone",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 60,
+        "end_line": 60
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 43,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::fmt::Debug for keystore2::permission::KeyPerm}::fmt",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 60,
+        "end_line": 60
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 44,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreCmpPartialEqKeyPerm.eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::PartialEq<keystore2::permission::KeyPerm> for keystore2::permission::KeyPerm}::eq",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 60,
+        "end_line": 60
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 55,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreConvertFromI32.from",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 56,
+      "lean_name": "keystore2.I32.Insts.CoreConvertFromKeystorePerm.from",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<keystore2::permission::KeystorePerm> for i32}::from",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 58,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.Keystore2_selinuxClassPermission.class_name",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl keystore2_selinux::ClassPermission for keystore2::permission::KeystorePerm}::class_name",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 57,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.Keystore2_selinuxClassPermission.name",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl keystore2_selinux::ClassPermission for keystore2::permission::KeystorePerm}::name",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 52,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreCloneClone.clone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::clone::Clone for keystore2::permission::KeystorePerm}::clone",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 106,
+        "end_line": 106
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 53,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::fmt::Debug for keystore2::permission::KeystorePerm}::fmt",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 106,
+        "end_line": 106
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 54,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreCmpPartialEqKeystorePerm.eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::PartialEq<keystore2::permission::KeystorePerm> for keystore2::permission::KeystorePerm}::eq",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 106,
+        "end_line": 106
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 59,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCloneClone.clone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::clone::Clone for keystore2::permission::KeyPermSet}::clone",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 60,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreFmtDebug.fmt",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::fmt::Debug for keystore2::permission::KeyPermSet}::fmt",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 62,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCmpPartialEqKeyPermSet.eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::PartialEq<keystore2::permission::KeyPermSet> for keystore2::permission::KeyPermSet}::eq",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 61,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCmpEq.assert_fields_are_eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::Eq for keystore2::permission::KeyPermSet}::assert_fields_are_eq",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 63,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCmpOrd.cmp",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::Ord for keystore2::permission::KeyPermSet}::cmp",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 68,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCmpPartialOrdKeyPermSet.partial_cmp",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::PartialOrd<keystore2::permission::KeyPermSet> for keystore2::permission::KeyPermSet}::partial_cmp",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 155,
+      "lean_name": "keystore2.permission.perm.IntoIter.new",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::perm::{keystore2::permission::perm::IntoIter}::new",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 192,
+        "end_line": 194
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 95,
+      "lean_name": "keystore2.permission.perm.IntoIter.Insts.CoreIterTraitsIteratorIteratorKeyPerm.next_loop.body",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::perm::{impl core::iter::traits::iterator::Iterator<keystore2::permission::KeyPerm> for keystore2::permission::perm::IntoIter}::next",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 201,
+        "end_line": 211
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": true,
+      "is_rec": false,
+      "reducible": false,
+      "loop": { "id": 0, "pos": [ 0 ], "is_body": true },
+      "parent_lean_name": "keystore2.permission.perm.IntoIter.Insts.CoreIterTraitsIteratorIteratorKeyPerm.next"
+    },
+    {
+      "def_id": 95,
+      "lean_name": "keystore2.permission.perm.IntoIter.Insts.CoreIterTraitsIteratorIteratorKeyPerm.next_loop",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::perm::{impl core::iter::traits::iterator::Iterator<keystore2::permission::KeyPerm> for keystore2::permission::perm::IntoIter}::next",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 201,
+        "end_line": 211
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": true,
+      "is_rec": false,
+      "reducible": false,
+      "loop": { "id": 0, "pos": [ 0 ], "is_body": false },
+      "parent_lean_name": "keystore2.permission.perm.IntoIter.Insts.CoreIterTraitsIteratorIteratorKeyPerm.next"
+    },
+    {
+      "def_id": 95,
+      "lean_name": "keystore2.permission.perm.IntoIter.Insts.CoreIterTraitsIteratorIteratorKeyPerm.next",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::perm::{impl core::iter::traits::iterator::Iterator<keystore2::permission::KeyPerm> for keystore2::permission::perm::IntoIter}::next",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 200,
+        "end_line": 211
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": true,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 77,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreConvertFromKeyPerm.from",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<keystore2::permission::KeyPerm> for keystore2::permission::KeyPermSet}::from",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 216,
+        "end_line": 218
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 78,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreConvertFromI32.from",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPermSet}::from",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 223,
+        "end_line": 225
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 79,
+      "lean_name": "keystore2.I32.Insts.CoreConvertFromKeyPermSet.from",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<keystore2::permission::KeyPermSet> for i32}::from",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 229,
+        "end_line": 231
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 80,
+      "lean_name": "keystore2.permission.KeyPermSet.includes",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{keystore2::permission::KeyPermSet}::includes",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 236,
+        "end_line": 239
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 81,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreIterTraitsCollectIntoIteratorKeyPermIntoIter.into_iter",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::iter::traits::collect::IntoIterator<keystore2::permission::KeyPerm, keystore2::permission::perm::IntoIter> for keystore2::permission::KeyPermSet}::into_iter",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 260,
+        "end_line": 262
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 20,
+      "lean_name": "keystore2.permission.check_keystore_permission",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::check_keystore_permission",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 267,
+        "end_line": 270
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 21,
+      "lean_name": "keystore2.permission.check_grant_permission_loop0.body",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::check_grant_permission",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 311,
+        "end_line": 319
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": true,
+      "is_rec": false,
+      "reducible": false,
+      "loop": { "id": 0, "pos": [ 0 ], "is_body": true },
+      "parent_lean_name": "keystore2.permission.check_grant_permission"
+    },
+    {
+      "def_id": 21,
+      "lean_name": "keystore2.permission.check_grant_permission_loop0",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::check_grant_permission",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 311,
+        "end_line": 319
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": true,
+      "is_rec": false,
+      "reducible": false,
+      "loop": { "id": 0, "pos": [ 0 ], "is_body": false },
+      "parent_lean_name": "keystore2.permission.check_grant_permission"
+    },
+    {
+      "def_id": 21,
+      "lean_name": "keystore2.permission.check_grant_permission_loop1.body",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::check_grant_permission",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 311,
+        "end_line": 319
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": true,
+      "is_rec": false,
+      "reducible": false,
+      "loop": { "id": 1, "pos": [ 1 ], "is_body": true },
+      "parent_lean_name": "keystore2.permission.check_grant_permission"
+    },
+    {
+      "def_id": 21,
+      "lean_name": "keystore2.permission.check_grant_permission_loop1",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::check_grant_permission",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 311,
+        "end_line": 319
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": true,
+      "is_rec": false,
+      "reducible": false,
+      "loop": { "id": 1, "pos": [ 1 ], "is_body": false },
+      "parent_lean_name": "keystore2.permission.check_grant_permission"
+    },
+    {
+      "def_id": 21,
+      "lean_name": "keystore2.permission.check_grant_permission",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::check_grant_permission",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 285,
+        "end_line": 319
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": true,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 22,
+      "lean_name": "keystore2.permission.check_key_permission",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::check_key_permission",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 340,
+        "end_line": 408
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 26,
+      "lean_name": "keystore2.sw_keyblob.get_tag_value",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::get_tag_value",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 45,
+        "end_line": 47
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 27,
+      "lean_name": "keystore2.sw_keyblob.tag_type",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::tag_type",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 50,
+        "end_line": 52
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 31,
+      "lean_name": "keystore2.sw_keyblob.hidden_params",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::hidden_params",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 279,
+        "end_line": 294
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 39,
+      "lean_name": "keystore2.sw_keyblob.deserialize_params",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::deserialize_params",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 397,
+        "end_line": 463
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 34,
+      "lean_name": "keystore2.sw_keyblob.consume_u32",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_u32",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 320,
+        "end_line": 328
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 37,
+      "lean_name": "keystore2.sw_keyblob.consume_vec",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_vec",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 354,
+        "end_line": 362
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 32,
+      "lean_name": "keystore2.sw_keyblob.consume_u8",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_u8",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 297,
+        "end_line": 305
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 40,
+      "lean_name": "keystore2.sw_keyblob.serialize_params",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::serialize_params",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 486,
+        "end_line": 561
+      },
+      "is_opaque": true,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 136,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.compute_hmac",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{keystore2::sw_keyblob::KeyBlob}::compute_hmac",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 265,
+        "end_line": 272
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 120,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.new_from_serialized",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{keystore2::sw_keyblob::KeyBlob}::new_from_serialized",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 228,
+        "end_line": 260
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 30,
+      "lean_name": "keystore2.sw_keyblob.add_der_len",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::add_der_len",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 190,
+        "end_line": 204
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 29,
+      "lean_name": "keystore2.sw_keyblob.pkcs8_wrap_nist_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::pkcs8_wrap_nist_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 157,
+        "end_line": 187
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 288,
+      "lean_name": "keystore2.sw_keyblob.export_key.closure_1.Insts.CoreOpsFunctionFnOnceTupleError.call_once",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::export_key::{impl core::ops::function::FnOnce<(), anyhow::Error> for keystore2::sw_keyblob::export_key::{closure#1}}::call_once",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 82,
+        "end_line": 82
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 287,
+      "lean_name": "keystore2.sw_keyblob.export_key.closure.Insts.CoreOpsFunctionFnOnceTupleError.call_once",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::export_key::{impl core::ops::function::FnOnce<(), anyhow::Error> for keystore2::sw_keyblob::export_key::{closure}}::call_once",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 67,
+        "end_line": 67
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 28,
+      "lean_name": "keystore2.sw_keyblob.export_key",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::export_key",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 55,
+        "end_line": 110
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 134,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.Insts.CoreCmpPartialEqKeyBlob.eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{impl core::cmp::PartialEq<keystore2::sw_keyblob::KeyBlob> for keystore2::sw_keyblob::KeyBlob}::eq",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 207,
+        "end_line": 207
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 135,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.Insts.CoreCmpEq.assert_fields_are_eq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{impl core::cmp::Eq for keystore2::sw_keyblob::KeyBlob}::assert_fields_are_eq",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 207,
+        "end_line": 207
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 33,
+      "lean_name": "keystore2.sw_keyblob.consume_bool",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_bool",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 310,
+        "end_line": 317
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 35,
+      "lean_name": "keystore2.sw_keyblob.consume_i32",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_i32",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 331,
+        "end_line": 339
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 36,
+      "lean_name": "keystore2.sw_keyblob.consume_i64",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_i64",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 342,
+        "end_line": 350
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    },
+    {
+      "def_id": 38,
+      "lean_name": "keystore2.sw_keyblob.consume_blob",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_blob",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 369,
+        "end_line": 393
+      },
+      "is_opaque": false,
+      "can_fail": true,
+      "can_diverge": false,
+      "is_rec": false,
+      "reducible": false
+    }
+  ],
+  "types": [
+    {
+      "def_id": 132,
+      "lean_name": "keystore2.core.alloc.layout.LayoutError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::alloc::layout::LayoutError",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/alloc/layout.rs",
+        "begin_line": 612,
+        "end_line": 612
+      }
+    },
+    {
+      "def_id": 26,
+      "lean_name": "keystore2.core.ffi.c_str.CStr",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::ffi::c_str::CStr",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/ffi/c_str.rs",
+        "begin_line": 102,
+        "end_line": 102
+      }
+    },
+    {
+      "def_id": 106,
+      "lean_name": "keystore2.core.panic.location.Location",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::panic::location::Location",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/panic/location.rs",
+        "begin_line": 39,
+        "end_line": 39
+      }
+    },
+    {
+      "def_id": 41,
+      "lean_name": "keystore2.alloc.collections.vec_deque.VecDeque",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::collections::vec_deque::VecDeque",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/collections/vec_deque/mod.rs",
+        "begin_line": 104,
+        "end_line": 107
+      }
+    },
+    {
+      "def_id": 58,
+      "lean_name": "keystore2.alloc.ffi.c_str.CString",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::ffi::c_str::CString",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/ffi/c_str.rs",
+        "begin_line": 108,
+        "end_line": 108
+      }
+    },
+    {
+      "def_id": 51,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.Algorithm.Algorithm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::Algorithm::Algorithm",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 15,
+        "end_line": 24
+      }
+    },
+    {
+      "def_id": 109,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.BlockMode.BlockMode",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::BlockMode::BlockMode",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 62,
+        "end_line": 69
+      }
+    },
+    {
+      "def_id": 111,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.Digest.Digest",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::Digest::Digest",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 86,
+        "end_line": 96
+      }
+    },
+    {
+      "def_id": 53,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 100,
+        "end_line": 108
+      }
+    },
+    {
+      "def_id": 52,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::ErrorCode::ErrorCode",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 112,
+        "end_line": 204
+      }
+    },
+    {
+      "def_id": 114,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.HardwareAuthenticatorType.HardwareAuthenticatorType",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::HardwareAuthenticatorType::HardwareAuthenticatorType",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 231,
+        "end_line": 238
+      }
+    },
+    {
+      "def_id": 47,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 363,
+        "end_line": 369
+      }
+    },
+    {
+      "def_id": 112,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyOrigin.KeyOrigin",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyOrigin::KeyOrigin",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 394,
+        "end_line": 402
+      }
+    },
+    {
+      "def_id": 44,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::Tag",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 492,
+        "end_line": 563
+      }
+    },
+    {
+      "def_id": 37,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.SecurityLevel.SecurityLevel",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::SecurityLevel::SecurityLevel",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 481,
+        "end_line": 488
+      }
+    },
+    {
+      "def_id": 110,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.PaddingMode.PaddingMode",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::PaddingMode::PaddingMode",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 468,
+        "end_line": 477
+      }
+    },
+    {
+      "def_id": 115,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.MlDsaVariant.MlDsaVariant",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::MlDsaVariant::MlDsaVariant",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 459,
+        "end_line": 464
+      }
+    },
+    {
+      "def_id": 113,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyPurpose.KeyPurpose",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyPurpose::KeyPurpose",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 445,
+        "end_line": 455
+      }
+    },
+    {
+      "def_id": 45,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameterValue::KeyParameterValue",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 421,
+        "end_line": 421
+      }
+    },
+    {
+      "def_id": 43,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 406,
+        "end_line": 406
+      }
+    },
+    {
+      "def_id": 46,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.TagType.TagType",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::TagType::TagType",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 567,
+        "end_line": 581
+      }
+    },
+    {
+      "def_id": 31,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.Domain.Domain",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::Domain::Domain",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 63,
+        "end_line": 71
+      }
+    },
+    {
+      "def_id": 29,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyDescriptor.KeyDescriptor",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyDescriptor::KeyDescriptor",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 197,
+        "end_line": 197
+      }
+    },
+    {
+      "def_id": 135,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      }
+    },
+    {
+      "def_id": 36,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 300,
+        "end_line": 323
+      }
+    },
+    {
+      "def_id": 16,
+      "lean_name": "keystore2.anyhow.Error",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::Error",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/lib.rs",
+        "begin_line": 390,
+        "end_line": 390
+      }
+    },
+    {
+      "def_id": 97,
+      "lean_name": "keystore2.binder.StatusCode",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "binder::StatusCode",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/binder/src/lib.rs",
+        "begin_line": 25,
+        "end_line": 25
+      }
+    },
+    {
+      "def_id": 96,
+      "lean_name": "keystore2.binder.ExceptionCode",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "binder::ExceptionCode",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/binder/src/lib.rs",
+        "begin_line": 58,
+        "end_line": 58
+      }
+    },
+    {
+      "def_id": 133,
+      "lean_name": "keystore2.nix.errno.consts.Errno",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "nix::errno::consts::Errno",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nix-0.29.0/src/errno.rs",
+        "begin_line": 840,
+        "end_line": 840
+      }
+    },
+    {
+      "def_id": 134,
+      "lean_name": "keystore2.keystore2_crypto.zvec.Error",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::zvec::Error",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/zvec.rs",
+        "begin_line": 38,
+        "end_line": 38
+      }
+    },
+    {
+      "def_id": 107,
+      "lean_name": "keystore2.keystore2_crypto.error.Error",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::error::Error",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/error.rs",
+        "begin_line": 20,
+        "end_line": 20
+      }
+    },
+    {
+      "def_id": 40,
+      "lean_name": "keystore2.keystore2_crypto.zvec.ZVec",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::zvec::ZVec",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/zvec.rs",
+        "begin_line": 31,
+        "end_line": 31
+      }
+    },
+    {
+      "def_id": 57,
+      "lean_name": "keystore2.keystore2_crypto.ECKey",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::ECKey",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 294,
+        "end_line": 294
+      }
+    },
+    {
+      "def_id": 120,
+      "lean_name": "keystore2.keystore2_crypto.OwnedECPoint",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::OwnedECPoint",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 310,
+        "end_line": 310
+      }
+    },
+    {
+      "def_id": 117,
+      "lean_name": "keystore2.keystore2_crypto.BorrowedECPoint",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::BorrowedECPoint",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 313,
+        "end_line": 313
+      }
+    },
+    {
+      "def_id": 118,
+      "lean_name": "keystore2.keystore2_crypto_bindgen.ec_point_st",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto_bindgen::ec_point_st",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/bindgen/keystore2_crypto_bindgen/src/lib.rs",
+        "begin_line": 19,
+        "end_line": 19
+      }
+    },
+    {
+      "def_id": 119,
+      "lean_name": "keystore2.keystore2_crypto.EcdhComputeKeyVersion",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::EcdhComputeKeyVersion",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 344,
+        "end_line": 344
+      }
+    },
+    {
+      "def_id": 33,
+      "lean_name": "keystore2.keystore2_selinux.Error",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::Error",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 70,
+        "end_line": 70
+      }
+    },
+    {
+      "def_id": 15,
+      "lean_name": "keystore2.keystore2_selinux.Context",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::Context",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 94,
+        "end_line": 94
+      }
+    },
+    {
+      "def_id": 105,
+      "lean_name": "keystore2.log.__private_api.GlobalLogger",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::GlobalLogger",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 39,
+        "end_line": 39
+      }
+    },
+    {
+      "def_id": 130,
+      "lean_name": "keystore2.log.Metadata",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::Metadata",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 1158,
+        "end_line": 1158
+      }
+    },
+    {
+      "def_id": 131,
+      "lean_name": "keystore2.log.Record",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::Record",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 842,
+        "end_line": 842
+      }
+    },
+    {
+      "def_id": 103,
+      "lean_name": "keystore2.log.Level",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::Level",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 475,
+        "end_line": 475
+      }
+    },
+    {
+      "def_id": 104,
+      "lean_name": "keystore2.log.LevelFilter",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::LevelFilter",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 636,
+        "end_line": 636
+      }
+    },
+    {
+      "def_id": 8,
+      "lean_name": "keystore2.boot_level_keys.BootLevel",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::BootLevel",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 34,
+        "end_line": 34
+      }
+    },
+    {
+      "def_id": 9,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::DenyLaterStrategy",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 39,
+        "end_line": 46
+      }
+    },
+    {
+      "def_id": 38,
+      "lean_name": "keystore2.raw_device.KeyMintDevice",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::raw_device::KeyMintDevice",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/raw_device.rs",
+        "begin_line": 50,
+        "end_line": 55
+      }
+    },
+    {
+      "def_id": 39,
+      "lean_name": "keystore2.database.KeystoreDB",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::database::KeystoreDB",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/database.rs",
+        "begin_line": 823,
+        "end_line": 827
+      }
+    },
+    {
+      "def_id": 10,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::BootLevelKeyCache",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 185,
+        "end_line": 193
+      }
+    },
+    {
+      "def_id": 108,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.expand_key.closure",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::expand_key::{closure}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 280,
+        "end_line": 280
+      }
+    },
+    {
+      "def_id": 12,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::ECDHPrivateKey",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 27,
+        "end_line": 27
+      }
+    },
+    {
+      "def_id": 121,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.decrypt_message.closure",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message::{closure}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 118,
+        "end_line": 132
+      }
+    },
+    {
+      "def_id": 34,
+      "lean_name": "keystore2.error.Error",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::error::Error",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/error.rs",
+        "begin_line": 50,
+        "end_line": 63
+      }
+    },
+    {
+      "def_id": 5,
+      "lean_name": "keystore2.permission.KeyPerm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::KeyPerm",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      }
+    },
+    {
+      "def_id": 6,
+      "lean_name": "keystore2.permission.KeystorePerm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::KeystorePerm",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      }
+    },
+    {
+      "def_id": 7,
+      "lean_name": "keystore2.permission.KeyPermSet",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::KeyPermSet",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 181,
+        "end_line": 181
+      }
+    },
+    {
+      "def_id": 24,
+      "lean_name": "keystore2.permission.perm.IntoIter",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::perm::IntoIter",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 186,
+        "end_line": 189
+      }
+    },
+    {
+      "def_id": 28,
+      "lean_name": "keystore2.utils.AppUid",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::utils::AppUid",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/utils.rs",
+        "begin_line": 79,
+        "end_line": 79
+      }
+    },
+    {
+      "def_id": 11,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::KeyBlob",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 208,
+        "end_line": 215
+      }
+    },
+    {
+      "def_id": 50,
+      "lean_name": "keystore2.sw_keyblob.export_key.closure_1",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::export_key::{closure#1}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 82,
+        "end_line": 82
+      }
+    },
+    {
+      "def_id": 49,
+      "lean_name": "keystore2.sw_keyblob.export_key.closure",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::export_key::{closure}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 67,
+        "end_line": 67
+      }
+    }
+  ],
+  "globals": [
+    {
+      "def_id": 46,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_224",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_224",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 100,
+        "end_line": 108
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 47,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_256",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_256",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 100,
+        "end_line": 108
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 48,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_384",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_384",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 100,
+        "end_line": 108
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 49,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.P_521",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}::P_521",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 100,
+        "end_line": 108
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 42,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.INVALID_KEY_BLOB",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::ErrorCode::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::ErrorCode::ErrorCode}::INVALID_KEY_BLOB",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 112,
+        "end_line": 204
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 43,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.RAW",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat}::RAW",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 363,
+        "end_line": 369
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 44,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.PKCS8",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat}::PKCS8",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 363,
+        "end_line": 369
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 41,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.ALGORITHM",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::Tag}::ALGORITHM",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 492,
+        "end_line": 563
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 45,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.Tag.Tag.EC_CURVE",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::{android_hardware_security_keymint::aidl::android::hardware::security::keymint::Tag::Tag}::EC_CURVE",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 492,
+        "end_line": 563
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 139,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.CONVERT_STORAGE_KEY_TO_EPHEMERAL",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::CONVERT_STORAGE_KEY_TO_EPHEMERAL",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 140,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.DELETE",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::DELETE",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 141,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GEN_UNIQUE_ID",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GEN_UNIQUE_ID",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 142,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GET_INFO",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GET_INFO",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 143,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.GRANT",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::GRANT",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 144,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.MANAGE_BLOB",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::MANAGE_BLOB",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 145,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REBIND",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REBIND",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 146,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.REQ_FORCED_OP",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::REQ_FORCED_OP",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 147,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.UPDATE",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::UPDATE",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 148,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 149,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.KeyPermission.KeyPermission.USE_DEV_ID",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::KeyPermission::{android_system_keystore2::aidl::android::system::keystore2::KeyPermission::KeyPermission}::USE_DEV_ID",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 267,
+        "end_line": 283
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 29,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.INVALID_ARGUMENT",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::ResponseCode::{android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode}::INVALID_ARGUMENT",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 300,
+        "end_line": 323
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 96,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.ResponseCode.ResponseCode.SYSTEM_ERROR",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::ResponseCode::{android_system_keystore2::aidl::android::system::keystore2::ResponseCode::ResponseCode}::SYSTEM_ERROR",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 300,
+        "end_line": 323
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 102,
+      "lean_name": "keystore2.keystore2_crypto.AES_256_KEY_LENGTH",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::AES_256_KEY_LENGTH",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/lib.rs",
+        "begin_line": 37,
+        "end_line": 37
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 154,
+      "lean_name": "keystore2.log.STATIC_MAX_LEVEL",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::STATIC_MAX_LEVEL",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 1611,
+        "end_line": 1611
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 7,
+      "lean_name": "keystore2.boot_level_keys.PROPERTY_NAME",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::PROPERTY_NAME",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 53,
+        "end_line": 53
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 37,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.HKDF_ADVANCE",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::HKDF_ADVANCE",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 196,
+        "end_line": 196
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 38,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.HKDF_AES",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::HKDF_AES",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 197,
+        "end_line": 197
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 39,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.HKDF_KEY_SIZE",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::HKDF_KEY_SIZE",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 198,
+        "end_line": 198
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 61,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.ConvertStorageKeyToEphemeral",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::ConvertStorageKeyToEphemeral",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 62,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.Delete",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Delete",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 63,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.GenUniqueId",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::GenUniqueId",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 64,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.GetInfo",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::GetInfo",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 65,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.Grant",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Grant",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 66,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.ManageBlob",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::ManageBlob",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 67,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.Rebind",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Rebind",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 68,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.ReqForcedOp",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::ReqForcedOp",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 69,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.Update",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Update",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 70,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.Use",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::Use",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 71,
+      "lean_name": "keystore2.permission.FromKeyPermI32.from.UseDevId",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}::from::UseDevId",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 73,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.AddAuth",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::AddAuth",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 74,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.ClearNs",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::ClearNs",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 75,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.List",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::List",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 76,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.Lock",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::Lock",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 77,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.Reset",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::Reset",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 78,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.Unlock",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::Unlock",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 79,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.ChangeUser",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::ChangeUser",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 80,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.ChangePassword",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::ChangePassword",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 81,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.ClearUID",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::ClearUID",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 82,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.GetAuthToken",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::GetAuthToken",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 83,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.EarlyBootEnded",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::EarlyBootEnded",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 84,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.PullMetrics",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::PullMetrics",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 85,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.DeleteAllKeys",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::DeleteAllKeys",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 86,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.GetAttestationKey",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::GetAttestationKey",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 87,
+      "lean_name": "keystore2.permission.FromKeystorePermI32.from.GetLastAuthTime",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}::from::GetLastAuthTime",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 8,
+      "lean_name": "keystore2.sw_keyblob.SOFTWARE_ROOT_OF_TRUST",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::SOFTWARE_ROOT_OF_TRUST",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 35,
+        "end_line": 35
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 55,
+      "lean_name": "keystore2.sw_keyblob.consume_u32.LEN",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_u32::LEN",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 321,
+        "end_line": 321
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 54,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.MAC_LEN",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{keystore2::sw_keyblob::KeyBlob}::MAC_LEN",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 225,
+        "end_line": 225
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 53,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.LEGACY_HMAC_KEY",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{keystore2::sw_keyblob::KeyBlob}::LEGACY_HMAC_KEY",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 222,
+        "end_line": 222
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 52,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.KEY_BLOB_VERSION",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{keystore2::sw_keyblob::KeyBlob}::KEY_BLOB_VERSION",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 219,
+        "end_line": 219
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 13,
+      "lean_name": "keystore2.sw_keyblob.DER_VERSION_0",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::DER_VERSION_0",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 149,
+        "end_line": 153
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 12,
+      "lean_name": "keystore2.sw_keyblob.DER_ALGORITHM_ID_P521",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::DER_ALGORITHM_ID_P521",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 140,
+        "end_line": 146
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 11,
+      "lean_name": "keystore2.sw_keyblob.DER_ALGORITHM_ID_P384",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::DER_ALGORITHM_ID_P384",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 131,
+        "end_line": 137
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 10,
+      "lean_name": "keystore2.sw_keyblob.DER_ALGORITHM_ID_P256",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::DER_ALGORITHM_ID_P256",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 122,
+        "end_line": 128
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 9,
+      "lean_name": "keystore2.sw_keyblob.DER_ALGORITHM_ID_P224",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::DER_ALGORITHM_ID_P224",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 113,
+        "end_line": 119
+      },
+      "can_fail": false
+    },
+    {
+      "def_id": 57,
+      "lean_name": "keystore2.sw_keyblob.consume_i32.LEN",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_i32::LEN",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 332,
+        "end_line": 332
+      },
+      "can_fail": true
+    },
+    {
+      "def_id": 59,
+      "lean_name": "keystore2.sw_keyblob.consume_i64.LEN",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::consume_i64::LEN",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 343,
+        "end_line": 343
+      },
+      "can_fail": true
+    }
+  ],
+  "trait_decls": [
+    {
+      "def_id": 18,
+      "lean_name": "keystore2.anyhow.context.ext.StdError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::context::ext::StdError",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/context.rs",
+        "begin_line": 12,
+        "end_line": 12
+      }
+    },
+    {
+      "def_id": 12,
+      "lean_name": "keystore2.keystore2_selinux.ClassPermission",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::ClassPermission",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 309,
+        "end_line": 309
+      }
+    },
+    {
+      "def_id": 44,
+      "lean_name": "keystore2.log.__private_api.sealed.KVs",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::sealed::KVs",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 14,
+        "end_line": 14
+      }
+    },
+    {
+      "def_id": 45,
+      "lean_name": "keystore2.log.Log",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::Log",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 1249,
+        "end_line": 1249
+      }
+    }
+  ],
+  "trait_impls": [
+    {
+      "def_id": 62,
+      "lean_name": "keystore2.Shared0T.Insts.CoreFmtDisplay",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::fmt::{impl core::fmt::Display for &'_0 T}",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/fmt/mod.rs",
+        "begin_line": 2882,
+        "end_line": 2882
+      },
+      "impl_trait_def_id": 21,
+      "impl_trait_rust_name": "core::fmt::Display",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 108,
+      "lean_name": "keystore2.Mut0T.Insts.CoreFmtDisplay",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::fmt::{impl core::fmt::Display for &'_0 mut T}",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/fmt/mod.rs",
+        "begin_line": 2882,
+        "end_line": 2882
+      },
+      "impl_trait_def_id": 21,
+      "impl_trait_rust_name": "core::fmt::Display",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 63,
+      "lean_name": "keystore2.Str.Insts.CoreFmtDisplay",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::fmt::{impl core::fmt::Display for str}",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/fmt/mod.rs",
+        "begin_line": 2964,
+        "end_line": 2964
+      },
+      "impl_trait_def_id": 21,
+      "impl_trait_rust_name": "core::fmt::Display",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 99,
+      "lean_name": "keystore2.Usize.Insts.CoreFmtDisplay",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::fmt::num::imp::{impl core::fmt::Display for usize}",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/fmt/num.rs",
+        "begin_line": 606,
+        "end_line": 606
+      },
+      "impl_trait_def_id": 21,
+      "impl_trait_rust_name": "core::fmt::Display",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 138,
+      "lean_name": "keystore2.U8.Insts.CoreFmtDisplay",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "core::fmt::num::imp::{impl core::fmt::Display for u8}",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/core/src/fmt/num.rs",
+        "begin_line": 606,
+        "end_line": 606
+      },
+      "impl_trait_def_id": 21,
+      "impl_trait_rust_name": "core::fmt::Display",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 80,
+      "lean_name": "keystore2.alloc.string.String.Insts.CoreFmtDisplay",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "alloc::string::{impl core::fmt::Display for alloc::string::String}",
+      "is_local": false,
+      "source": {
+        "file": "/rustc/library/alloc/src/string.rs",
+        "begin_line": 2783,
+        "end_line": 2783
+      },
+      "impl_trait_def_id": 21,
+      "impl_trait_rust_name": "core::fmt::Display",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 96,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.EcCurve.EcCurve.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::{impl core::fmt::Debug for android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::EcCurve}",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 100,
+        "end_line": 108
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 85,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyFormat.KeyFormat.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::{impl core::fmt::Debug for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyFormat::KeyFormat}",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 363,
+        "end_line": 369
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 89,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter.Insts.CoreCloneClone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::{impl core::clone::Clone for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter}",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 405,
+        "end_line": 405
+      },
+      "impl_trait_def_id": 0,
+      "impl_trait_rust_name": "core::clone::Clone",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 145,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameter.KeyParameter.Insts.CoreCmpPartialEqKeyParameter",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::{impl core::cmp::PartialEq<android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter> for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameter::KeyParameter}",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 405,
+        "end_line": 405
+      },
+      "impl_trait_def_id": 9,
+      "impl_trait_rust_name": "core::cmp::PartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 84,
+      "lean_name": "keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint.KeyParameterValue.KeyParameterValue.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameterValue::{impl core::fmt::Debug for android_hardware_security_keymint::aidl::android::hardware::security::keymint::KeyParameterValue::KeyParameterValue}",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_hardware_security_keymint/src/lib.rs",
+        "begin_line": 420,
+        "end_line": 420
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 72,
+      "lean_name": "keystore2.android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "android_system_keystore2::aidl::android::system::keystore2::Domain::{impl core::fmt::Debug for android_system_keystore2::aidl::android::system::keystore2::Domain::Domain}",
+      "is_local": false,
+      "source": {
+        "file": "fvs-harness/aidl/android_system_keystore2/src/lib.rs",
+        "begin_line": 63,
+        "end_line": 71
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 76,
+      "lean_name": "keystore2.anyhow.context.ext.StdError.Blanket",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::context::ext::{impl anyhow::context::ext::StdError for E}",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/context.rs",
+        "begin_line": 19,
+        "end_line": 21
+      },
+      "impl_trait_def_id": 18,
+      "impl_trait_rust_name": "anyhow::context::ext::StdError",
+      "impl_trait_is_builtin": false
+    },
+    {
+      "def_id": 61,
+      "lean_name": "keystore2.anyhow.Error.Insts.AnyhowContextExtStdError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::context::ext::{impl anyhow::context::ext::StdError for anyhow::Error}",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/context.rs",
+        "begin_line": 32,
+        "end_line": 32
+      },
+      "impl_trait_def_id": 18,
+      "impl_trait_rust_name": "anyhow::context::ext::StdError",
+      "impl_trait_is_builtin": false
+    },
+    {
+      "def_id": 149,
+      "lean_name": "keystore2.anyhow.Error.Insts.CoreConvertFrom",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "anyhow::error::{impl core::convert::From<E> for anyhow::Error}",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.102/src/error.rs",
+        "begin_line": 674,
+        "end_line": 676
+      },
+      "impl_trait_def_id": 11,
+      "impl_trait_rust_name": "core::convert::From",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 168,
+      "lean_name": "keystore2.keystore2_crypto.error.Error.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::error::{impl core::fmt::Debug for keystore2_crypto::error::Error}",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/error.rs",
+        "begin_line": 19,
+        "end_line": 19
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 169,
+      "lean_name": "keystore2.keystore2_crypto.error.Error.Insts.CoreFmtDisplay",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::error::{impl core::fmt::Display for keystore2_crypto::error::Error}",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/error.rs",
+        "begin_line": 19,
+        "end_line": 19
+      },
+      "impl_trait_def_id": 21,
+      "impl_trait_rust_name": "core::fmt::Display",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 137,
+      "lean_name": "keystore2.keystore2_crypto.error.Error.Insts.CoreErrorError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_crypto::error::{impl core::error::Error for keystore2_crypto::error::Error}",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/src/crypto/error.rs",
+        "begin_line": 19,
+        "end_line": 19
+      },
+      "impl_trait_def_id": 22,
+      "impl_trait_rust_name": "core::error::Error",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 118,
+      "lean_name": "keystore2.keystore2_selinux.Error.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::{impl core::fmt::Debug for keystore2_selinux::Error}",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 69,
+        "end_line": 69
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 119,
+      "lean_name": "keystore2.keystore2_selinux.Error.Insts.CoreFmtDisplay",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::{impl core::fmt::Display for keystore2_selinux::Error}",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 69,
+        "end_line": 69
+      },
+      "impl_trait_def_id": 21,
+      "impl_trait_rust_name": "core::fmt::Display",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 77,
+      "lean_name": "keystore2.keystore2_selinux.Error.Insts.CoreErrorError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2_selinux::{impl core::error::Error for keystore2_selinux::Error}",
+      "is_local": false,
+      "source": {
+        "file": "keystore2/selinux/src/lib.rs",
+        "begin_line": 69,
+        "end_line": 69
+      },
+      "impl_trait_def_id": 22,
+      "impl_trait_rust_name": "core::error::Error",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 133,
+      "lean_name": "keystore2.Tuple.Insts.Log__private_apiSealedKVs",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::{impl log::__private_api::sealed::KVs<'a> for ()}",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 28,
+        "end_line": 28
+      },
+      "impl_trait_def_id": 44,
+      "impl_trait_rust_name": "log::__private_api::sealed::KVs",
+      "impl_trait_is_builtin": false
+    },
+    {
+      "def_id": 134,
+      "lean_name": "keystore2.log.__private_api.GlobalLogger.Insts.LogLog",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::__private_api::{impl log::Log for log::__private_api::GlobalLogger}",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/__private_api.rs",
+        "begin_line": 41,
+        "end_line": 41
+      },
+      "impl_trait_def_id": 45,
+      "impl_trait_rust_name": "log::Log",
+      "impl_trait_is_builtin": false
+    },
+    {
+      "def_id": 165,
+      "lean_name": "keystore2.log.Level.Insts.CoreCmpPartialEqLevelFilter",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::{impl core::cmp::PartialEq<log::LevelFilter> for log::Level}",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 501,
+        "end_line": 501
+      },
+      "impl_trait_def_id": 9,
+      "impl_trait_rust_name": "core::cmp::PartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 129,
+      "lean_name": "keystore2.log.Level.Insts.CoreCmpPartialOrdLevelFilter",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "log::{impl core::cmp::PartialOrd<log::LevelFilter> for log::Level}",
+      "is_local": false,
+      "source": {
+        "file": "/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/log-0.4.29/src/lib.rs",
+        "begin_line": 508,
+        "end_line": 508
+      },
+      "impl_trait_def_id": 14,
+      "impl_trait_rust_name": "core::cmp::PartialOrd",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 40,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCloneClone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::clone::Clone for keystore2::boot_level_keys::BootLevel}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "impl_trait_def_id": 0,
+      "impl_trait_rust_name": "core::clone::Clone",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 41,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreMarkerCopy",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::marker::Copy for keystore2::boot_level_keys::BootLevel}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "impl_trait_def_id": 6,
+      "impl_trait_rust_name": "core::marker::Copy",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 42,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::fmt::Debug for keystore2::boot_level_keys::BootLevel}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 43,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreMarkerStructuralPartialEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::marker::StructuralPartialEq for keystore2::boot_level_keys::BootLevel}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "impl_trait_def_id": 8,
+      "impl_trait_rust_name": "core::marker::StructuralPartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 44,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCmpPartialEqBootLevel",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::PartialEq<keystore2::boot_level_keys::BootLevel> for keystore2::boot_level_keys::BootLevel}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "impl_trait_def_id": 9,
+      "impl_trait_rust_name": "core::cmp::PartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 45,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCmpEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::Eq for keystore2::boot_level_keys::BootLevel}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "impl_trait_def_id": 10,
+      "impl_trait_rust_name": "core::cmp::Eq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 46,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCmpPartialOrdBootLevel",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::PartialOrd<keystore2::boot_level_keys::BootLevel> for keystore2::boot_level_keys::BootLevel}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "impl_trait_def_id": 14,
+      "impl_trait_rust_name": "core::cmp::PartialOrd",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 47,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreCmpOrd",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::Ord for keystore2::boot_level_keys::BootLevel}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "impl_trait_def_id": 13,
+      "impl_trait_rust_name": "core::cmp::Ord",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 48,
+      "lean_name": "keystore2.boot_level_keys.BootLevel.Insts.CoreHashHash",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::hash::Hash for keystore2::boot_level_keys::BootLevel}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 33,
+        "end_line": 33
+      },
+      "impl_trait_def_id": 24,
+      "impl_trait_rust_name": "core::hash::Hash",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 49,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::fmt::Debug for keystore2::boot_level_keys::DenyLaterStrategy}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 38,
+        "end_line": 38
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 50,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy.Insts.CoreMarkerStructuralPartialEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::marker::StructuralPartialEq for keystore2::boot_level_keys::DenyLaterStrategy}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 38,
+        "end_line": 38
+      },
+      "impl_trait_def_id": 8,
+      "impl_trait_rust_name": "core::marker::StructuralPartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 51,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy.Insts.CoreCmpPartialEqDenyLaterStrategy",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::PartialEq<keystore2::boot_level_keys::DenyLaterStrategy> for keystore2::boot_level_keys::DenyLaterStrategy}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 38,
+        "end_line": 38
+      },
+      "impl_trait_def_id": 9,
+      "impl_trait_rust_name": "core::cmp::PartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 52,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy.Insts.CoreCmpEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::cmp::Eq for keystore2::boot_level_keys::DenyLaterStrategy}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 38,
+        "end_line": 38
+      },
+      "impl_trait_def_id": 10,
+      "impl_trait_rust_name": "core::cmp::Eq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 54,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy.Insts.CoreCloneClone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::clone::Clone for keystore2::boot_level_keys::DenyLaterStrategy}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 38,
+        "end_line": 38
+      },
+      "impl_trait_def_id": 0,
+      "impl_trait_rust_name": "core::clone::Clone",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 55,
+      "lean_name": "keystore2.boot_level_keys.DenyLaterStrategy.Insts.CoreMarkerCopy",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{impl core::marker::Copy for keystore2::boot_level_keys::DenyLaterStrategy}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 38,
+        "end_line": 38
+      },
+      "impl_trait_def_id": 6,
+      "impl_trait_rust_name": "core::marker::Copy",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 135,
+      "lean_name": "keystore2.boot_level_keys.BootLevelKeyCache.expand_key.closure.Insts.CoreOpsFunctionFnOnceTupleShared0ZVecResultZVecError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::expand_key::{impl core::ops::function::FnOnce<(&'_0 keystore2_crypto::zvec::ZVec,), core::result::Result<keystore2_crypto::zvec::ZVec, keystore2_crypto::error::Error>> for keystore2::boot_level_keys::{keystore2::boot_level_keys::BootLevelKeyCache}::expand_key::{closure}<'_0, '_1, '_2>}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/boot_level_keys.rs",
+        "begin_line": 280,
+        "end_line": 280
+      },
+      "impl_trait_def_id": 26,
+      "impl_trait_rust_name": "core::ops::function::FnOnce",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 152,
+      "lean_name": "keystore2.P.Insts.CoreOpsFunctionFnOnceTupleECKeyECDHPrivateKey",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{impl core::ops::function::FnOnce<(keystore2_crypto::ECKey,), keystore2::ec_crypto::ECDHPrivateKey> for keystore2::ec_crypto::ECDHPrivateKey}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 27,
+        "end_line": 27
+      },
+      "impl_trait_def_id": 26,
+      "impl_trait_rust_name": "core::ops::function::FnOnce",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 158,
+      "lean_name": "keystore2.ec_crypto.ECDHPrivateKey.decrypt_message.closure.Insts.CoreOpsFunctionFnOnceTupleErrorResultZVecError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message::{impl core::ops::function::FnOnce<(keystore2_crypto::error::Error,), core::result::Result<keystore2_crypto::zvec::ZVec, anyhow::Error>> for keystore2::ec_crypto::{keystore2::ec_crypto::ECDHPrivateKey}::decrypt_message::{closure}<'_0, '_1, '_2, '_3, '_4, '_5, '_6>}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/ec_crypto.rs",
+        "begin_line": 118,
+        "end_line": 132
+      },
+      "impl_trait_def_id": 26,
+      "impl_trait_rust_name": "core::ops::function::FnOnce",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 120,
+      "lean_name": "keystore2.error.Error.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::error::{impl core::fmt::Debug for keystore2::error::Error}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/error.rs",
+        "begin_line": 49,
+        "end_line": 49
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 121,
+      "lean_name": "keystore2.error.Error.Insts.CoreFmtDisplay",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::error::{impl core::fmt::Display for keystore2::error::Error}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/error.rs",
+        "begin_line": 49,
+        "end_line": 49
+      },
+      "impl_trait_def_id": 21,
+      "impl_trait_rust_name": "core::fmt::Display",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 79,
+      "lean_name": "keystore2.error.Error.Insts.CoreErrorError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::error::{impl core::error::Error for keystore2::error::Error}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/error.rs",
+        "begin_line": 49,
+        "end_line": 49
+      },
+      "impl_trait_def_id": 22,
+      "impl_trait_rust_name": "core::error::Error",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 13,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreConvertFromI32",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "impl_trait_def_id": 11,
+      "impl_trait_rust_name": "core::convert::From",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 14,
+      "lean_name": "keystore2.I32.Insts.CoreConvertFromKeyPerm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<keystore2::permission::KeyPerm> for i32}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "impl_trait_def_id": 11,
+      "impl_trait_rust_name": "core::convert::From",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 15,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.Keystore2_selinuxClassPermission",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl keystore2_selinux::ClassPermission for keystore2::permission::KeyPerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 54,
+        "end_line": 100
+      },
+      "impl_trait_def_id": 12,
+      "impl_trait_rust_name": "keystore2_selinux::ClassPermission",
+      "impl_trait_is_builtin": false
+    },
+    {
+      "def_id": 7,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreCloneClone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::clone::Clone for keystore2::permission::KeyPerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 60,
+        "end_line": 60
+      },
+      "impl_trait_def_id": 0,
+      "impl_trait_rust_name": "core::clone::Clone",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 8,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreMarkerCopy",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::marker::Copy for keystore2::permission::KeyPerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 60,
+        "end_line": 60
+      },
+      "impl_trait_def_id": 6,
+      "impl_trait_rust_name": "core::marker::Copy",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 9,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::fmt::Debug for keystore2::permission::KeyPerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 60,
+        "end_line": 60
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 10,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreMarkerStructuralPartialEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::marker::StructuralPartialEq for keystore2::permission::KeyPerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 60,
+        "end_line": 60
+      },
+      "impl_trait_def_id": 8,
+      "impl_trait_rust_name": "core::marker::StructuralPartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 11,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreCmpPartialEqKeyPerm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::PartialEq<keystore2::permission::KeyPerm> for keystore2::permission::KeyPerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 60,
+        "end_line": 60
+      },
+      "impl_trait_def_id": 9,
+      "impl_trait_rust_name": "core::cmp::PartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 12,
+      "lean_name": "keystore2.permission.KeyPerm.Insts.CoreCmpEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::Eq for keystore2::permission::KeyPerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 60,
+        "end_line": 60
+      },
+      "impl_trait_def_id": 10,
+      "impl_trait_rust_name": "core::cmp::Eq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 23,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreConvertFromI32",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeystorePerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "impl_trait_def_id": 11,
+      "impl_trait_rust_name": "core::convert::From",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 24,
+      "lean_name": "keystore2.I32.Insts.CoreConvertFromKeystorePerm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<keystore2::permission::KeystorePerm> for i32}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "impl_trait_def_id": 11,
+      "impl_trait_rust_name": "core::convert::From",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 25,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.Keystore2_selinuxClassPermission",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl keystore2_selinux::ClassPermission for keystore2::permission::KeystorePerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 102,
+        "end_line": 155
+      },
+      "impl_trait_def_id": 12,
+      "impl_trait_rust_name": "keystore2_selinux::ClassPermission",
+      "impl_trait_is_builtin": false
+    },
+    {
+      "def_id": 17,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreCloneClone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::clone::Clone for keystore2::permission::KeystorePerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 106,
+        "end_line": 106
+      },
+      "impl_trait_def_id": 0,
+      "impl_trait_rust_name": "core::clone::Clone",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 18,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreMarkerCopy",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::marker::Copy for keystore2::permission::KeystorePerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 106,
+        "end_line": 106
+      },
+      "impl_trait_def_id": 6,
+      "impl_trait_rust_name": "core::marker::Copy",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 19,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::fmt::Debug for keystore2::permission::KeystorePerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 106,
+        "end_line": 106
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 20,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreMarkerStructuralPartialEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::marker::StructuralPartialEq for keystore2::permission::KeystorePerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 106,
+        "end_line": 106
+      },
+      "impl_trait_def_id": 8,
+      "impl_trait_rust_name": "core::marker::StructuralPartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 21,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreCmpPartialEqKeystorePerm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::PartialEq<keystore2::permission::KeystorePerm> for keystore2::permission::KeystorePerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 106,
+        "end_line": 106
+      },
+      "impl_trait_def_id": 9,
+      "impl_trait_rust_name": "core::cmp::PartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 22,
+      "lean_name": "keystore2.permission.KeystorePerm.Insts.CoreCmpEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::Eq for keystore2::permission::KeystorePerm}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 106,
+        "end_line": 106
+      },
+      "impl_trait_def_id": 10,
+      "impl_trait_rust_name": "core::cmp::Eq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 28,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCloneClone",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::clone::Clone for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "impl_trait_def_id": 0,
+      "impl_trait_rust_name": "core::clone::Clone",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 26,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreMarkerCopy",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::marker::Copy for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "impl_trait_def_id": 6,
+      "impl_trait_rust_name": "core::marker::Copy",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 29,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreFmtDebug",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::fmt::Debug for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "impl_trait_def_id": 7,
+      "impl_trait_rust_name": "core::fmt::Debug",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 32,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCmpPartialEqKeyPermSet",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::PartialEq<keystore2::permission::KeyPermSet> for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "impl_trait_def_id": 9,
+      "impl_trait_rust_name": "core::cmp::PartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 30,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCmpEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::Eq for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "impl_trait_def_id": 10,
+      "impl_trait_rust_name": "core::cmp::Eq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 31,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreMarkerStructuralPartialEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::marker::StructuralPartialEq for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "impl_trait_def_id": 8,
+      "impl_trait_rust_name": "core::marker::StructuralPartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 34,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCmpPartialOrdKeyPermSet",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::PartialOrd<keystore2::permission::KeyPermSet> for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "impl_trait_def_id": 14,
+      "impl_trait_rust_name": "core::cmp::PartialOrd",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 33,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreCmpOrd",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::cmp::Ord for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 180,
+        "end_line": 180
+      },
+      "impl_trait_def_id": 13,
+      "impl_trait_rust_name": "core::cmp::Ord",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 59,
+      "lean_name": "keystore2.permission.perm.IntoIter.Insts.CoreIterTraitsIteratorIteratorKeyPerm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::perm::{impl core::iter::traits::iterator::Iterator<keystore2::permission::KeyPerm> for keystore2::permission::perm::IntoIter}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 197,
+        "end_line": 212
+      },
+      "impl_trait_def_id": 17,
+      "impl_trait_rust_name": "core::iter::traits::iterator::Iterator",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 35,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreConvertFromKeyPerm",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<keystore2::permission::KeyPerm> for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 215,
+        "end_line": 219
+      },
+      "impl_trait_def_id": 11,
+      "impl_trait_rust_name": "core::convert::From",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 36,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreConvertFromI32",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<i32> for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 222,
+        "end_line": 226
+      },
+      "impl_trait_def_id": 11,
+      "impl_trait_rust_name": "core::convert::From",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 37,
+      "lean_name": "keystore2.I32.Insts.CoreConvertFromKeyPermSet",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::convert::From<keystore2::permission::KeyPermSet> for i32}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 228,
+        "end_line": 232
+      },
+      "impl_trait_def_id": 11,
+      "impl_trait_rust_name": "core::convert::From",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 38,
+      "lean_name": "keystore2.permission.KeyPermSet.Insts.CoreIterTraitsCollectIntoIteratorKeyPermIntoIter",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::permission::{impl core::iter::traits::collect::IntoIterator<keystore2::permission::KeyPerm, keystore2::permission::perm::IntoIter> for keystore2::permission::KeyPermSet}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/permission.rs",
+        "begin_line": 256,
+        "end_line": 263
+      },
+      "impl_trait_def_id": 16,
+      "impl_trait_rust_name": "core::iter::traits::collect::IntoIterator",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 95,
+      "lean_name": "keystore2.sw_keyblob.export_key.closure_1.Insts.CoreOpsFunctionFnOnceTupleError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::export_key::{impl core::ops::function::FnOnce<(), anyhow::Error> for keystore2::sw_keyblob::export_key::{closure#1}}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 82,
+        "end_line": 82
+      },
+      "impl_trait_def_id": 26,
+      "impl_trait_rust_name": "core::ops::function::FnOnce",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 90,
+      "lean_name": "keystore2.sw_keyblob.export_key.closure.Insts.CoreOpsFunctionFnOnceTupleError",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::export_key::{impl core::ops::function::FnOnce<(), anyhow::Error> for keystore2::sw_keyblob::export_key::{closure}}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 67,
+        "end_line": 67
+      },
+      "impl_trait_def_id": 26,
+      "impl_trait_rust_name": "core::ops::function::FnOnce",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 56,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.Insts.CoreMarkerStructuralPartialEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{impl core::marker::StructuralPartialEq for keystore2::sw_keyblob::KeyBlob}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 207,
+        "end_line": 207
+      },
+      "impl_trait_def_id": 8,
+      "impl_trait_rust_name": "core::marker::StructuralPartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 57,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.Insts.CoreCmpPartialEqKeyBlob",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{impl core::cmp::PartialEq<keystore2::sw_keyblob::KeyBlob> for keystore2::sw_keyblob::KeyBlob}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 207,
+        "end_line": 207
+      },
+      "impl_trait_def_id": 9,
+      "impl_trait_rust_name": "core::cmp::PartialEq",
+      "impl_trait_is_builtin": true
+    },
+    {
+      "def_id": 58,
+      "lean_name": "keystore2.sw_keyblob.KeyBlob.Insts.CoreCmpEq",
+      "lean_file": "Keystore2.lean",
+      "rust_name": "keystore2::sw_keyblob::{impl core::cmp::Eq for keystore2::sw_keyblob::KeyBlob}",
+      "is_local": true,
+      "source": {
+        "file": "keystore2/src/sw_keyblob.rs",
+        "begin_line": 207,
+        "end_line": 207
+      },
+      "impl_trait_def_id": 10,
+      "impl_trait_rust_name": "core::cmp::Eq",
+      "impl_trait_is_builtin": true
+    }
+  ]
+}
