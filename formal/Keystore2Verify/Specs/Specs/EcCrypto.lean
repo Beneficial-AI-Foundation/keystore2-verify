@@ -400,7 +400,7 @@ recall agree_key_fail_deref_secret (root : anyhow.Error → ErrRoot)
     (hoct : keystore2_crypto.ec_point_oct_to_point other = ok (.Ok p))
     (hgp : keystore2_crypto.OwnedECPoint.get_point p = ok eps)
     (hecdh : keystore2_crypto.ecdh_compute_key eps self version = ok (.Ok sec))
-    (ss : Slice Std.U8) (x : Error)
+    (x : Error)
     (hds : zvecDeref sec = fail x) :
     ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = fail x
 
@@ -547,6 +547,22 @@ recall encrypt_message_ok_lengths (root : anyhow.Error → ErrRoot)
     (he : keystore2_crypto.aes_gcm_encrypt message ks = ok (.Ok (ct, iv, tag))) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message =
       ok (.Ok (spk, salt, iv, ct, tag)) ∧
+      salt.val.length = 16 ∧ iv.val.length = 12 ∧ tag.val.length = 16 ∧
+      ct.val.length = message.length
+
+recall encrypt_message_ok_lengths_of_result (root : anyhow.Error → ErrRoot)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc95 : CryptoCtxLaw root
+      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
+    (hcpk : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
+    (hoct : EcPointPointToOctSpec) (hsalt : KeystoreCryptoGenerateSaltSpec)
+    (haes : AesGcmEncryptSpec)
+    (recipient message : Slice Std.U8)
+    (spk salt iv ct tag : alloc.vec.Vec Std.U8)
+    (h : ec_crypto.ECDHPrivateKey.encrypt_message recipient message =
+      ok (.Ok (spk, salt, iv, ct, tag))) :
+    (1 ≤ spk.val.length ∧ spk.val.length ≤ 133) ∧
       salt.val.length = 16 ∧ iv.val.length = 12 ∧ tag.val.length = 16 ∧
       ct.val.length = message.length
 

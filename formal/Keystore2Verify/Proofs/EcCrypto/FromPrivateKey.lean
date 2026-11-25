@@ -28,8 +28,8 @@ theorem from_private_key_err (root : anyhow.Error → ErrRoot)
       root e' = ErrRoot.crypto e := by
   sorry
 
-/-- conditional: if `ec_key_parse_private_key buf` panics, then `from_private_key buf` panics in the
-same way. Hypothesis: the outcome of the call. No law is needed. -/
+/-- conditional: if `ec_key_parse_private_key buf` panics, then `from_private_key buf` returns the
+same `fail x`. Hypothesis: the outcome of the call. No law is needed. -/
 theorem from_private_key_fail (buf : Slice Std.U8) (x : Error)
     (hparse : keystore2_crypto.ec_key_parse_private_key buf = fail x) :
     ec_crypto.ECDHPrivateKey.from_private_key buf = fail x := by

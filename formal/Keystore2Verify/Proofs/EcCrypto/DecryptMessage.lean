@@ -128,9 +128,10 @@ theorem decrypt_message_err_public_key
   sorry
 
 /-- conditional: if `public_key` returns `Ok` and `agree_key` (version `Current`) returns `Err e`,
-then `decrypt_message` returns an error with the same root cause as `e`. In the Rust source a bad or
-empty `sender` makes `agree_key` fail, and the `?` of line 117 returns at this point, before
-`aes_gcm_decrypt` is called. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the
+then `decrypt_message` returns an error with the same root cause as `e`. The statement assumes only
+that `agree_key` returned `Err e`. In the Rust source `agree_key` returns an error when `sender`
+does not decode, and the `?` of line 117 returns at this point, before `aes_gcm_decrypt` is called.
+Hypotheses: the shared laws for `from_str_nonconst` and `format`, the
 `context` law `AnyCtxLaw` at line 117, and the outcomes of the calls. -/
 theorem decrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -208,8 +209,8 @@ theorem decrypt_message_err_legacy_decrypt (root : anyhow.Error → ErrRoot)
     (.Err e') ∧ root e' = ErrRoot.crypto e := by
   sorry
 
-/-- conditional: if `public_key` panics, then `decrypt_message` panics in the same way. Hypothesis:
-the outcome of the call. No law is needed. -/
+/-- conditional: if `public_key` panics, then `decrypt_message` returns the same `fail x`.
+Hypothesis: the outcome of the call. No law is needed. -/
 theorem decrypt_message_fail_public_key (self : ec_crypto.ECDHPrivateKey)
     (sender salt iv ct tag : Slice Std.U8)
     (x : Error) (hpk : ec_crypto.ECDHPrivateKey.public_key self = fail x) :
@@ -217,7 +218,7 @@ theorem decrypt_message_fail_public_key (self : ec_crypto.ECDHPrivateKey)
   sorry
 
 /-- conditional: if `public_key` returns `Ok` and `agree_key` (version `Current`) panics, then
-`decrypt_message` panics in the same way. Hypotheses: the outcomes of the two calls. No law is
+`decrypt_message` returns the same `fail x`. Hypotheses: the outcomes of the two calls. No law is
 needed. -/
 theorem decrypt_message_fail_agree_key (self : ec_crypto.ECDHPrivateKey)
     (sender salt iv ct tag : Slice Std.U8)
@@ -229,11 +230,11 @@ theorem decrypt_message_fail_agree_key (self : ec_crypto.ECDHPrivateKey)
   sorry
 
 /-- conditional: if the first `aes_gcm_decrypt` returns `Err e1` and the legacy `agree_key` panics,
-then `decrypt_message` panics in the same way. Hypotheses: the shared laws for `from_str_nonconst`
-and `format`, the `context` law `AnyCtxLaw` at lines 117 and 129, and the outcomes of the calls.
-Model limit: the two `agree_key` calls run the same `hkdf_extract` and point-conversion steps before
-the version is used. A run in which one of these shared steps gives different outcomes in the two
-calls is outside the model. -/
+then `decrypt_message` returns the same `fail x`. Hypotheses: the shared laws for
+`from_str_nonconst` and `format`, the `context` law `AnyCtxLaw` at lines 117 and 129, and the
+outcomes of the calls. Model limit: the two `agree_key` calls run the same `hkdf_extract` and
+point-conversion steps before the version is used. A run in which one of these shared steps gives
+different outcomes in the two calls is outside the model. -/
 theorem decrypt_message_fail_legacy_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
@@ -261,10 +262,10 @@ theorem decrypt_message_closure_ignores_error
     closureCallOnce c e1 = closureCallOnce c e2 := by
   sorry
 
-/-- conditional: if `deref` of the derived key panics, then `decrypt_message` panics in the same
-way. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` law `AnyCtxLaw`
-at line 117 (the call before it passes through `context`), and the outcomes of the earlier calls and
-of this one. -/
+/-- conditional: if `deref` of the derived key panics, then `decrypt_message` returns the same
+`fail x`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` law
+`AnyCtxLaw` at line 117 (the call before it passes through `context`), and the outcomes of the
+earlier calls and of this one. -/
 theorem decrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
@@ -278,8 +279,8 @@ theorem decrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     (hd : zvecDeref key = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x := by
   sorry
-/-- conditional: if the first `aes_gcm_decrypt` panics, then `decrypt_message` panics in the same
-way. In the Rust source a panic is not an `Err`, so it does not reach the closure of `or_else`.
+/-- conditional: if the first `aes_gcm_decrypt` panics, then `decrypt_message` returns the same
+`fail x`. In the Rust source a panic is not an `Err`, so it does not reach the closure of `or_else`.
 Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` law `AnyCtxLaw` at
 line 117, and the outcomes of the earlier calls and of this one. -/
 theorem decrypt_message_fail_first_decrypt (root : anyhow.Error → ErrRoot)
@@ -297,12 +298,12 @@ theorem decrypt_message_fail_first_decrypt (root : anyhow.Error → ErrRoot)
     (hdec : keystore2_crypto.aes_gcm_decrypt ct iv tag ks = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x := by
   sorry
-/-- conditional: if `deref` of the legacy key panics, then `decrypt_message` panics in the same way.
-Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` law `AnyCtxLaw` at
-lines 117 and 129, and the outcomes of the earlier calls and of this one. Model limit: the two
-`agree_key` calls run the same `hkdf_extract` and point-conversion steps before the version is used.
-A run in which one of these shared steps gives different outcomes in the two calls is outside the
-model. -/
+/-- conditional: if `deref` of the legacy key panics, then `decrypt_message` returns the same
+`fail x`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` law
+`AnyCtxLaw` at lines 117 and 129, and the outcomes of the earlier calls and of this one. Model
+limit: the two `agree_key` calls run the same `hkdf_extract` and point-conversion steps before the
+version is used. A run in which one of these shared steps gives different outcomes in the two calls
+is outside the model. -/
 theorem decrypt_message_fail_deref_legacy_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
@@ -324,7 +325,7 @@ theorem decrypt_message_fail_deref_legacy_key (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x := by
   sorry
 /-- conditional: if the second `aes_gcm_decrypt`, with the legacy key, panics, then
-`decrypt_message` panics in the same way. Hypotheses: the shared laws for `from_str_nonconst` and
+`decrypt_message` returns the same `fail x`. Hypotheses: the shared laws for `from_str_nonconst` and
 `format`, the `context` law `AnyCtxLaw` at lines 117 and 129, and the outcomes of the earlier calls
 and of this one. Model limit: the two `agree_key` calls run the same `hkdf_extract` and
 point-conversion steps before the version is used. A run in which one of these shared steps gives
