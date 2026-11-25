@@ -117,15 +117,14 @@ theorem decrypt_message_ok_legacy (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok (.Ok p) := by
   sorry
 
-/-- conditional: if `public_key` returns `Err e`, then `decrypt_message` returns an error with the
-same root cause as `e`. In the Rust source the `?` returns at this point, before `agree_key` is
-called. Hypothesis: the outcome of the call. No law is needed. -/
-theorem decrypt_message_err_public_key (root : anyhow.Error → ErrRoot)
+/-- conditional: if `public_key` returns `Err e`, then `decrypt_message` returns the same error `e`
+(the error value is passed through unchanged). In the Rust source the `?` returns at this point,
+before `agree_key` is called. Hypothesis: the outcome of the call. No law is needed. -/
+theorem decrypt_message_err_public_key
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (e : anyhow.Error)
     (hpk : ec_crypto.ECDHPrivateKey.public_key self = ok (.Err e)) :
-    ∃ e', ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok
-    (.Err e') ∧ root e' = root e := by
+    ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok (.Err e) := by
   sorry
 
 /-- conditional: if `public_key` returns `Ok` and `agree_key` (version `Current`) returns `Err e`,

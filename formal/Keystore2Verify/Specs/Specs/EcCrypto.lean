@@ -785,12 +785,11 @@ recall decrypt_message_ok_legacy (root : anyhow.Error → ErrRoot)
     (hdec2 : keystore2_crypto.aes_gcm_decrypt ct iv tag ks2 = ok (.Ok p)) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok (.Ok p)
 
-recall decrypt_message_err_public_key (root : anyhow.Error → ErrRoot)
+recall decrypt_message_err_public_key
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (e : anyhow.Error)
     (hpk : ec_crypto.ECDHPrivateKey.public_key self = ok (.Err e)) :
-    ∃ e', ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok
-    (.Err e') ∧ root e' = root e
+    ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok (.Err e)
 
 recall decrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
