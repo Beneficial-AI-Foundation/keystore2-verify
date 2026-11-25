@@ -70,10 +70,9 @@ def Total2Law {A B C : Type} (f : A → B → Result C) : Prop :=
 
 /-! ## anyhow
 
-Observation: `anyhow::Error` is an opaque type. Callers look at an error only through its root
-cause (`keystore2/src/error.rs`: `e.root_cause().downcast_ref::<Error>()`). The classifier
-`root` gives the type of the root cause. The laws say nothing about messages, backtraces or
-equality of errors. Source: `anyhow` 1.0.102, `src/error.rs` and `src/context.rs`.
+The model observes an opaque `anyhow::Error` only through `root`, which classifies its root
+cause (`keystore2/src/error.rs`: `e.root_cause().downcast_ref::<Error>()`). Binder can also return
+formatted error text. The laws say nothing about that text, backtraces or equality of errors. Source: `anyhow` 1.0.102, `src/error.rs` and `src/context.rs`.
 -/
 
 /-- The root-cause class of an `anyhow::Error`. One constructor for each error type that keystore2

@@ -13,12 +13,12 @@
 
 ## Input
 
-The crate `keystore2` of this workspace, with the two patches of `translation-patches/series` applied
-to a copy of the tree (the checkout is never edited). Cargo arguments:
+The baseline recipe applies the two patches in `translation-patches/series` to a copy of the tree
+and selects the `keystore2` crate. Cargo arguments:
 `--locked --lib --package keystore2 --no-default-features`.
 
 The publication records neither the host triple nor the effective Cargo target; it also does not
-record whether the macOS-only clock patch was applied. A successful build on another host does
+record whether the [macOS-only clock patch](../fvs-harness/host-patches/macos-clock-boottime.patch) was applied. A successful build on another host does
 not recover that information. For regeneration, record `rustc -vV`, the effective target
 (including Cargo configuration and environment), and the applied patch list, then compare both
 output hashes with `Extraction/.fvs-publication.json`.
