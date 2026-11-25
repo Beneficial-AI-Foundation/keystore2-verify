@@ -1,4 +1,4 @@
-import Keystore2Verify.Specs.Defs.SwKeyblob
+import Keystore2Verify.Proofs.Lemmas.SwKeyblobWrap
 
 namespace Keystore2Verify.SwKeyblob
 open Aeneas Aeneas.Std Result keystore2
@@ -14,7 +14,8 @@ theorem pkcs8_wrap_nist_key_ok (nist_key : Slice Std.U8) (curve : EcCurve.EcCurv
     (hbody : (pkcs8Body (nums alg.val) (nums nist_key.val)).length ≤ 0xffff) :
     ∃ out, sw_keyblob.pkcs8_wrap_nist_key nist_key curve = ok (.Ok out) ∧
       nums out.val = pkcs8Wrap (nums alg.val) (nums nist_key.val) := by
-  sorry
+  rw [wrap_eq_body nist_key curve alg hc]
+  exact wrap_body_ok alg nist_key hbody
 
 /-- conditional: for a curve that is not one of the four NIST curves (Curve25519 included),
 `pkcs8_wrap_nist_key` returns an error whose root cause is `INVALID_KEY_BLOB`. The curve is
@@ -22,7 +23,7 @@ checked first, so this holds for every key. Hypotheses: `BlobErrFmtLaws`. -/
 theorem pkcs8_wrap_nist_key_err_curve (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (nist_key : Slice Std.U8) (curve : EcCurve.EcCurve) (hc : ¬ NistCurve curve) :
     ∃ e, sw_keyblob.pkcs8_wrap_nist_key nist_key curve = ok (.Err e) ∧ IsBlobErr root e := by
-  sorry
+  exact wrap_err_curve root hlaw nist_key curve hc
 
 /-- conditional: for a NIST curve and a key longer than `0xffff` bytes, `pkcs8_wrap_nist_key`
 returns an error whose root cause is `INVALID_KEY_BLOB` (the length of the octet string does not
@@ -31,7 +32,9 @@ theorem pkcs8_wrap_nist_key_err_key_len (root : anyhow.Error → ErrRoot)
     (hlaw : BlobErrFmtLaws root) (nist_key : Slice Std.U8) (curve : EcCurve.EcCurve)
     (hc : NistCurve curve) (hkey : 0xffff < nist_key.val.length) :
     ∃ e, sw_keyblob.pkcs8_wrap_nist_key nist_key curve = ok (.Err e) ∧ IsBlobErr root e := by
-  sorry
+  obtain ⟨alg, hc'⟩ := hc
+  rw [wrap_eq_body nist_key curve alg hc']
+  exact wrap_body_err_key root hlaw alg nist_key hkey
 
 /-- conditional: for a NIST curve and a key of at most `0xffff` bytes whose wrapped content is
 longer than `0xffff` bytes, `pkcs8_wrap_nist_key` returns an error whose root cause is
@@ -43,5 +46,6 @@ theorem pkcs8_wrap_nist_key_err_body_len (root : anyhow.Error → ErrRoot)
     (alg : Slice Std.U8) (hc : NistAlgId curve alg) (hkey : nist_key.val.length ≤ 0xffff)
     (hbody : 0xffff < (pkcs8Body (nums alg.val) (nums nist_key.val)).length) :
     ∃ e, sw_keyblob.pkcs8_wrap_nist_key nist_key curve = ok (.Err e) ∧ IsBlobErr root e := by
-  sorry
+  rw [wrap_eq_body nist_key curve alg hc]
+  exact wrap_body_err_body root hlaw alg nist_key (nist_alg_len curve alg hc) hkey hbody
 end Keystore2Verify.SwKeyblob

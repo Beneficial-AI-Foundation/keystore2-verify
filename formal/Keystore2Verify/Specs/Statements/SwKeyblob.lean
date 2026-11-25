@@ -21,8 +21,20 @@ open alloc.vec
 recall tag_type_bv (tag : Tag.Tag) :
     ∃ t, sw_keyblob.tag_type tag = ok t ∧ t.bv = tag.bv &&& 0xF0000000#32
 
+/-- info: 'Keystore2Verify.SwKeyblob.tag_type_bv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms tag_type_bv
+
 recall tag_type_same_top_bits (t1 t2 : Tag.Tag) (h : t1.bv >>> 28 = t2.bv >>> 28) :
     ∃ r, sw_keyblob.tag_type t1 = ok r ∧ sw_keyblob.tag_type t2 = ok r
+
+/-- info: 'Keystore2Verify.SwKeyblob.tag_type_same_top_bits' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms tag_type_same_top_bits
 
 recall add_der_len_ok (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
     (hlen : len.val ≤ 0xffff)
@@ -30,14 +42,59 @@ recall add_der_len_ok (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
     ∃ buf', sw_keyblob.add_der_len buf len = ok (.Ok (), buf') ∧
       nums buf'.val = nums buf.val ++ derLen len.val
 
+/-- info: 'Keystore2Verify.SwKeyblob.add_der_len_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms add_der_len_ok
+
 recall add_der_len_fail_capacity (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
     (hlen : len.val ≤ 0xffff)
     (hover : Std.Usize.max < buf.val.length + (derLen len.val).length) :
     sw_keyblob.add_der_len buf len = fail .maximumSizeExceeded
 
+/-- info: 'Keystore2Verify.SwKeyblob.add_der_len_fail_capacity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms add_der_len_fail_capacity
+
 recall add_der_len_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (buf : alloc.vec.Vec Std.U8) (len : Std.Usize) (hlen : 0xffff < len.val) :
     ∃ e, sw_keyblob.add_der_len buf len = ok (.Err e, buf) ∧ IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.add_der_len_err' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms add_der_len_err
 
 recall pkcs8_wrap_nist_key_ok (nist_key : Slice Std.U8) (curve : EcCurve.EcCurve)
     (alg : Slice Std.U8) (hc : NistAlgId curve alg)
@@ -45,14 +102,62 @@ recall pkcs8_wrap_nist_key_ok (nist_key : Slice Std.U8) (curve : EcCurve.EcCurve
     ∃ out, sw_keyblob.pkcs8_wrap_nist_key nist_key curve = ok (.Ok out) ∧
       nums out.val = pkcs8Wrap (nums alg.val) (nums nist_key.val)
 
+/-- info: 'Keystore2Verify.SwKeyblob.pkcs8_wrap_nist_key_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ EcCurve.EcCurve.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms pkcs8_wrap_nist_key_ok
+
 recall pkcs8_wrap_nist_key_err_curve (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (nist_key : Slice Std.U8) (curve : EcCurve.EcCurve) (hc : ¬ NistCurve curve) :
     ∃ e, sw_keyblob.pkcs8_wrap_nist_key nist_key curve = ok (.Err e) ∧ IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.pkcs8_wrap_nist_key_err_curve' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ EcCurve.EcCurve.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms pkcs8_wrap_nist_key_err_curve
 
 recall pkcs8_wrap_nist_key_err_key_len (root : anyhow.Error → ErrRoot)
     (hlaw : BlobErrFmtLaws root) (nist_key : Slice Std.U8) (curve : EcCurve.EcCurve)
     (hc : NistCurve curve) (hkey : 0xffff < nist_key.val.length) :
     ∃ e, sw_keyblob.pkcs8_wrap_nist_key nist_key curve = ok (.Err e) ∧ IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.pkcs8_wrap_nist_key_err_key_len' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ EcCurve.EcCurve.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms pkcs8_wrap_nist_key_err_key_len
 
 recall pkcs8_wrap_nist_key_err_body_len (root : anyhow.Error → ErrRoot)
     (hlaw : BlobErrFmtLaws root) (nist_key : Slice Std.U8) (curve : EcCurve.EcCurve)
@@ -60,21 +165,105 @@ recall pkcs8_wrap_nist_key_err_body_len (root : anyhow.Error → ErrRoot)
     (hbody : 0xffff < (pkcs8Body (nums alg.val) (nums nist_key.val)).length) :
     ∃ e, sw_keyblob.pkcs8_wrap_nist_key nist_key curve = ok (.Err e) ∧ IsBlobErr root e
 
+/-- info: 'Keystore2Verify.SwKeyblob.pkcs8_wrap_nist_key_err_body_len' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ EcCurve.EcCurve.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms pkcs8_wrap_nist_key_err_body_len
+
 recall consume_u8_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
     (hfirst : CoreSliceFirstSpec) (data : Slice Std.U8) (h : data.val = []) :
     ∃ e, sw_keyblob.consume_u8 data = ok (.Err e, data) ∧ IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_u8_err' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.slice.Slice.first,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_u8_err
 
 recall consume_u8_ok (hfirst : CoreSliceFirstSpec) (data : Slice Std.U8) (b : Std.U8)
     (rest : List Std.U8) (h : data.val = b :: rest) :
     ∃ data', sw_keyblob.consume_u8 data = ok (.Ok b, data') ∧ data'.val = rest
 
+/-- info: 'Keystore2Verify.SwKeyblob.consume_u8_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.slice.Slice.first,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_u8_ok
+
 recall consume_bool_err_empty (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
     (hfirst : CoreSliceFirstSpec) (data : Slice Std.U8) (h : data.val = []) :
     ∃ e, sw_keyblob.consume_bool data = ok (.Err e, data) ∧ IsBlobErr root e
 
+/-- info: 'Keystore2Verify.SwKeyblob.consume_bool_err_empty' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.slice.Slice.first,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_bool_err_empty
+
 recall consume_bool_true (hfirst : CoreSliceFirstSpec) (data : Slice Std.U8)
     (rest : List Std.U8) (h : data.val = 1#u8 :: rest) :
     ∃ data', sw_keyblob.consume_bool data = ok (.Ok true, data') ∧ data'.val = rest
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_bool_true' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.slice.Slice.first,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_bool_true
 
 recall consume_bool_err_value (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
     (hfirst : CoreSliceFirstSpec) (data : Slice Std.U8) (b : Std.U8) (rest : List Std.U8)
@@ -82,42 +271,195 @@ recall consume_bool_err_value (root : anyhow.Error → ErrRoot) (hlaw : BlobErrL
     ∃ e data', sw_keyblob.consume_bool data = ok (.Err e, data') ∧ IsBlobErr root e ∧
       data'.val = rest
 
+/-- info: 'Keystore2Verify.SwKeyblob.consume_bool_err_value' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.fmt.Arguments.from_str_nonconst,
+ core.slice.Slice.first,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_bool_err_value
+
 recall consume_u32_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.U32 4) (data : Slice Std.U8) (h : data.val.length < 4) :
     ∃ e, sw_keyblob.consume_u32 data = ok (.Err e, data) ∧ IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_u32_err' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_u32_err
 
 recall consume_u32_ok (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeBytesSpec)
     (data : Slice Std.U8) (h : 4 ≤ data.val.length) :
     ∃ x data', sw_keyblob.consume_u32 data = ok (.Ok x, data') ∧
       x.val = u32At data.val 0 ∧ data'.val = data.val.drop 4
 
+/-- info: 'Keystore2Verify.SwKeyblob.consume_u32_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_u32_ok
+
 recall consume_i32_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.I32 4) (data : Slice Std.U8) (h : data.val.length < 4) :
     ∃ e, sw_keyblob.consume_i32 data = ok (.Err e, data) ∧ IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_i32_err' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.I32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_i32_err
 
 recall consume_i32_ok (hsize : SizeOfLaw Std.I32 4) (hfrom : CoreNumI32FromNeBytesSpec)
     (data : Slice Std.U8) (h : 4 ≤ data.val.length) :
     ∃ x data', sw_keyblob.consume_i32 data = ok (.Ok x, data') ∧
       x.bv = BitVec.ofNat 32 (u32At data.val 0) ∧ data'.val = data.val.drop 4
 
+/-- info: 'Keystore2Verify.SwKeyblob.consume_i32_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.I32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_i32_ok
+
 recall consume_i64_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.I64 8) (data : Slice Std.U8) (h : data.val.length < 8) :
     ∃ e, sw_keyblob.consume_i64 data = ok (.Err e, data) ∧ IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_i64_err' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.I64.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_i64_err
 
 recall consume_i64_ok (hsize : SizeOfLaw Std.I64 8) (hfrom : CoreNumI64FromNeBytesSpec)
     (data : Slice Std.U8) (h : 8 ≤ data.val.length) :
     ∃ x data', sw_keyblob.consume_i64 data = ok (.Ok x, data') ∧
       x.bv = BitVec.ofNat 64 (leNat (data.val.take 8)) ∧ data'.val = data.val.drop 8
 
+/-- info: 'Keystore2Verify.SwKeyblob.consume_i64_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.I64.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_i64_ok
+
 recall consume_vec_err_prefix (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.U32 4) (data : Slice Std.U8) (h : data.val.length < 4) :
     ∃ e, sw_keyblob.consume_vec data = ok (.Err e, data) ∧ IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_vec_err_prefix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_vec_err_prefix
 
 recall consume_vec_err_len (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (h : 4 ≤ data.val.length) (hlen : data.val.length - 4 < u32At data.val 0) :
     ∃ e data', sw_keyblob.consume_vec data = ok (.Err e, data') ∧ IsBlobErr root e ∧
       data'.val = data.val.drop 4
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_vec_err_len' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_vec_err_len
 
 recall consume_vec_ok (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeBytesSpec)
     (data : Slice Std.U8) (h : 4 ≤ data.val.length)
@@ -126,11 +468,46 @@ recall consume_vec_ok (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeByt
       v.val = (data.val.drop 4).take (u32At data.val 0) ∧
       data'.val = data.val.drop (4 + u32At data.val 0)
 
+/-- info: 'Keystore2Verify.SwKeyblob.consume_vec_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_vec_ok
+
 recall consume_blob_err_len (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.U32 4) (data : Slice Std.U8) (next : Std.Usize)
     (blob : Slice Std.U8) (h : data.val.length < 4) :
     ∃ e, sw_keyblob.consume_blob data next blob = ok (.Err e, data, next) ∧
       IsBlobErr root e
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_blob_err_len' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Mut0T.Insts.CoreFmtDisplay.fmt,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_blob_err_len
 
 recall consume_blob_err_offset (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
@@ -139,12 +516,48 @@ recall consume_blob_err_offset (root : anyhow.Error → ErrRoot) (hlaw : BlobErr
     ∃ e data', sw_keyblob.consume_blob data next blob = ok (.Err e, data', next) ∧
       IsBlobErr root e ∧ data'.val = data.val.drop 4
 
+/-- info: 'Keystore2Verify.SwKeyblob.consume_blob_err_offset' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Mut0T.Insts.CoreFmtDisplay.fmt,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_blob_err_offset
+
 recall consume_blob_err_mismatch (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (next : Std.Usize) (blob : Slice Std.U8) (h : 8 ≤ data.val.length)
     (hoff : u32At data.val 4 ≠ next.val) :
     ∃ e data', sw_keyblob.consume_blob data next blob = ok (.Err e, data', next) ∧
       IsBlobErr root e ∧ data'.val = data.val.drop 8
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_blob_err_mismatch' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Mut0T.Insts.CoreFmtDisplay.fmt,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_blob_err_mismatch
 
 recall consume_blob_err_past_end (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
@@ -155,11 +568,47 @@ recall consume_blob_err_past_end (root : anyhow.Error → ErrRoot) (hlaw : BlobE
     ∃ e data', sw_keyblob.consume_blob data next blob = ok (.Err e, data', next) ∧
       IsBlobErr root e ∧ data'.val = data.val.drop 8
 
+/-- info: 'Keystore2Verify.SwKeyblob.consume_blob_err_past_end' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Mut0T.Insts.CoreFmtDisplay.fmt,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_blob_err_past_end
+
 recall consume_blob_fail_overflow (hsize : SizeOfLaw Std.U32 4)
     (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8) (next : Std.Usize)
     (blob : Slice Std.U8) (h : 8 ≤ data.val.length) (hoff : u32At data.val 4 = next.val)
     (hover : Std.Usize.max < next.val + u32At data.val 0) :
     sw_keyblob.consume_blob data next blob = fail .integerOverflow
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_blob_fail_overflow' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Mut0T.Insts.CoreFmtDisplay.fmt,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_blob_fail_overflow
 
 recall consume_blob_ok (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeBytesSpec)
     (data : Slice Std.U8) (next : Std.Usize) (blob : Slice Std.U8) (h : 8 ≤ data.val.length)
@@ -168,6 +617,24 @@ recall consume_blob_ok (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeBy
     ∃ v data' next', sw_keyblob.consume_blob data next blob = ok (.Ok v, data', next') ∧
       v.val = (blob.val.drop next.val).take (u32At data.val 0) ∧
       data'.val = data.val.drop 8 ∧ next'.val = next.val + u32At data.val 0
+
+/-- info: 'Keystore2Verify.SwKeyblob.consume_blob_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ alloc.fmt.format,
+ core.mem.size_of,
+ Mut0T.Insts.CoreFmtDisplay.fmt,
+ anyhow.error.Error.context,
+ anyhow.error.Error.new,
+ core.num.U32.from_ne_bytes,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms consume_blob_ok
 
 recall compute_hmac_ok (htrunc : AllocVecTruncateSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (hd tag : alloc.vec.Vec Std.U8) (msg : Slice Std.U8)
