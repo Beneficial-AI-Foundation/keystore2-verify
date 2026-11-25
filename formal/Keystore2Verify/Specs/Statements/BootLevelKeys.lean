@@ -74,7 +74,8 @@ recall hkdf_key_size_val : BootLevelKeyCache.HKDF_KEY_SIZE.val = 32
 recall BootLevelKeyCache_new_current (k : keystore2_crypto.zvec.ZVec) (s : BootLevelKeyCache)
     (h : BootLevelKeyCache.new k = ok s) : s.current.val = 0
 
-/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_new_current' depends on axioms: [propext,
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_new_current' depends on axioms:
+[propext,
  Classical.choice,
  Quot.sound,
  keystore2_crypto.zvec.ZVec,
@@ -90,7 +91,8 @@ recall BootLevelKeyCache_new_ok (view : View)
     (k : keystore2_crypto.zvec.ZVec) :
     ∃ s, BootLevelKeyCache.new k = ok s ∧ s.current.val = 0 ∧ view s.cache = [k]
 
-/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_new_ok' depends on axioms: [propext,
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_new_ok' depends on axioms:
+[propext,
  Classical.choice,
  Quot.sound,
  keystore2_crypto.zvec.ZVec,
@@ -571,7 +573,8 @@ recall BootLevelKeyCache_finish_ok (view : View)
     (hclear : ZVecQueueClearLaw view) (s : BootLevelKeyCache) :
     ∃ s', BootLevelKeyCache.finish s = ok s' ∧ s'.current = s.current ∧ view s'.cache = []
 
-/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_finish_ok' depends on axioms: [propext,
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_finish_ok' depends on axioms:
+[propext,
  Classical.choice,
  Quot.sound,
  keystore2_crypto.zvec.ZVec,
@@ -587,6 +590,27 @@ recall BootLevelKeyCache_expand_key_state
     (hget : BootLevelKeyCache.get_hkdf_key s L = ok (r0, s1))
     (h : BootLevelKeyCache.expand_key s L n info = ok (r, s')) : s' = s1
 
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_expand_key_state' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_expand_key_state
+
 recall BootLevelKeyCache_expand_key_err_lookup (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
@@ -596,12 +620,58 @@ recall BootLevelKeyCache_expand_key_err_lookup (root : anyhow.Error → ErrRoot)
     ∃ e', BootLevelKeyCache.expand_key s L n info = ok (RErr e', s1) ∧
       root e' = root e
 
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_expand_key_err_lookup' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_expand_key_err_lookup
+
 recall BootLevelKeyCache_expand_key_none (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hcc : ContextCryptoLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
     (s s1 : BootLevelKeyCache) (L : BootLevel) (n : Std.Usize) (info : Slice Std.U8)
     (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk none, s1)) :
     BootLevelKeyCache.expand_key s L n info = ok (ROk none, s1)
+
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_expand_key_none' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_expand_key_none
 
 recall BootLevelKeyCache_expand_key_some (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hcc : ContextCryptoLaw root) (hfmt : AllocFmtFormatSpec)
@@ -612,6 +682,29 @@ recall BootLevelKeyCache_expand_key_some (root : anyhow.Error → ErrRoot)
     (hderef : zvecDeref k = ok sl)
     (hexp : keystore2_crypto.hkdf_expand n sl info = ok (ROk z)) :
     BootLevelKeyCache.expand_key s L n info = ok (ROk (some z), s1)
+
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_expand_key_some' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_expand_key_some
 
 recall BootLevelKeyCache_expand_key_err_expand (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hcc : ContextCryptoLaw root) (hfmt : AllocFmtFormatSpec)
@@ -624,6 +717,29 @@ recall BootLevelKeyCache_expand_key_err_expand (root : anyhow.Error → ErrRoot)
     ∃ e, BootLevelKeyCache.expand_key s L n info = ok (RErr e, s1) ∧
       root e = ErrRoot.crypto ce
 
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_expand_key_err_expand' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_expand_key_err_expand
+
 recall BootLevelKeyCache_expand_key_len (root : anyhow.Error → ErrRoot)
     (hhkdf : KeystoreCryptoHkdfExpandSpec) (hcc : ContextCryptoLaw root)
     (s s' : BootLevelKeyCache) (L : BootLevel) (n : Std.Usize) (info : Slice Std.U8)
@@ -631,10 +747,55 @@ recall BootLevelKeyCache_expand_key_len (root : anyhow.Error → ErrRoot)
     (h : BootLevelKeyCache.expand_key s L n info = ok (ROk (some z), s')) :
     ∃ sl, zvecDeref z = ok sl ∧ sl.length = n.val
 
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_expand_key_len' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_expand_key_len
+
 recall BootLevelKeyCache_expand_key_fail_get_hkdf_key
     (s : BootLevelKeyCache) (L : BootLevel) (n : Std.Usize) (info : Slice Std.U8) (x : Error)
     (hget : BootLevelKeyCache.get_hkdf_key s L = fail x) :
     BootLevelKeyCache.expand_key s L n info = fail x
+
+/-- info:
+'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_expand_key_fail_get_hkdf_key' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_expand_key_fail_get_hkdf_key
 
 recall BootLevelKeyCache_expand_key_fail_expand (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
@@ -646,6 +807,30 @@ recall BootLevelKeyCache_expand_key_fail_expand (root : anyhow.Error → ErrRoot
     (hexp : keystore2_crypto.hkdf_expand n sl info = fail x) :
     BootLevelKeyCache.expand_key s L n info = fail x
 
+/-- info:
+'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_expand_key_fail_expand' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_expand_key_fail_expand
+
 recall BootLevelKeyCache_expand_key_fail_deref (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
@@ -655,12 +840,56 @@ recall BootLevelKeyCache_expand_key_fail_deref (root : anyhow.Error → ErrRoot)
     (hderef : zvecDeref k = fail x) :
     BootLevelKeyCache.expand_key s L n info = fail x
 
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_expand_key_fail_deref' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_expand_key_fail_deref
+
 recall BootLevelKeyCache_aes_key_state
     (s s1 s' : BootLevelKeyCache) (L : BootLevel)
     (r0 r : core.result.Result (Option keystore2_crypto.zvec.ZVec) anyhow.Error)
     (hexp : BootLevelKeyCache.expand_key s L keystore2_crypto.AES_256_KEY_LENGTH
       BootLevelKeyCache.HKDF_AES = ok (r0, s1))
     (h : BootLevelKeyCache.aes_key s L = ok (r, s')) : s' = s1
+
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_aes_key_state' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_aes_key_state
 
 recall BootLevelKeyCache_aes_key_err (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
@@ -671,6 +900,29 @@ recall BootLevelKeyCache_aes_key_err (root : anyhow.Error → ErrRoot)
     ∃ e', BootLevelKeyCache.aes_key s L = ok (RErr e', s1) ∧
       root e' = root e
 
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_aes_key_err' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_aes_key_err
+
 recall BootLevelKeyCache_aes_key_ok (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
@@ -679,6 +931,29 @@ recall BootLevelKeyCache_aes_key_ok (root : anyhow.Error → ErrRoot)
       BootLevelKeyCache.HKDF_AES = ok (ROk v, s1)) :
     BootLevelKeyCache.aes_key s L = ok (ROk v, s1)
 
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_aes_key_ok' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_aes_key_ok
+
 recall BootLevelKeyCache_aes_key_len (root : anyhow.Error → ErrRoot)
     (hhkdf : KeystoreCryptoHkdfExpandSpec) (hctx : ContextKeyLaw root)
     (hcc : ContextCryptoLaw root)
@@ -686,16 +961,83 @@ recall BootLevelKeyCache_aes_key_len (root : anyhow.Error → ErrRoot)
     (h : BootLevelKeyCache.aes_key s L = ok (ROk (some z), s')) :
     ∃ sl, zvecDeref z = ok sl ∧ sl.length = 32
 
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_aes_key_len' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_aes_key_len
+
 recall BootLevelKeyCache_aes_key_fail_expand_key
     (s : BootLevelKeyCache) (L : BootLevel) (x : Error)
     (hexp : BootLevelKeyCache.expand_key s L keystore2_crypto.AES_256_KEY_LENGTH
       BootLevelKeyCache.HKDF_AES = fail x) :
     BootLevelKeyCache.aes_key s L = fail x
 
+/-- info:
+'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_aes_key_fail_expand_key' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_aes_key_fail_expand_key
+
 recall BootLevelKeyCache_aes_key_fail_get_hkdf_key
     (s : BootLevelKeyCache) (L : BootLevel) (x : Error)
     (hget : BootLevelKeyCache.get_hkdf_key s L = fail x) :
     BootLevelKeyCache.aes_key s L = fail x
+
+/-- info:
+'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_aes_key_fail_get_hkdf_key' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_aes_key_fail_get_hkdf_key
 
 recall BootLevelKeyCache_aes_key_fail_expand (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
@@ -708,6 +1050,29 @@ recall BootLevelKeyCache_aes_key_fail_expand (root : anyhow.Error → ErrRoot)
       BootLevelKeyCache.HKDF_AES = fail x) :
     BootLevelKeyCache.aes_key s L = fail x
 
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_aes_key_fail_expand' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_aes_key_fail_expand
+
 recall BootLevelKeyCache_aes_key_fail_deref (root : anyhow.Error → ErrRoot)
     (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec)
@@ -716,5 +1081,28 @@ recall BootLevelKeyCache_aes_key_fail_deref (root : anyhow.Error → ErrRoot)
     (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk (some k), s1))
     (hderef : zvecDeref k = fail x) :
     BootLevelKeyCache.aes_key s L = fail x
+
+/-- info: 'Keystore2Verify.BootLevelKeys.BootLevelKeyCache_aes_key_fail_deref' depends on axioms:
+[propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_crypto.hkdf_expand,
+ alloc.fmt.format,
+ BootLevelKeyCache.get_hkdf_key,
+ keystore2_crypto.zvec.ZVec,
+ VecDeque,
+ core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms BootLevelKeyCache_aes_key_fail_deref
 
 end Keystore2Verify.BootLevelKeys
