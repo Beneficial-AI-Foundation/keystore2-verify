@@ -57,7 +57,7 @@ theorem consume_blob_err_past_end (root : anyhow.Error → ErrRoot) (hlaw : Blob
   sorry
 
 /-- conditional: if the offset is the expected one and the sum of offset and length does not fit
-in a `usize` (only possible when `usize` has 32 bits), `consume_blob` panics. Hypotheses: the
+in a `usize` (only possible when `usize` has 32 bits), `consume_blob` returns `fail .integerOverflow`. Hypotheses: the
 slice has at least 8 bytes, the offset read is `next`, the sum is larger than the largest
 `usize`, and the laws `SizeOfLaw Std.U32 4` and `CoreNumU32FromNeBytesSpec`. -/
 theorem consume_blob_fail_overflow (hsize : SizeOfLaw Std.U32 4)

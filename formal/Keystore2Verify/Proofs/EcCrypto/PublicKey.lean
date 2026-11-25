@@ -48,7 +48,7 @@ theorem public_key_err (root : anyhow.Error → ErrRoot)
       root e' = ErrRoot.crypto e := by
   sorry
 
-/-- conditional: if `get_point` fails on the point of the key (in Rust: the pointer is null), then
+/-- conditional: if `get_point` returns `fail x` on the point of the key, then
 `public_key` returns the same `fail x`. In the Rust source `ec_point_point_to_oct` follows
 `get_point`. Hypotheses: the outcomes of `ec_key_get0_public_key` and `get_point`. No law is needed.
 -/

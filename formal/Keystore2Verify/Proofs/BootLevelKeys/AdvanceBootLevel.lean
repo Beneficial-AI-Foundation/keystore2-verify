@@ -153,7 +153,7 @@ theorem BootLevelKeyCache_advance_boot_level_fail_sub (root : anyhow.Error → E
 current level is at most `L`, and the queue of `s1` has fewer than `L - current` entries, then
 `advance_boot_level` panics: the shared law for `VecDeque::split_off` says the split fails when
 the offset is beyond the length. Hypotheses: the outcome of `get_hkdf_key` (`hget`); `hle`;
-`hover`; the law `VecDequeSplitOffLaw`; `ContextKeyLaw`; the laws `format` and
+`hover`; the law `ZVecQueueSplitOffLaw`; `ContextKeyLaw`; the laws `format` and
 `from_str_nonconst`. Model limit: this is a conditional check on an arbitrary state returned by
 the opaque `get_hkdf_key`. In the Rust source a successful lookup never returns such a state (it
 has grown the queue to hold an element at the requested offset), so the Rust code cannot reach

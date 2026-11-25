@@ -25,9 +25,8 @@ translation models a repeated call with the same arguments as one pure function,
 the same arguments have the same outcome in every statement. For the domain `BLOB` with
 `perm = ManageBlob`, step 1 and step 2 make the same call. The success statement covers this case:
 it covers the runs in which the repeated check gives the same answer each time (`Ok`). A run in
-which the policy answer changes between the two calls is outside the model. The statement about an
-error of the final check assumes `perm ≠ ManageBlob`, because otherwise its hypotheses contradict
-each other (the same call would return `Ok` and an error).
+which the policy answer changes between the two calls is outside the model. The final-check error and failure statements need no separate `perm ≠ ManageBlob` hypothesis:
+when `perm = ManageBlob`, the same call cannot both succeed and return the later error or failure.
 Where a statement says that an outcome is `fail x`, the generated function returns `fail x` at once. The statements about `fail` for the lookup and for `getcon` need no law: the
 generated body binds these results first. -/
 
@@ -113,8 +112,8 @@ theorem check_key_permission_app_getcon_fail
   sorry
 
 /-- conditional: the access vector does not cover `perm`, the domain is `SELINUX` or `BLOB`, and
-the lookup of the namespace fails with `x` (an outer failure: the backend initialisation unwraps its
-result). The result is `fail x`. Hypothesis: the outcome of the lookup. No law is needed. -/
+the namespace lookup returns `fail x`. The caller returns the same `fail x`; the statement does
+not identify the cause of the opaque lookup failure. Hypothesis: the outcome of the lookup. No law is needed. -/
 theorem check_key_permission_lookup_fail
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
     (key : KeyDesc) (access_vector : Option permission.KeyPermSet)

@@ -20,7 +20,7 @@ theorem add_der_len_ok (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
   sorry
 
 /-- exact: for a length up to `0xffff`, if the buffer has no room for the encoding (one push per
-byte of `derLen len`), `add_der_len` panics: one of its pushes fails. Room means the bound of the
+byte of `derLen len`), a push fails and `add_der_len` returns `fail .maximumSizeExceeded`. Room means the bound of the
 Aeneas vector model (at most `usize::MAX` bytes). In Rust the panic comes at the lower limit of
 `isize::MAX` bytes, so this statement describes the model and is not a capacity guarantee for the
 Rust code. -/
