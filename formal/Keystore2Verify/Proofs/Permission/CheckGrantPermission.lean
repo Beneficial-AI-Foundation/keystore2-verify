@@ -213,14 +213,15 @@ theorem check_grant_permission_ok_empty (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, bit 3 of `access_vec` is not
-set, at least one bit is set, and for every set bit `i` the check of the permission
-`KeyPerm::from(1 << i)` returns `Ok`. The result is `Ok`. Two set bits that are no `KeyPerm` give
-two checks of `KeyPerm::None`: the statement covers the runs in which both give the same answer
-(`Ok`). A run in which the policy answer changes between the two calls is outside the model.
-Hypotheses: the `context` laws of `check_grant_permission_grant_check_err`, the `format` law
-(`AllocFmtFormatSpec`, the loop builds a message in every iteration), the `context` law for `()`
-with a `String` message (`AnyhowStringCtxLaw`, it keeps an `Ok`), and the outcomes `htarget` names
-and of the view of `ctx` and of the calls of `check_permission`. -/
+set, and for every set bit `i` the check of the permission `KeyPerm::from(1 << i)` returns `Ok`.
+The result is `Ok`. The set may be empty: the result is the same, and
+`check_grant_permission_ok_empty` gives that case without the `format` law. Two set bits that are
+no `KeyPerm` give two checks of `KeyPerm::None`: the statement covers the runs in which both give
+the same answer (`Ok`). A run in which the policy answer changes between the two calls is outside
+the model. Hypotheses: the `context` laws of `check_grant_permission_grant_check_err`, the `format`
+law (`AllocFmtFormatSpec`, the loop builds a message in every iteration), the `context` law for
+`()` with a `String` message (`AnyhowStringCtxLaw`, it keeps an `Ok`), and the outcomes `htarget`
+names and of the view of `ctx` and of the calls of `check_permission`. -/
 theorem check_grant_permission_ok (root : anyhow.Error → ErrRoot)
     (hfmt : AllocFmtFormatSpec)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -235,7 +236,6 @@ theorem check_grant_permission_ok (root : anyhow.Error → ErrRoot)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.Grant = ok (.Ok ()))
     (hbit : ¬ HasBit access_vec 3)
-    (hsome : ∃ i, i < 32 ∧ HasBit access_vec i)
     (hloop : ∀ i, i < 32 → HasBit access_vec i → ∃ kp, keyPermFromI32 (bitVal i) = ok kp ∧
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ())) :

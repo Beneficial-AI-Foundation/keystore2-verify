@@ -397,7 +397,6 @@ recall check_grant_permission_ok (root : anyhow.Error → ErrRoot)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.Grant = ok (.Ok ()))
     (hbit : ¬ HasBit access_vec 3)
-    (hsome : ∃ i, i < 32 ∧ HasBit access_vec i)
     (hloop : ∀ i, i < 32 → HasBit access_vec i → ∃ kp, keyPermFromI32 (bitVal i) = ok kp ∧
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ())) :

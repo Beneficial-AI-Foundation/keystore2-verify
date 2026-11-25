@@ -169,10 +169,6 @@ abbrev KsStringCtxLaw (root : anyhow.Error → ErrRoot) : Prop :=
 
 /-! ## Coverage by an access vector -/
 
-/-- Bit `i` is a bit that is no `KeyPerm`: bit 10 (`USE_NO_LSKF_BINDING`) and bits 12 to 31.
-`KeyPerm::from(1 << i)` is `KeyPerm::None` for exactly these bits (and for no other bit). -/
-def UnknownBit (i : Nat) : Prop := i = 10 ∨ (12 ≤ i ∧ i < 32)
-
 /-- The access vector covers `perm`: it is `some s`, and `s` includes the bit set of `perm`. -/
 def Covers (perm : permission.KeyPerm) (access_vector : Option permission.KeyPermSet) : Prop :=
   ∃ s o, access_vector = some s ∧
