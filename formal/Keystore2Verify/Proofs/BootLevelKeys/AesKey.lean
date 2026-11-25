@@ -97,5 +97,19 @@ theorem BootLevelKeyCache_aes_key_fail_expand (root : anyhow.Error → ErrRoot)
     BootLevelKeyCache.aes_key s L = fail x := by
   sorry
 
+/-- conditional: if `get_hkdf_key` returned `Ok (some k)`, and the view of `k` as a slice
+(`zvecDeref k`) panics (returns `fail x`), then `aes_key` fails with the same `x`.
+Hypotheses: the outcome of `get_hkdf_key` (`hget`); the outcome of the view (`hderef`);
+`ContextKeyLaw`; the laws `format` and `from_str_nonconst`. -/
+theorem BootLevelKeyCache_aes_key_fail_deref (root : anyhow.Error → ErrRoot)
+    (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec)
+    (s s1 : BootLevelKeyCache) (L : BootLevel)
+    (k : keystore2_crypto.zvec.ZVec) (x : Error)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk (some k), s1))
+    (hderef : zvecDeref k = fail x) :
+    BootLevelKeyCache.aes_key s L = fail x := by
+  sorry
+
 
 end Keystore2Verify.BootLevelKeys

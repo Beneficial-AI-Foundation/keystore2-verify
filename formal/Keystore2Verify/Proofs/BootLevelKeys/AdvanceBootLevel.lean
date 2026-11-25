@@ -10,8 +10,8 @@ open CoreCmpOrd renaming cmp → bootLevelCmp
 open CoreCmpPartialOrdBootLevel renaming partial_cmp → bootLevelPartialCmp
 open keystore2.alloc.collections.vec_deque
 
-/-- exact: if the level is not accessible, `advance_boot_level` returns `Ok ()` and leaves the
-cache unchanged. In the Rust source this path only logs. -/
+/-- exact: if the level is not accessible and `advance_boot_level` returns normally, it returns
+`Ok ()` and leaves the cache unchanged. In the Rust source this path only logs. -/
 theorem BootLevelKeyCache_advance_boot_level_not_accessible
     (s s' : BootLevelKeyCache) (L : BootLevel) (r : core.result.Result Unit anyhow.Error)
     (hacc : BootLevelKeyCache.level_accessible s L = ok false)

@@ -200,8 +200,7 @@ recall BootLevelKeyCache_expand_key_err_expand (root : anyhow.Error → ErrRoot)
       root e = ErrRoot.crypto ce
 
 recall BootLevelKeyCache_expand_key_len (root : anyhow.Error → ErrRoot)
-    (hhkdf : KeystoreCryptoHkdfExpandSpec) (hctx : ContextKeyLaw root)
-    (hcc : ContextCryptoLaw root)
+    (hhkdf : KeystoreCryptoHkdfExpandSpec) (hcc : ContextCryptoLaw root)
     (s s' : BootLevelKeyCache) (L : BootLevel) (n : Std.Usize) (info : Slice Std.U8)
     (z : keystore2_crypto.zvec.ZVec)
     (h : BootLevelKeyCache.expand_key s L n info = ok (ROk (some z), s')) :
@@ -220,6 +219,15 @@ recall BootLevelKeyCache_expand_key_fail_expand (root : anyhow.Error → ErrRoot
     (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk (some k), s1))
     (hderef : zvecDeref k = ok sl)
     (hexp : keystore2_crypto.hkdf_expand n sl info = fail x) :
+    BootLevelKeyCache.expand_key s L n info = fail x
+
+recall BootLevelKeyCache_expand_key_fail_deref (root : anyhow.Error → ErrRoot)
+    (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec)
+    (s s1 : BootLevelKeyCache) (L : BootLevel) (n : Std.Usize) (info : Slice Std.U8)
+    (k : keystore2_crypto.zvec.ZVec) (x : Error)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk (some k), s1))
+    (hderef : zvecDeref k = fail x) :
     BootLevelKeyCache.expand_key s L n info = fail x
 
 recall BootLevelKeyCache_aes_key_state
@@ -273,6 +281,15 @@ recall BootLevelKeyCache_aes_key_fail_expand (root : anyhow.Error → ErrRoot)
     (hderef : zvecDeref k = ok sl)
     (hexp : keystore2_crypto.hkdf_expand keystore2_crypto.AES_256_KEY_LENGTH sl
       BootLevelKeyCache.HKDF_AES = fail x) :
+    BootLevelKeyCache.aes_key s L = fail x
+
+recall BootLevelKeyCache_aes_key_fail_deref (root : anyhow.Error → ErrRoot)
+    (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec)
+    (s s1 : BootLevelKeyCache) (L : BootLevel)
+    (k : keystore2_crypto.zvec.ZVec) (x : Error)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk (some k), s1))
+    (hderef : zvecDeref k = fail x) :
     BootLevelKeyCache.aes_key s L = fail x
 
 end Keystore2Verify.BootLevelKeys
