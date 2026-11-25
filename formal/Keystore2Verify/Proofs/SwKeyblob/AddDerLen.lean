@@ -32,8 +32,8 @@ theorem add_der_len_fail_capacity (buf : alloc.vec.Vec Std.U8) (len : Std.Usize)
 
 /-- conditional: for a length above `0xffff`, `add_der_len` returns an error whose root cause is
 `INVALID_KEY_BLOB`, and the buffer is returned unchanged. Hypotheses: the length is above
-`0xffff`, and the shared laws of `BlobErrLaws`. -/
-theorem add_der_len_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
+`0xffff`, and the shared laws of `BlobErrFmtLaws`. -/
+theorem add_der_len_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (buf : alloc.vec.Vec Std.U8) (len : Std.Usize) (hlen : 0xffff < len.val) :
     ∃ e, sw_keyblob.add_der_len buf len = ok (.Err e, buf) ∧ IsBlobErr root e := by
   sorry

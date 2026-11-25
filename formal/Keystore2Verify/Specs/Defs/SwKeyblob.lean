@@ -66,13 +66,19 @@ of `anyhow::Error`. -/
 def IsBlobErr (root : anyhow.Error → ErrRoot) (e : anyhow.Error) : Prop :=
   root e = ErrRoot.ks (error.Error.Km ErrorCode.ErrorCode.INVALID_KEY_BLOB)
 
-/-- The shared laws that the `bloberr!` macro needs: `anyhow::Error::new` of a keystore2 error
-(`ErrorNewLaw`), `Error::context` with a `String` (`ErrorContextLaw`), `format` and
-`from_str_nonconst`. With them, each `bloberr!` error has the root cause of `IsBlobErr`. -/
-def BlobErrLaws (root : anyhow.Error → ErrRoot) : Prop :=
+/-- The shared laws that a `bloberr!` error with a formatted message needs: `anyhow::Error::new`
+of a keystore2 error (`ErrorNewLaw`), `Error::context` with a `String` (`ErrorContextLaw`) and
+`format` (`AllocFmtFormatSpec`). With them, such an error has the root cause of `IsBlobErr`. -/
+def BlobErrFmtLaws (root : anyhow.Error → ErrRoot) : Prop :=
   ErrorNewLaw root ErrRoot.ks (anyhowNew ksErrorError) ∧
   ErrorContextLaw root (anyhowContext stringDisplay) ∧
-  AllocFmtFormatSpec ∧ CoreFmtArgumentsFromStrNonconstSpec
+  AllocFmtFormatSpec
+
+/-- The shared laws that the `bloberr!` macro needs for a message with no arguments: those of
+`BlobErrFmtLaws`, and `from_str_nonconst`. The paths with a formatted message evaluate no
+`from_str_nonconst` and use `BlobErrFmtLaws` instead. -/
+def BlobErrLaws (root : anyhow.Error → ErrRoot) : Prop :=
+  BlobErrFmtLaws root ∧ CoreFmtArgumentsFromStrNonconstSpec
 
 /-- The shared law `ErrorFromLaw` for the conversion of a `keystore2_crypto` error into an
 `anyhow::Error`, which `?` applies to the result of `hmac_sha256`. -/

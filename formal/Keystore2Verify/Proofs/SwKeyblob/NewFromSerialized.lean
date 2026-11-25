@@ -5,10 +5,10 @@ open Aeneas Aeneas.Std Result keystore2
 open Keystore2Verify.Externals
 open keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint
 
-/-- conditional: a blob of fewer than 21 bytes (empty included) gives an error whose root cause
-is `INVALID_KEY_BLOB`. The length is checked first, so this holds for every `hidden`.
-Hypotheses: `BlobErrLaws` and the law `CoreMemSizeOfSpec`. -/
-theorem new_from_serialized_err_short (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
+/-- conditional: a blob of fewer than 21 bytes (empty included) gives an error whose root cause is
+`INVALID_KEY_BLOB`. The length is checked first, so this holds for every `hidden`. Hypotheses:
+`BlobErrFmtLaws` and the law `CoreMemSizeOfSpec`. -/
+theorem new_from_serialized_err_short (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : CoreMemSizeOfSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (h : data.val.length < minBlobLen) :
     ∃ e, sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) ∧
@@ -55,9 +55,10 @@ theorem new_from_serialized_err_mac (root : anyhow.Error → ErrRoot) (hlaw : Bl
 
 /-- conditional: if the MAC is good and the first byte is not 0, `new_from_serialized` returns an
 error whose root cause is `INVALID_KEY_BLOB`. Hypotheses: `MacOk`, the first byte `v` is not 0,
-`BlobErrLaws`, and the laws `CoreMemSizeOfSpec`, `Shared0SliceNeSpec` and `CoreSliceFirstSpec`. -/
+`BlobErrFmtLaws`, and the laws `CoreMemSizeOfSpec`, `Shared0SliceNeSpec` and
+`CoreSliceFirstSpec`. -/
 theorem new_from_serialized_err_version (root : anyhow.Error → ErrRoot)
-    (hlaw : BlobErrLaws root) (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
+    (hlaw : BlobErrFmtLaws root) (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (data : Slice Std.U8) (hidden : Slice KeyParam)
     (hmac : MacOk data hidden) (v : Std.U8) (hv : data.val.head? = some v) (hv0 : v.val ≠ 0) :
     ∃ e, sw_keyblob.KeyBlob.new_from_serialized data hidden = ok (.Err e) ∧
@@ -67,10 +68,10 @@ theorem new_from_serialized_err_version (root : anyhow.Error → ErrRoot)
 /-- conditional: if the MAC is good, the version is 0 and the key material length `u32At data 1`
 is larger than the bytes after it, `new_from_serialized` returns an error whose root cause is
 `INVALID_KEY_BLOB`. The 8 MAC bytes count as bytes after it. Hypotheses: `MacOk`, the version is
-0, the length is too large, `BlobErrLaws`, and the laws `CoreMemSizeOfSpec`,
+0, the length is too large, `BlobErrFmtLaws`, and the laws `CoreMemSizeOfSpec`,
 `Shared0SliceNeSpec`, `CoreSliceFirstSpec` and `CoreNumU32FromNeBytesSpec`. -/
 theorem new_from_serialized_err_key_len (root : anyhow.Error → ErrRoot)
-    (hlaw : BlobErrLaws root) (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
+    (hlaw : BlobErrFmtLaws root) (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (hmac : MacOk data hidden) (hv : data.val.head? = some 0#u8)
     (hlen : data.val.length - 5 < u32At data.val 1) :
@@ -155,9 +156,9 @@ theorem new_from_serialized_fail_rest (hsize : CoreMemSizeOfSpec) (hne : Shared0
 
 /-- conditional: both parameter lists parse and more than 8 bytes are left, so
 `new_from_serialized` returns an error whose root cause is `INVALID_KEY_BLOB`. Hypotheses: as for
-`new_from_serialized_fail_rest`, but `d4` is longer than 8 bytes, and `BlobErrLaws`. -/
+`new_from_serialized_fail_rest`, but `d4` is longer than 8 bytes, and `BlobErrFmtLaws`. -/
 theorem new_from_serialized_err_extra (root : anyhow.Error → ErrRoot)
-    (hlaw : BlobErrLaws root) (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
+    (hlaw : BlobErrFmtLaws root) (hsize : CoreMemSizeOfSpec) (hne : Shared0SliceNeSpec)
     (hfirst : CoreSliceFirstSpec) (hfrom : CoreNumU32FromNeBytesSpec) (data : Slice Std.U8)
     (hidden : Slice KeyParam) (hpast : PastKey data hidden) (d2 : Slice Std.U8)
     (hd2 : d2.val = data.val.drop (5 + u32At data.val 1))

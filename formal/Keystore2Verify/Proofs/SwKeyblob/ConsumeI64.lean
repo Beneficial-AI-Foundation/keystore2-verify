@@ -5,10 +5,10 @@ open Aeneas Aeneas.Std Result keystore2
 open Keystore2Verify.Externals
 open keystore2.android_hardware_security_keymint.aidl.android.hardware.security.keymint
 
-/-- conditional: on a slice of fewer than 8 bytes, `consume_i64` returns an error whose root
-cause is `INVALID_KEY_BLOB`, and the slice is returned unchanged. Hypotheses: `BlobErrLaws` and
-the law `CoreMemSizeOfSpec`. -/
-theorem consume_i64_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
+/-- conditional: on a slice of fewer than 8 bytes, `consume_i64` returns an error whose root cause
+is `INVALID_KEY_BLOB`, and the slice is returned unchanged. Hypotheses: `BlobErrFmtLaws` and the
+law `CoreMemSizeOfSpec`. -/
+theorem consume_i64_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : CoreMemSizeOfSpec) (data : Slice Std.U8) (h : data.val.length < 8) :
     ∃ e, sw_keyblob.consume_i64 data = ok (.Err e, data) ∧ IsBlobErr root e := by
   sorry
