@@ -73,16 +73,16 @@ theorem encrypt_message_ok_lengths (root : anyhow.Error → ErrRoot)
 /-- conditional: if `encrypt_message` returns `Ok (spk, salt, iv, ct, tag)`, then `spk` has between
 1 and 133 bytes, `salt` has 16 bytes, `iv` has 12 bytes, `tag` has 16 bytes and `ct` is as long as
 `message`. The hypothesis is the returned value; the outcomes of the calls inside are not assumed.
-Hypotheses: the `context` laws `AnyCtxLaw` at line 83 and `CryptoCtxLaw` at lines 84 and 95, the
-`context` law `CryptoCtxLaw` inside `public_key` (these laws let an `Ok` after `context` come only
-from an `Ok` before it), the length laws `EcPointPointToOctSpec`, `KeystoreCryptoGenerateSaltSpec`
-and `AesGcmEncryptSpec`, and the returned value. -/
+Hypotheses: the `context` laws `AnyCtxLaw` at line 83 and `CryptoCtxLaw` at line 95, the
+vector-valued `CryptoCtxLaw`, which covers both the salt `context` (line 84) and the `context`
+inside `public_key` (these laws let an `Ok` after `context` come only from an `Ok` before it), the
+length laws `EcPointPointToOctSpec`, `KeystoreCryptoGenerateSaltSpec` and `AesGcmEncryptSpec`, and
+the returned value. -/
 theorem encrypt_message_ok_lengths_of_result (root : anyhow.Error → ErrRoot)
     (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc95 : CryptoCtxLaw root
       (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
-    (hcpk : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hoct : EcPointPointToOctSpec) (hsalt : KeystoreCryptoGenerateSaltSpec)
     (haes : AesGcmEncryptSpec)
     (recipient message : Slice Std.U8)

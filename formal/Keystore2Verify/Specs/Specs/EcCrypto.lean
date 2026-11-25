@@ -555,7 +555,6 @@ recall encrypt_message_ok_lengths_of_result (root : anyhow.Error → ErrRoot)
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc95 : CryptoCtxLaw root
       (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
-    (hcpk : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hoct : EcPointPointToOctSpec) (hsalt : KeystoreCryptoGenerateSaltSpec)
     (haes : AesGcmEncryptSpec)
     (recipient message : Slice Std.U8)
