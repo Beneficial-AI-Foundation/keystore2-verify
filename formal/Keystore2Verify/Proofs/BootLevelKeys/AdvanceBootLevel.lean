@@ -122,4 +122,48 @@ theorem BootLevelKeyCache_advance_boot_level_ok_retained (view : View)
       (view s'.cache).head? = (view s1.cache)[L.val - s1.current.val]? := by
   sorry
 
+/-- conditional: if the level is accessible and `get_hkdf_key` panics (returns `fail x`), then
+`advance_boot_level` fails with the same `x`. Hypotheses: the level is accessible (`hacc`) and
+the outcome of `get_hkdf_key` (`hget`). No law is needed. -/
+theorem BootLevelKeyCache_advance_boot_level_fail_get_hkdf_key
+    (s : BootLevelKeyCache) (L : BootLevel) (x : Error)
+    (hacc : BootLevelKeyCache.level_accessible s L = ok true)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = fail x) :
+    BootLevelKeyCache.advance_boot_level s L = fail x := by
+  sorry
+
+/-- conditional: if the level is accessible, `get_hkdf_key` returned `Ok` with a cache `s1` whose
+current level is above `L`, then `advance_boot_level` fails with an integer overflow: the
+subtraction `L - current` underflows. Hypotheses: the outcome of `get_hkdf_key` (`hget`); the
+bound `hlt`; `ContextKeyLaw`; the laws `format` and `from_str_nonconst`. -/
+theorem BootLevelKeyCache_advance_boot_level_fail_sub (root : anyhow.Error → ErrRoot)
+    (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec)
+    (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)
+    (hacc : BootLevelKeyCache.level_accessible s L = ok true)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk o, s1))
+    (hlt : L.val < s1.current.val) :
+    BootLevelKeyCache.advance_boot_level s L = fail Error.integerOverflow := by
+  sorry
+
+/-- conditional: if the level is accessible, `get_hkdf_key` returned `Ok` with a cache `s1` whose
+current level is at most `L`, and the queue of `s1` has fewer than `L - current` entries, then
+`advance_boot_level` panics: the shared law for `VecDeque::split_off` says the split fails when
+the offset is beyond the length. Hypotheses: the outcome of `get_hkdf_key` (`hget`); `hle`;
+`hover`; the law `VecDequeSplitOffLaw`; `ContextKeyLaw`; the laws `format` and
+`from_str_nonconst`. -/
+theorem BootLevelKeyCache_advance_boot_level_fail_split_off (view : View)
+    (root : anyhow.Error → ErrRoot)
+    (hsplit : VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal))
+    (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec)
+    (s s1 : BootLevelKeyCache) (L : BootLevel) (o : Option keystore2_crypto.zvec.ZVec)
+    (hacc : BootLevelKeyCache.level_accessible s L = ok true)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk o, s1))
+    (hle : s1.current.val ≤ L.val)
+    (hover : (view s1.cache).length < L.val - s1.current.val) :
+    BootLevelKeyCache.advance_boot_level s L = fail Error.panic := by
+  sorry
+
+
 end Keystore2Verify.BootLevelKeys

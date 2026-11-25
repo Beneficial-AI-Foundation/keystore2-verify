@@ -95,4 +95,28 @@ theorem BootLevelKeyCache_expand_key_len (root : anyhow.Error → ErrRoot)
     ∃ sl, zvecDeref z = ok sl ∧ sl.length = n.val := by
   sorry
 
+/-- conditional: if `get_hkdf_key` panics (returns `fail x`), then `expand_key` fails with the same
+`x`. Hypothesis: the outcome of `get_hkdf_key` (`hget`). No law is needed. -/
+theorem BootLevelKeyCache_expand_key_fail_get_hkdf_key
+    (s : BootLevelKeyCache) (L : BootLevel) (n : Std.Usize) (info : Slice Std.U8) (x : Error)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = fail x) :
+    BootLevelKeyCache.expand_key s L n info = fail x := by
+  sorry
+
+/-- conditional: if `get_hkdf_key` returned `Ok (some k)`, and `hkdf_expand n k info` panics
+(returns `fail x`), then `expand_key` fails with the same `x`. Hypotheses: the outcome of
+`get_hkdf_key` (`hget`); the view of `k` as a slice `sl` (`hderef`) and the outcome of
+`hkdf_expand` on it (`hexp`); `ContextKeyLaw`; the laws `format` and `from_str_nonconst`. -/
+theorem BootLevelKeyCache_expand_key_fail_expand (root : anyhow.Error → ErrRoot)
+    (hctx : ContextKeyLaw root) (hfmt : AllocFmtFormatSpec)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec)
+    (s s1 : BootLevelKeyCache) (L : BootLevel) (n : Std.Usize) (info sl : Slice Std.U8)
+    (k : keystore2_crypto.zvec.ZVec) (x : Error)
+    (hget : BootLevelKeyCache.get_hkdf_key s L = ok (ROk (some k), s1))
+    (hderef : zvecDeref k = ok sl)
+    (hexp : keystore2_crypto.hkdf_expand n sl info = fail x) :
+    BootLevelKeyCache.expand_key s L n info = fail x := by
+  sorry
+
+
 end Keystore2Verify.BootLevelKeys
