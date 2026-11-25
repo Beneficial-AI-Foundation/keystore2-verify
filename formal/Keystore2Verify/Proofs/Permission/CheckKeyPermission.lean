@@ -5,6 +5,7 @@ open Aeneas Aeneas.Std Result keystore2
 open core.ffi.c_str
 open Keystore2Verify.Externals
 open permission.KeyPerm.Insts
+open permission.KeyPermSet.Insts.CoreConvertFromKeyPerm renaming «from» → setFromKeyPerm
 
 /-! `check_key_permission` works in this order, and a failing step returns at once:
 
@@ -39,7 +40,10 @@ theorem check_key_permission_covered
     (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
     (hcov : Covers perm access_vector) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = ok (.Ok ()) := by
-  sorry
+  obtain ⟨s, o, rfl, ho, hinc⟩ := hcov
+  have hb : (s &&& o = o) = True := eq_true hinc
+  unfold permission.check_key_permission
+  simp [permission.KeyPermSet.includes, ho, lift, hb]
 
 /-- exact: `perm` is `KeyPerm::None` and the access vector is `some av`, for any `av`. The result is
 `Ok`, for every domain. This is the case where `perm` has the empty bit set. -/
@@ -48,7 +52,11 @@ theorem check_key_permission_none_perm
     (av : permission.KeyPermSet) :
     permission.check_key_permission caller_uid caller_ctx permission.KeyPerm.None key (some av) =
       ok (.Ok ()) := by
-  sorry
+  have hz : setFromKeyPerm permission.KeyPerm.None = ok 0#i32 := by
+    simp [setFromKeyPerm, lift]; rfl
+  unfold permission.check_key_permission
+  have hz2 : av &&& 0#i32 = 0#i32 := I32.bv_eq_imp_eq _ _ (by simp)
+  simp [permission.KeyPermSet.includes, hz, lift, hz2]
 
 /-- conditional: the access vector does not cover `perm`, the domain is `APP`, and the caller uid
 differs from the namespace. The result is an error whose root cause is

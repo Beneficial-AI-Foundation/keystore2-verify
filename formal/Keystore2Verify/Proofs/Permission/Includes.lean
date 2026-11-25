@@ -37,7 +37,11 @@ theorem includes_key_perm (self : permission.KeyPermSet) (p : permission.KeyPerm
       permission.KeyPermSet.includes
         (core.convert.IntoFrom CoreConvertFromKeyPerm) self p = ok b ∧
       (b = true ↔ Includes self o) := by
-  sorry
+  obtain ⟨o, ho⟩ : ∃ o, CoreConvertFromKeyPerm.from p = ok o :=
+    ⟨IScalar.cast .I32 (read_discriminant p), by simp [CoreConvertFromKeyPerm.from, lift]⟩
+  refine ⟨o, decide (self &&& o = o), ho, ?_, ?_⟩
+  · simp [permission.KeyPermSet.includes, ho, lift]
+  · simp [Includes]
 
 /-- exact: `includes` with an `i32` never fails. It is `true` exactly when `self` contains every
 bit of the number. Bits that are no `KeyPerm`, and the sign bit, count like any other bit. -/
@@ -45,7 +49,9 @@ theorem includes_i32 (self : permission.KeyPermSet) (x : Std.I32) :
     ∃ b, permission.KeyPermSet.includes
         (core.convert.IntoFrom CoreConvertFromI32) self x = ok b ∧
       (b = true ↔ Includes self x) := by
-  sorry
+  refine ⟨decide (self &&& x = x), ?_, ?_⟩
+  · simp [permission.KeyPermSet.includes, CoreConvertFromI32.from, lift]
+  · simp [Includes]
 
 /-- exact: `includes` with a `KeyPermSet` never fails. It is `true` exactly when `self` contains
 every bit of `other`. -/
@@ -53,6 +59,8 @@ theorem includes_key_perm_set (self other : permission.KeyPermSet) :
     ∃ b, permission.KeyPermSet.includes
         (core.convert.IntoFrom (core.convert.FromSame permission.KeyPermSet)) self other = ok b ∧
       (b = true ↔ Includes self other) := by
-  sorry
+  refine ⟨decide (self &&& other = other), ?_, ?_⟩
+  · simp [permission.KeyPermSet.includes, lift]
+  · simp [Includes]
 
 end Keystore2Verify.Permission

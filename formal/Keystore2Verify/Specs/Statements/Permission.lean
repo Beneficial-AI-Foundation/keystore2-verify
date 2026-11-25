@@ -25,16 +25,40 @@ recall key_perm_from_i32 (x : Std.I32) :
       (x.val ∈ keyPermNumbers → keyPermValue p = x.val) ∧
       (x.val ∉ keyPermNumbers → p = permission.KeyPerm.None)
 
+/-- info: 'Keystore2Verify.Permission.key_perm_from_i32' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_from_i32
+
+
 recall key_perm_into_i32 (p : permission.KeyPerm) :
     ∃ v, i32FromKeyPerm p = ok v ∧ v.val = keyPermValue p
+
+/-- info: 'Keystore2Verify.Permission.key_perm_into_i32' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_into_i32
+
 
 recall key_perm_round_trip (p : permission.KeyPerm) (v : Std.I32)
     (h : i32FromKeyPerm p = ok v) :
     keyPermFromI32 v = ok p
 
+/-- info: 'Keystore2Verify.Permission.key_perm_round_trip' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_round_trip
+
+
 recall key_perm_into_i32_injective (p q : permission.KeyPerm) (v : Std.I32)
     (hp : i32FromKeyPerm p = ok v)
     (hq : i32FromKeyPerm q = ok v) : p = q
+
+/-- info: 'Keystore2Verify.Permission.key_perm_into_i32_injective' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_into_i32_injective
+
 
 recall key_perm_name :
     keyPermName .None = ok (toStr "none") ∧
@@ -50,16 +74,45 @@ recall key_perm_name :
     keyPermName .UseDevId = ok (toStr "use_dev_id") ∧
     keyPermName .ConvertStorageKeyToEphemeral = ok (toStr "convert_storage_key_to_ephemeral")
 
+/-- info: 'Keystore2Verify.Permission.key_perm_name' depends on axioms: [propext, Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_name
+
+
 recall key_perm_name_injective (p q : permission.KeyPerm) (s : Str)
     (hp : keyPermName p = ok s) (hq : keyPermName q = ok s) : p = q
+
+/-- info: 'Keystore2Verify.Permission.key_perm_name_injective' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_name_injective
+
 
 recall key_perm_class_name (p : permission.KeyPerm) :
     keyPermClassName p = ok (toStr "keystore2_key")
 
+/-- info: 'Keystore2Verify.Permission.key_perm_class_name' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_class_name
+
+
 recall key_perm_clone (p : permission.KeyPerm) : keyPermClone p = ok p
+
+/-- info: 'Keystore2Verify.Permission.key_perm_clone' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in
+#print axioms key_perm_clone
+
 
 recall key_perm_eq (p q : permission.KeyPerm) :
     ∃ b, keyPermEq p q = ok b ∧ (b = true ↔ p = q)
+
+/-- info: 'Keystore2Verify.Permission.key_perm_eq' depends on axioms: [propext, Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_eq
+
 
 end KeyPerm
 
@@ -77,16 +130,40 @@ recall keystore_perm_from_i32 (x : Std.I32) :
       (x.val ∈ keystorePermNumbers → keystorePermValue p = x.val) ∧
       (x.val ∉ keystorePermNumbers → p = permission.KeystorePerm.None)
 
+/-- info: 'Keystore2Verify.Permission.keystore_perm_from_i32' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_from_i32
+
+
 recall keystore_perm_into_i32 (p : permission.KeystorePerm) :
     ∃ v, i32FromKeystorePerm p = ok v ∧ v.val = keystorePermValue p
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_into_i32' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_into_i32
+
 
 recall keystore_perm_round_trip (p : permission.KeystorePerm) (v : Std.I32)
     (h : i32FromKeystorePerm p = ok v) :
     keystorePermFromI32 v = ok p
 
+/-- info: 'Keystore2Verify.Permission.keystore_perm_round_trip' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_round_trip
+
+
 recall keystore_perm_into_i32_injective (p q : permission.KeystorePerm) (v : Std.I32)
     (hp : i32FromKeystorePerm p = ok v)
     (hq : i32FromKeystorePerm q = ok v) : p = q
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_into_i32_injective' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_into_i32_injective
+
 
 recall keystore_perm_name :
     keystorePermName .None = ok (toStr "none") ∧
@@ -106,16 +183,46 @@ recall keystore_perm_name :
     keystorePermName .GetAttestationKey = ok (toStr "get_attestation_key") ∧
     keystorePermName .GetLastAuthTime = ok (toStr "get_last_auth_time")
 
+/-- info: 'Keystore2Verify.Permission.keystore_perm_name' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_name
+
+
 recall keystore_perm_name_injective (p q : permission.KeystorePerm) (s : Str)
     (hp : keystorePermName p = ok s) (hq : keystorePermName q = ok s) : p = q
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_name_injective' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_name_injective
+
 
 recall keystore_perm_class_name (p : permission.KeystorePerm) :
     keystorePermClassName p = ok (toStr "keystore2")
 
+/-- info: 'Keystore2Verify.Permission.keystore_perm_class_name' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_class_name
+
+
 recall keystore_perm_clone (p : permission.KeystorePerm) : keystorePermClone p = ok p
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_clone' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_clone
+
 
 recall keystore_perm_eq (p q : permission.KeystorePerm) :
     ∃ b, keystorePermEq p q = ok b ∧ (b = true ↔ p = q)
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_eq' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_eq
+
 
 end KeystorePerm
 
@@ -132,21 +239,61 @@ open CoreCmpPartialOrdKeyPermSet renaming partial_cmp → setPartialCmp
 recall key_perm_set_from_key_perm (p : permission.KeyPerm) :
     ∃ s, setFromKeyPerm p = ok s ∧ s.val = keyPermValue p
 
+/-- info: 'Keystore2Verify.Permission.key_perm_set_from_key_perm' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_from_key_perm
+
+
 recall key_perm_set_from_i32 (x : Std.I32) : setFromI32 x = ok x
+
+/-- info: 'Keystore2Verify.Permission.key_perm_set_from_i32' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_from_i32
+
 
 recall i32_from_key_perm_set (s : permission.KeyPermSet) :
     i32FromKeyPermSet s = ok s
 
+/-- info: 'Keystore2Verify.Permission.i32_from_key_perm_set' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms i32_from_key_perm_set
+
+
 recall key_perm_set_clone (s : permission.KeyPermSet) : setClone s = ok s
+
+/-- info: 'Keystore2Verify.Permission.key_perm_set_clone' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_clone
+
 
 recall key_perm_set_eq (a b : permission.KeyPermSet) :
     ∃ r, setEq a b = ok r ∧ (r = true ↔ a = b)
 
+/-- info: 'Keystore2Verify.Permission.key_perm_set_eq' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in
+#print axioms key_perm_set_eq
+
+
 recall key_perm_set_cmp (a b : permission.KeyPermSet) :
     setCmp a b = ok (compare a.val b.val)
 
+/-- info: 'Keystore2Verify.Permission.key_perm_set_cmp' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in
+#print axioms key_perm_set_cmp
+
+
 recall key_perm_set_partial_cmp (a b : permission.KeyPermSet) :
     setPartialCmp a b = ok (some (compare a.val b.val))
+
+/-- info: 'Keystore2Verify.Permission.key_perm_set_partial_cmp' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_partial_cmp
+
 
 end KeyPermSet
 
@@ -170,15 +317,33 @@ recall includes_key_perm (self : permission.KeyPermSet) (p : permission.KeyPerm)
         (core.convert.IntoFrom CoreConvertFromKeyPerm) self p = ok b ∧
       (b = true ↔ Includes self o)
 
+/-- info: 'Keystore2Verify.Permission.includes_key_perm' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms includes_key_perm
+
+
 recall includes_i32 (self : permission.KeyPermSet) (x : Std.I32) :
     ∃ b, permission.KeyPermSet.includes
         (core.convert.IntoFrom CoreConvertFromI32) self x = ok b ∧
       (b = true ↔ Includes self x)
 
+/-- info: 'Keystore2Verify.Permission.includes_i32' depends on axioms: [propext, Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms includes_i32
+
+
 recall includes_key_perm_set (self other : permission.KeyPermSet) :
     ∃ b, permission.KeyPermSet.includes
         (core.convert.IntoFrom (core.convert.FromSame permission.KeyPermSet)) self other = ok b ∧
       (b = true ↔ Includes self other)
+
+/-- info: 'Keystore2Verify.Permission.includes_key_perm_set' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms includes_key_perm_set
+
 
 recall includes_div {T : Type} (inst : core.convert.Into T permission.KeyPermSet)
     (self : permission.KeyPermSet) (other : T) (h : inst.into other = .div) :
@@ -196,21 +361,51 @@ open permission.KeyPerm.Insts.CoreConvertFromI32 renaming «from» → keyPermFr
 recall into_iter_new (v : permission.KeyPermSet) :
     IntoIter.new v = ok { vec := v, pos := 0#u8 }
 
+/-- info: 'Keystore2Verify.Permission.into_iter_new' depends on axioms: [propext, Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms into_iter_new
+
+
 recall key_perm_set_into_iter (v : permission.KeyPermSet) :
     CoreIterTraitsCollectIntoIteratorKeyPermIntoIter.into_iter v =
       ok { vec := v, pos := 0#u8 }
+
+/-- info: 'Keystore2Verify.Permission.key_perm_set_into_iter' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_into_iter
+
 
 recall into_iter_next_some (it : permission.perm.IntoIter) (i : Nat)
     (hi : NextBit it.vec it.pos.val i) :
     ∃ kp it', keyPermFromI32 (bitVal i) = ok kp ∧ iterNext it = ok (some kp, it') ∧
       it'.vec = it.vec ∧ it'.pos.val = i + 1
 
+/-- info: 'Keystore2Verify.Permission.into_iter_next_some' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms into_iter_next_some
+
+
 recall into_iter_next_none (it : permission.perm.IntoIter) (hpos : it.pos.val ≤ 32)
     (hnone : ∀ j, it.pos.val ≤ j → j < 32 → ¬ HasBit it.vec j) :
     ∃ it', iterNext it = ok (none, it') ∧ it'.vec = it.vec ∧ it'.pos.val = 32
 
+/-- info: 'Keystore2Verify.Permission.into_iter_next_none' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms into_iter_next_none
+
+
 recall into_iter_next_pos_too_large (it : permission.perm.IntoIter) (hpos : 32 < it.pos.val) :
     ∃ x, iterNext it = fail x
+
+/-- info: 'Keystore2Verify.Permission.into_iter_next_pos_too_large' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms into_iter_next_pos_too_large
+
 
 end IntoIter
 
@@ -499,11 +694,41 @@ recall check_key_permission_covered
     (hcov : Covers perm access_vector) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = ok (.Ok ())
 
+/-- info: 'Keystore2Verify.Permission.check_key_permission_covered' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_covered
+
+
 recall check_key_permission_none_perm
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (key : KeyDesc)
     (av : permission.KeyPermSet) :
     permission.check_key_permission caller_uid caller_ctx permission.KeyPerm.None key (some av) =
       ok (.Ok ())
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_none_perm' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_none_perm
+
 
 recall check_key_permission_foreign_app (root : anyhow.Error → ErrRoot)
     (hctx : SelinuxStrCtxLaw root)
