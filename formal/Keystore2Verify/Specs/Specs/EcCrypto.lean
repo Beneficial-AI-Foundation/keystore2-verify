@@ -5,6 +5,7 @@ import Keystore2Verify.Proofs.EcCrypto.PublicKey
 import Keystore2Verify.Proofs.EcCrypto.AgreeKey
 import Keystore2Verify.Proofs.EcCrypto.EncryptMessage
 import Keystore2Verify.Proofs.EcCrypto.DecryptMessage
+import Keystore2Verify.Proofs.EcCrypto.Satisfiable
 
 namespace Keystore2Verify.EcCrypto
 open Aeneas Aeneas.Std Result keystore2
@@ -13,8 +14,6 @@ open alloc.vec
 open ec_crypto.ECDHPrivateKey.decrypt_message
 open closure.Insts.CoreOpsFunctionFnOnceTupleErrorResultZVecError renaming
   call_once → closureCallOnce
-
-
 
 recall generate_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -188,10 +187,8 @@ recall agree_key_ok_length (root : anyhow.Error → ErrRoot)
 recall agree_key_err_sender_extract (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
-    
     (e : keystore2_crypto.error.Error)
     (hext1 : keystore2_crypto.hkdf_extract sender salt = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = ok
@@ -201,7 +198,6 @@ recall agree_key_err_sender_extract (root : anyhow.Error → ErrRoot)
 recall agree_key_err_recipient_extract (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
@@ -315,7 +311,6 @@ recall agree_key_fail_sender_extract (self : ec_crypto.ECDHPrivateKey)
 recall agree_key_fail_deref_sender_extract (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
@@ -327,7 +322,6 @@ recall agree_key_fail_deref_sender_extract (root : anyhow.Error → ErrRoot)
 recall agree_key_fail_recipient_extract (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
@@ -341,7 +335,6 @@ recall agree_key_fail_recipient_extract (root : anyhow.Error → ErrRoot)
 recall agree_key_fail_oct_to_point (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
@@ -506,7 +499,8 @@ recall agree_key_fail_expand (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (hc95 : CryptoCtxLaw root
@@ -530,7 +524,8 @@ recall encrypt_message_ok (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_ok_lengths (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (hc95 : CryptoCtxLaw root
@@ -557,11 +552,7 @@ recall encrypt_message_ok_lengths (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_err_generate (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
     (recipient message : Slice Std.U8)
     (e : anyhow.Error)
     (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Err e)) :
@@ -570,11 +561,8 @@ recall encrypt_message_err_generate (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_err_public_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Ok k))
@@ -585,11 +573,9 @@ recall encrypt_message_err_public_key (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_err_generate_salt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (spk : alloc.vec.Vec Std.U8)
@@ -602,11 +588,10 @@ recall encrypt_message_err_generate_salt (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (spk : alloc.vec.Vec Std.U8)
@@ -623,7 +608,8 @@ recall encrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_err_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (hc95 : CryptoCtxLaw root
@@ -648,11 +634,7 @@ recall encrypt_message_err_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_fail_public_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Ok k))
@@ -662,11 +644,9 @@ recall encrypt_message_fail_public_key (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_fail_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (spk : alloc.vec.Vec Std.U8)
@@ -687,9 +667,8 @@ recall encrypt_message_fail_generate (recipient message : Slice Std.U8)
 
 recall encrypt_message_fail_generate_salt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (spk : alloc.vec.Vec Std.U8)
@@ -701,7 +680,8 @@ recall encrypt_message_fail_generate_salt (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (recipient message : Slice Std.U8)
@@ -721,7 +701,8 @@ recall encrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
 
 recall encrypt_message_fail_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (recipient message : Slice Std.U8)
@@ -743,7 +724,6 @@ recall encrypt_message_fail_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
 recall decrypt_message_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (rpk : alloc.vec.Vec Std.U8)
     (key : keystore2_crypto.zvec.ZVec)
@@ -759,7 +739,6 @@ recall decrypt_message_ok (root : anyhow.Error → ErrRoot)
 recall decrypt_message_ok_length (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (hlen : AesGcmDecryptSpec)
     (rpk : alloc.vec.Vec Std.U8)
@@ -773,6 +752,16 @@ recall decrypt_message_ok_length (root : anyhow.Error → ErrRoot)
     (hdec : keystore2_crypto.aes_gcm_decrypt ct iv tag ks = ok (.Ok p)) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok
     (.Ok p) ∧ ∃ s, zvecDeref p = ok s ∧ s.length = ct.length
+
+recall decrypt_message_ok_length_of_result (root : anyhow.Error → ErrRoot)
+    (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
+    (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hlen : AesGcmDecryptSpec)
+    (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
+    (p : keystore2_crypto.zvec.ZVec)
+    (h : ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok (.Ok p)) :
+    ∃ s, zvecDeref p = ok s ∧ s.length = ct.length
 
 recall decrypt_message_ok_legacy (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -808,7 +797,6 @@ recall decrypt_message_err_public_key (root : anyhow.Error → ErrRoot)
 recall decrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (rpk : alloc.vec.Vec Std.U8)
     (hpk : ec_crypto.ECDHPrivateKey.public_key self = ok (.Ok rpk))
@@ -821,7 +809,6 @@ recall decrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
 recall decrypt_message_err_legacy_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (rpk : alloc.vec.Vec Std.U8)
     (key : keystore2_crypto.zvec.ZVec)
@@ -880,7 +867,6 @@ recall decrypt_message_fail_agree_key (self : ec_crypto.ECDHPrivateKey)
 recall decrypt_message_fail_legacy_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (rpk : alloc.vec.Vec Std.U8)
     (key : keystore2_crypto.zvec.ZVec)
@@ -904,7 +890,6 @@ recall decrypt_message_closure_ignores_error
 recall decrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (rpk : alloc.vec.Vec Std.U8)
     (key : keystore2_crypto.zvec.ZVec)
@@ -918,7 +903,6 @@ recall decrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
 recall decrypt_message_fail_first_decrypt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (rpk : alloc.vec.Vec Std.U8)
     (key : keystore2_crypto.zvec.ZVec)
@@ -934,7 +918,6 @@ recall decrypt_message_fail_first_decrypt (root : anyhow.Error → ErrRoot)
 recall decrypt_message_fail_deref_legacy_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (rpk : alloc.vec.Vec Std.U8)
     (key : keystore2_crypto.zvec.ZVec)
@@ -955,7 +938,6 @@ recall decrypt_message_fail_deref_legacy_key (root : anyhow.Error → ErrRoot)
 recall decrypt_message_fail_legacy_decrypt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (rpk : alloc.vec.Vec Std.U8)
     (key : keystore2_crypto.zvec.ZVec)
@@ -974,5 +956,32 @@ recall decrypt_message_fail_legacy_decrypt (root : anyhow.Error → ErrRoot)
     (x : Error)
     (hdec2 : keystore2_crypto.aes_gcm_decrypt ct iv tag ks2 = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x
+
+recall ec_crypto_laws_satisfiable :
+    ∃ (Z : Type) (deref : Z → Result (Slice Std.U8))
+      (expand : Std.Usize → Slice Std.U8 → Slice Std.U8 →
+        Result (core.result.Result Z keystore2_crypto.error.Error))
+      (extract : Slice Std.U8 → Slice Std.U8 →
+        Result (core.result.Result Z keystore2_crypto.error.Error))
+      (salt : Result (core.result.Result (alloc.vec.Vec Std.U8) keystore2_crypto.error.Error))
+      (marshal : keystore2_crypto.ECKey →
+        Result (core.result.Result Z keystore2_crypto.error.Error))
+      (to_oct : keystore2_crypto_bindgen.ec_point_st →
+        Result (core.result.Result (alloc.vec.Vec Std.U8) keystore2_crypto.error.Error))
+      (enc : Slice Std.U8 → Slice Std.U8 → Result (core.result.Result
+        (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8)
+        keystore2_crypto.error.Error))
+      (dec : Slice Std.U8 → Slice Std.U8 → Slice Std.U8 → Slice Std.U8 →
+        Result (core.result.Result Z keystore2_crypto.error.Error)),
+      TotalLaw deref ∧ HkdfExpandLenLaw deref expand ∧ HkdfExtractLenLaw deref extract ∧
+      SaltLenLaw salt ∧ EcKeyMarshalLenLaw deref marshal ∧ PointToOctLenLaw to_oct ∧
+      AesGcmEncryptLenLaw enc ∧ AesGcmDecryptLenLaw deref dec ∧
+      (∃ n prk info z, expand n prk info = ok (.Ok z)) ∧
+      (∃ secret salt' z, extract secret salt' = ok (.Ok z)) ∧
+      (∃ s, salt = ok (.Ok s)) ∧
+      (∀ key, ∃ z, marshal key = ok (.Ok z)) ∧
+      (∀ pt, ∃ v, to_oct pt = ok (.Ok v)) ∧
+      (∃ m k ct iv tag, enc m k = ok (.Ok (ct, iv, tag))) ∧
+      (∃ data iv tag key p, dec data iv tag key = ok (.Ok p))
 
 end Keystore2Verify.EcCrypto

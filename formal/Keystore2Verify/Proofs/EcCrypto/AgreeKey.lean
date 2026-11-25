@@ -69,15 +69,14 @@ theorem agree_key_ok_length (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if the first extract returns `Err e`, then `agree_key` returns an error whose root
-cause is the crypto error `e`. Hypotheses: the shared laws for `from_str_nonconst`, `format` and
-`context`, and the outcomes of the earlier calls and of this one. Later calls are not assumed. -/
+cause is the crypto error `e`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the
+`context` law `CryptoCtxLaw` at `ZVec`, and the outcome of this call. In the Rust source the `?` of
+line 63 returns at this point, before the second extract is called. -/
 theorem agree_key_err_sender_extract (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
-    
     (e : keystore2_crypto.error.Error)
     (hext1 : keystore2_crypto.hkdf_extract sender salt = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.agree_key self salt other sender recipient version = ok
@@ -86,13 +85,13 @@ theorem agree_key_err_sender_extract (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if the first extract returns `Ok` and the second returns `Err e`, then `agree_key`
-returns an error whose root cause is `e`. Hypotheses: the shared laws for `from_str_nonconst`,
-`format` and `context`, and the outcomes of the earlier calls and of this one. Later calls are not
-assumed. -/
+returns an error whose root cause is `e`. Hypotheses: the shared laws for `from_str_nonconst` and
+`format`, the `context` law `CryptoCtxLaw` at `ZVec`, and the outcomes of the two calls and of the
+`deref` of the first output. In the Rust source the `?` of line 65 returns at this point, before the
+point is parsed. -/
 theorem agree_key_err_recipient_extract (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
@@ -107,10 +106,10 @@ theorem agree_key_err_recipient_extract (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if both extracts return `Ok` and `ec_point_oct_to_point other` returns `Err e`,
-then `agree_key` returns an error whose root cause is `e`. This is the case of a bad `other`; the
-point is parsed only after the two extracts. Hypotheses: the shared laws for `from_str_nonconst`,
-`format` and `context`, and the outcomes of the earlier calls and of this one. Later calls are not
-assumed. -/
+then `agree_key` returns an error whose root cause is `e`. This is the case of a bad `other`; in the
+Rust source the point is parsed after the two extracts. Hypotheses: the shared laws for
+`from_str_nonconst` and `format`, the `context` laws `CryptoCtxLaw` at `ZVec` and `OwnedECPoint`,
+and the outcomes of the earlier calls and of this one. Later calls are not assumed. -/
 theorem agree_key_err_oct_to_point (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
@@ -229,13 +228,12 @@ theorem agree_key_fail_sender_extract (self : ec_crypto.ECDHPrivateKey)
   sorry
 
 /-- conditional: if `deref` of the output of the first extract (the first call is `Ok`) panics, then
-`agree_key` panics in the same way. Hypotheses: the shared laws for `from_str_nonconst`, `format`
-and `context` (the calls before it pass through `context`), and the outcomes of the earlier calls
-and of this one. -/
+`agree_key` panics in the same way. Hypotheses: the shared laws for `from_str_nonconst` and
+`format`, the `context` law `CryptoCtxLaw` at `ZVec` (the first call passes through `context`), and
+the outcomes of the first call and of this one. -/
 theorem agree_key_fail_deref_sender_extract (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
@@ -246,12 +244,11 @@ theorem agree_key_fail_deref_sender_extract (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if the second extract panics, then `agree_key` panics in the same way. Hypotheses:
-the shared laws for `from_str_nonconst`, `format` and `context` (the calls before it pass through
-`context`), and the outcomes of the earlier calls and of this one. -/
+the shared laws for `from_str_nonconst` and `format`, the `context` law `CryptoCtxLaw` at `ZVec`
+(the first call passes through `context`), and the outcomes of the earlier calls and of this one. -/
 theorem agree_key_fail_recipient_extract (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)
@@ -264,12 +261,12 @@ theorem agree_key_fail_recipient_extract (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if `ec_point_oct_to_point other` panics, then `agree_key` panics in the same way.
-Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the calls before it
-pass through `context`), and the outcomes of the earlier calls and of this one. -/
+Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` law `CryptoCtxLaw`
+at `ZVec` (the two extracts pass through `context`), and the outcomes of the earlier calls and of
+this one. -/
 theorem agree_key_fail_oct_to_point (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hz : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hp : CryptoCtxLaw root keystore2_crypto.OwnedECPoint)
     (self : ec_crypto.ECDHPrivateKey) (salt other sender recipient : Slice Std.U8)
     (version : keystore2_crypto.EcdhComputeKeyVersion)
     (k1 : keystore2_crypto.zvec.ZVec)

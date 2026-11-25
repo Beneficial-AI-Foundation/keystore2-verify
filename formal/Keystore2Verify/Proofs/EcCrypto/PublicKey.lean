@@ -49,8 +49,8 @@ theorem public_key_err (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if `get_point` panics on the point of the key (in Rust: the pointer is null), then
-`public_key` panics in the same way, and nothing else is called. Hypotheses: the outcomes of
-`ec_key_get0_public_key` and `get_point`. No law is needed. -/
+`public_key` panics in the same way. In the Rust source `ec_point_point_to_oct` follows `get_point`.
+Hypotheses: the outcomes of `ec_key_get0_public_key` and `get_point`. No law is needed. -/
 theorem public_key_fail_get_point (self : ec_crypto.ECDHPrivateKey)
     (pt : keystore2_crypto.BorrowedECPoint) (x : Error)
     (hkey : keystore2_crypto.ec_key_get0_public_key self = ok pt)

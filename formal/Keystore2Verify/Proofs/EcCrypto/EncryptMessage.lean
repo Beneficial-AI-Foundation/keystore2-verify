@@ -14,7 +14,8 @@ recipient key, and the version `Current`. Hypotheses: the shared laws for `from_
 calls. -/
 theorem encrypt_message_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (hc95 : CryptoCtxLaw root
@@ -42,7 +43,8 @@ theorem encrypt_message_ok (root : anyhow.Error → ErrRoot)
 of 16 bytes, an IV of 12 bytes, a tag of 16 bytes and a ciphertext as long as `message`. -/
 theorem encrypt_message_ok_lengths (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (hc95 : CryptoCtxLaw root
@@ -69,16 +71,13 @@ theorem encrypt_message_ok_lengths (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if `generate` returns `Err e`, then `encrypt_message` returns an error with the
-same root cause as `e`. Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context`
-(at the five calls of lines 82, 83, 84, 93 and 95), and the outcomes of the calls. Later steps are
-not assumed. -/
+same root cause as `e`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the
+`context` law at line 82, and the outcome of `generate`. In the Rust source the `?` of line 82
+returns at this point, before `public_key` is called, so the statement takes no law for the later
+calls. -/
 theorem encrypt_message_err_generate (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
     (recipient message : Slice Std.U8)
     (e : anyhow.Error)
     (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Err e)) :
@@ -88,15 +87,13 @@ theorem encrypt_message_err_generate (root : anyhow.Error → ErrRoot)
 
 /-- conditional: if `generate` returns `Ok` and `public_key` returns `Err e`, then `encrypt_message`
 returns an error with the same root cause as `e`. Hypotheses: the shared laws for
-`from_str_nonconst`, `format` and `context` (at the five calls of lines 82, 83, 84, 93 and 95), and
-the outcomes of the calls. Later steps are not assumed. -/
+`from_str_nonconst` and `format`, the `context` laws at lines 82 and 83, and the outcomes of the two
+calls. In the Rust source the `?` of line 83 returns at this point, before `generate_salt` is
+called. -/
 theorem encrypt_message_err_public_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Ok k))
@@ -108,15 +105,14 @@ theorem encrypt_message_err_public_key (root : anyhow.Error → ErrRoot)
 
 /-- conditional: if `generate` and `public_key` return `Ok` and `generate_salt` returns `Err e`,
 then `encrypt_message` returns an error whose root cause is the crypto error `e`. Hypotheses: the
-shared laws for `from_str_nonconst`, `format` and `context` (at the five calls of lines 82, 83, 84,
-93 and 95), and the outcomes of the calls. Later steps are not assumed. -/
+shared laws for `from_str_nonconst` and `format`, the `context` laws at lines 82, 83 and 84, and the
+outcomes of the three calls. In the Rust source the `?` of line 84 returns at this point, before
+`agree_key` is called. -/
 theorem encrypt_message_err_generate_salt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (spk : alloc.vec.Vec Std.U8)
@@ -129,17 +125,16 @@ theorem encrypt_message_err_generate_salt (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if the first three steps return `Ok` and `agree_key` returns `Err e`, then
-`encrypt_message` returns an error with the same root cause as `e`. A bad or empty
-`recipient_public_key` ends here. Hypotheses: the shared laws for `from_str_nonconst`, `format` and
-`context` (at the five calls of lines 82, 83, 84, 93 and 95), and the outcomes of the calls. Later
-steps are not assumed. -/
+`encrypt_message` returns an error with the same root cause as `e`. In the Rust source a bad or
+empty `recipient_public_key` makes `agree_key` fail, and the `?` of line 93 returns at this point,
+before `aes_gcm_encrypt` is called. Hypotheses: the shared laws for `from_str_nonconst` and
+`format`, the `context` laws at lines 82, 83, 84 and 93, and the outcomes of the calls. -/
 theorem encrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (spk : alloc.vec.Vec Std.U8)
@@ -157,11 +152,12 @@ theorem encrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
 
 /-- conditional: if the first four steps return `Ok` and `aes_gcm_encrypt` returns `Err e`, then
 `encrypt_message` returns an error whose root cause is the crypto error `e`. Hypotheses: the shared
-laws for `from_str_nonconst`, `format` and `context` (at the five calls of lines 82, 83, 84, 93 and
-95), and the outcomes of the calls. Later steps are not assumed. -/
+laws for `from_str_nonconst` and `format`, the `context` laws at the five calls of lines 82, 83, 84,
+93 and 95, and the outcomes of the calls. -/
 theorem encrypt_message_err_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (hc95 : CryptoCtxLaw root
@@ -186,15 +182,11 @@ theorem encrypt_message_err_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if `generate` returns `Ok` and `public_key` panics, then `encrypt_message` panics
-in the same way. Hypotheses: the outcomes of the earlier calls and of this one. The context laws are
-needed for the steps before it. -/
+in the same way. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` law
+at line 82, and the outcomes of `generate` and `public_key`. -/
 theorem encrypt_message_fail_public_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Ok k))
@@ -204,15 +196,13 @@ theorem encrypt_message_fail_public_key (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if the first three steps return `Ok` and `agree_key` panics, then `encrypt_message`
-panics in the same way. Hypotheses: the outcomes of the earlier calls and of this one. The context
-laws are needed for the steps before it. -/
+panics in the same way. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the
+`context` laws at lines 82, 83 and 84, and the outcomes of the earlier calls and of this one. -/
 theorem encrypt_message_fail_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
-    (hc95 : CryptoCtxLaw root
-      (alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8 × alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (spk : alloc.vec.Vec Std.U8)
@@ -234,15 +224,14 @@ theorem encrypt_message_fail_generate (recipient message : Slice Std.U8)
     (hg : ec_crypto.ECDHPrivateKey.generate = fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
   sorry
-/-- conditional: if `generate_salt` (the key and its public key are `Ok`) panics, then
-`encrypt_message` panics in the same way. Hypotheses: the shared laws for `from_str_nonconst`,
-`format` and `context` (the steps before it pass through `context`), and the outcomes of the earlier
-calls and of this one. -/
+/-- conditional: if `generate` and `public_key` return `Ok` and `generate_salt` panics, then
+`encrypt_message` panics in the same way. Hypotheses: the shared laws for `from_str_nonconst` and
+`format`, the `context` laws at lines 82 and 83, and the outcomes of the earlier calls and of this
+one. -/
 theorem encrypt_message_fail_generate_salt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
-    (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (recipient message : Slice Std.U8)
     (k : ec_crypto.ECDHPrivateKey)
     (spk : alloc.vec.Vec Std.U8)
@@ -253,11 +242,12 @@ theorem encrypt_message_fail_generate_salt (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
   sorry
 /-- conditional: if `deref` of the derived key panics, then `encrypt_message` panics in the same
-way. Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the steps before
-it pass through `context`), and the outcomes of the earlier calls and of this one. -/
+way. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` laws at lines
+82, 83, 84 and 93, and the outcomes of the earlier calls and of this one. -/
 theorem encrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (recipient message : Slice Std.U8)
@@ -276,11 +266,12 @@ theorem encrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
   sorry
 /-- conditional: if `aes_gcm_encrypt` panics, then `encrypt_message` panics in the same way.
-Hypotheses: the shared laws for `from_str_nonconst`, `format` and `context` (the steps before it
-pass through `context`), and the outcomes of the earlier calls and of this one. -/
+Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` laws at lines 82,
+83, 84 and 93, and the outcomes of the earlier calls and of this one. -/
 theorem encrypt_message_fail_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
-    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey) (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
+    (hc82 : AnyCtxLaw root ec_crypto.ECDHPrivateKey)
+    (hc83 : AnyCtxLaw root (alloc.vec.Vec Std.U8))
     (hc84 : CryptoCtxLaw root (alloc.vec.Vec Std.U8))
     (hc93 : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
     (recipient message : Slice Std.U8)
