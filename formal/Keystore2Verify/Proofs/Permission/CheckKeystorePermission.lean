@@ -37,9 +37,9 @@ theorem check_keystore_permission_getcon_err (root : anyhow.Error → ErrRoot)
   sorry
 
 /-- conditional: if `getcon` returns the context `ctx` and the check of `perm` returns an error
-`e`, the function returns an error with the same root cause as `e`: no message is added.
-Hypotheses: the `context` law of `check_keystore_permission_ok`, and the outcomes of `getcon`, of
-the view of `ctx`, and of `check_permission`. -/
+`e`, the function returns the same error `e`. Hypotheses: the `context` law of
+`check_keystore_permission_ok` (the `context` call of `getcon` keeps the `Ok`), and the outcomes
+of `getcon`, of the view of `ctx`, and of `check_permission`. -/
 theorem check_keystore_permission_check_err (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (caller_ctx : CStr) (perm : permission.KeystorePerm)
@@ -47,21 +47,20 @@ theorem check_keystore_permission_check_err (root : anyhow.Error → ErrRoot)
     (hget : keystore2_selinux.getcon = ok (.Ok ctx)) (hc : contextCStr ctx = ok c)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       perm = ok (.Err e)) :
-    ∃ e', permission.check_keystore_permission caller_ctx perm = ok (.Err e') ∧
-      root e' = root e := by
+    permission.check_keystore_permission caller_ctx perm = ok (.Err e) := by
   sorry
 
-/-- conditional: if `getcon` panics, the function panics in the same way. In the Rust source this
-path returns before `check_permission` is called. Hypothesis: the outcome of `getcon`. No law is
-needed. -/
+/-- conditional: if `getcon` fails with `x`, the function returns the same `fail x`. In the Rust
+source this path returns before `check_permission` is called. Hypothesis: the outcome of `getcon`.
+No law is needed. -/
 theorem check_keystore_permission_getcon_fail (caller_ctx : CStr)
     (perm : permission.KeystorePerm) (x : Error)
     (hget : keystore2_selinux.getcon = fail x) :
     permission.check_keystore_permission caller_ctx perm = fail x := by
   sorry
 
-/-- conditional: if `getcon` returns the context `ctx` and the check of `perm` panics, the
-function panics in the same way. Hypotheses: the `context` law of
+/-- conditional: if `getcon` returns the context `ctx` and the check of `perm` fails with `x`, the
+function returns the same `fail x`. Hypotheses: the `context` law of
 `check_keystore_permission_ok`, and the outcomes of `getcon`, of the view of `ctx`, and of
 `check_permission`. -/
 theorem check_keystore_permission_check_fail (root : anyhow.Error → ErrRoot)
@@ -74,8 +73,8 @@ theorem check_keystore_permission_check_fail (root : anyhow.Error → ErrRoot)
     permission.check_keystore_permission caller_ctx perm = fail x := by
   sorry
 
-/-- conditional: if `getcon` returns the context `ctx` and the view of `ctx` as a `CStr` panics,
-the function panics in the same way. Hypotheses: the `context` law of
+/-- conditional: if `getcon` returns the context `ctx` and the view of `ctx` as a `CStr` fails with
+`x`, the function returns the same `fail x`. Hypotheses: the `context` law of
 `check_keystore_permission_ok`, and the outcomes of `getcon` and of the view. -/
 theorem check_keystore_permission_deref_fail (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)

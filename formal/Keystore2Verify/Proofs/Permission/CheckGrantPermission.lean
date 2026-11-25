@@ -317,4 +317,36 @@ theorem check_grant_permission_loop_fail (root : anyhow.Error → ErrRoot)
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x := by
   sorry
 
+/-- conditional: the function returns `Ok`. Then the access vector does not have bit 3 set (the
+value of `Grant`), the key domain is `APP` with the caller uid equal to the namespace and `getcon`
+returning the target `ctx`, or `SELINUX` with the lookup returning `ctx`, the view of `ctx` is
+`c`, the check of `Grant` against `c` returned `Ok`, and for every set bit `i` the check of
+`KeyPerm::from(1 << i)` against `c` returned `Ok`. Every other branch of the body ends in an error
+under the laws: the foreign `APP` branch, the branch of an access vector with `Grant`, and the
+other domains build an error through `context`, and a failed `getcon`, lookup, `Grant` check or
+loop check goes to `from_residual`. Hypotheses: the `context` laws for a context value and for
+`()` with a `&str` message (`AnyhowStrCtxLaw`), for `()` with a `String` message
+(`AnyhowStringCtxLaw`), for a SELinux error with a `&str` message (`SelinuxStrCtxLaw`) and for a
+keystore2 error with a `String` message (`KsStringCtxLaw`), and the outcome of the call. -/
+theorem check_grant_permission_of_ok (root : anyhow.Error → ErrRoot)
+    (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
+    (hctxU : AnyhowStrCtxLaw root Unit) (hctxS : AnyhowStringCtxLaw root Unit)
+    (hsel : SelinuxStrCtxLaw root) (hks : KsStringCtxLaw root)
+    (caller_uid : utils.AppUid) (caller_ctx : CStr)
+    (access_vec : permission.KeyPermSet) (key : KeyDesc)
+    (hok : permission.check_grant_permission caller_uid caller_ctx access_vec key =
+      ok (.Ok ())) :
+    ¬ HasBit access_vec 3 ∧
+      ∃ ctx c, contextCStr ctx = ok c ∧
+        ((key.domain = domainApp ∧ caller_uid = key.nspace ∧
+            keystore2_selinux.getcon = ok (.Ok ctx)) ∨
+          (key.domain = domainSelinux ∧
+            permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))) ∧
+        keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
+          permission.KeyPerm.Grant = ok (.Ok ()) ∧
+        ∀ i, i < 32 → HasBit access_vec i → ∃ kp, keyPermFromI32 (bitVal i) = ok kp ∧
+          keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
+            ok (.Ok ()) := by
+  sorry
+
 end Keystore2Verify.Permission

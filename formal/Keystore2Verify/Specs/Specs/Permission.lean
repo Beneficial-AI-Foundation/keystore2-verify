@@ -237,8 +237,7 @@ recall check_keystore_permission_check_err (root : anyhow.Error → ErrRoot)
     (hget : keystore2_selinux.getcon = ok (.Ok ctx)) (hc : contextCStr ctx = ok c)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       perm = ok (.Err e)) :
-    ∃ e', permission.check_keystore_permission caller_ctx perm = ok (.Err e') ∧
-      root e' = root e
+    permission.check_keystore_permission caller_ctx perm = ok (.Err e)
 
 recall check_keystore_permission_getcon_fail (caller_ctx : CStr)
     (perm : permission.KeystorePerm) (x : Error)
@@ -460,6 +459,26 @@ recall check_grant_permission_loop_fail (root : anyhow.Error → ErrRoot)
       fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x
 
+recall check_grant_permission_of_ok (root : anyhow.Error → ErrRoot)
+    (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
+    (hctxU : AnyhowStrCtxLaw root Unit) (hctxS : AnyhowStringCtxLaw root Unit)
+    (hsel : SelinuxStrCtxLaw root) (hks : KsStringCtxLaw root)
+    (caller_uid : utils.AppUid) (caller_ctx : CStr)
+    (access_vec : permission.KeyPermSet) (key : KeyDesc)
+    (hok : permission.check_grant_permission caller_uid caller_ctx access_vec key =
+      ok (.Ok ())) :
+    ¬ HasBit access_vec 3 ∧
+      ∃ ctx c, contextCStr ctx = ok c ∧
+        ((key.domain = domainApp ∧ caller_uid = key.nspace ∧
+            keystore2_selinux.getcon = ok (.Ok ctx)) ∨
+          (key.domain = domainSelinux ∧
+            permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))) ∧
+        keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
+          permission.KeyPerm.Grant = ok (.Ok ()) ∧
+        ∀ i, i < 32 → HasBit access_vec i → ∃ kp, keyPermFromI32 (bitVal i) = ok kp ∧
+          keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
+            ok (.Ok ())
+
 end CheckGrantPermission
 
 section CheckKeyPermission
@@ -572,8 +591,8 @@ recall check_key_permission_blob_manage_err (root : anyhow.Error → ErrRoot)
     (hc : contextCStr ctx = ok c)
     (hmanage : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.ManageBlob = ok (.Err e)) :
-    ∃ e', permission.check_key_permission caller_uid caller_ctx perm key access_vector =
-        ok (.Err e') ∧ root e' = root e
+    permission.check_key_permission caller_uid caller_ctx perm key access_vector =
+      ok (.Err e)
 
 recall check_key_permission_app_selinux_check_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -605,8 +624,8 @@ recall check_key_permission_app_selinux_check_err (root : anyhow.Error → ErrRo
     (e : anyhow.Error)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       perm = ok (.Err e)) :
-    ∃ e', permission.check_key_permission caller_uid caller_ctx perm key access_vector =
-        ok (.Err e') ∧ root e' = root e
+    permission.check_key_permission caller_uid caller_ctx perm key access_vector =
+      ok (.Err e)
 
 recall check_key_permission_blob_check_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -639,8 +658,8 @@ recall check_key_permission_blob_check_err (root : anyhow.Error → ErrRoot)
     (e : anyhow.Error)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       perm = ok (.Err e)) :
-    ∃ e', permission.check_key_permission caller_uid caller_ctx perm key access_vector =
-        ok (.Err e') ∧ root e' = root e
+    permission.check_key_permission caller_uid caller_ctx perm key access_vector =
+      ok (.Err e)
 
 recall check_key_permission_app_selinux_deref_fail (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -712,6 +731,27 @@ recall check_key_permission_blob_check_fail (root : anyhow.Error → ErrRoot)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       perm = fail x) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = fail x
+
+recall check_key_permission_of_ok (root : anyhow.Error → ErrRoot)
+    (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
+    (hselStr : SelinuxStrCtxLaw root) (hselString : SelinuxStringCtxLaw root)
+    (hks : KsStringCtxLaw root)
+    (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
+    (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
+    (hok : permission.check_key_permission caller_uid caller_ctx perm key access_vector =
+      ok (.Ok ())) :
+    Covers perm access_vector ∨
+      ∃ ctx c, contextCStr ctx = ok c ∧
+        keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c perm =
+          ok (.Ok ()) ∧
+        ((key.domain = domainApp ∧ caller_uid = key.nspace ∧
+            keystore2_selinux.getcon = ok (.Ok ctx)) ∨
+          (key.domain = domainSelinux ∧
+            permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)) ∨
+          (key.domain = domainBlob ∧
+            permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx) ∧
+            keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
+              permission.KeyPerm.ManageBlob = ok (.Ok ())))
 
 end CheckKeyPermission
 
