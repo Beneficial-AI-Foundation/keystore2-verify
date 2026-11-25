@@ -12,7 +12,9 @@ theorem includes_ok {T : Type} (inst : core.convert.Into T permission.KeyPermSet
     (h : inst.into other = ok o) :
     ∃ b, permission.KeyPermSet.includes inst self other = ok b ∧
       (b = true ↔ Includes self o) := by
-  sorry
+  refine ⟨decide (self &&& o = o), ?_, ?_⟩
+  · simp [permission.KeyPermSet.includes, h, lift]
+  · simp [Includes]
 
 /-- conditional: for any type `T` with a conversion into `KeyPermSet`, if the conversion of
 `other` fails with `x`, `includes` fails with `x`. Hypothesis: the outcome of the
@@ -21,13 +23,13 @@ theorem includes_fail {T : Type} (inst : core.convert.Into T permission.KeyPermS
     (self : permission.KeyPermSet) (other : T) (x : Error)
     (h : inst.into other = fail x) :
     permission.KeyPermSet.includes inst self other = fail x := by
-  sorry
+  simp [permission.KeyPermSet.includes, h]
 
 /-- If a generic conversion diverges, the wrapper does not return a permission decision. -/
 theorem includes_div {T : Type} (inst : core.convert.Into T permission.KeyPermSet)
     (self : permission.KeyPermSet) (other : T) (h : inst.into other = .div) :
     permission.KeyPermSet.includes inst self other = .div := by
-  sorry
+  simp [permission.KeyPermSet.includes, h]
 
 /-- exact: `includes` with a `KeyPerm` never fails. It is `true` exactly when the set contains
 every bit of the bit set of the permission. For `KeyPerm::None` that set is empty, so the result
