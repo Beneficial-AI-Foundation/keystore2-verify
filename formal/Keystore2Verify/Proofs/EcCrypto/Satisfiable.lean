@@ -51,6 +51,51 @@ theorem ec_crypto_laws_satisfiable :
       (∀ pt, ∃ v, to_oct pt = ok (.Ok v)) ∧
       (∃ m k ct iv tag, enc m k = ok (.Ok (ct, iv, tag))) ∧
       (∃ data iv tag key p, dec data iv tag key = ok (.Ok p)) := by
-  sorry
+  have h32 : 32 ≤ Std.Usize.max := by scalar_tac
+  have h16 : 16 ≤ Std.Usize.max := by scalar_tac
+  have h12 : 12 ≤ Std.Usize.max := by scalar_tac
+  have h73 : 73 ≤ Std.Usize.max := by scalar_tac
+  have h1 : 1 ≤ Std.Usize.max := by scalar_tac
+  have hs : ∀ s : Slice Std.U8, s.length ≤ Std.Usize.max := fun s => s.property
+  let s0 : Slice Std.U8 := Slice.from [] (by simp)
+  let zs : ∀ n, n ≤ Std.Usize.max → Slice Std.U8 := fun n h =>
+    Slice.from (List.replicate n 0#u8) (by simpa using h)
+  let zv : ∀ n, n ≤ Std.Usize.max → alloc.vec.Vec Std.U8 := fun n h =>
+    ⟨zs n h⟩
+  have hzs : ∀ n h, (zs n h).val = List.replicate n 0#u8 := fun _ _ => Slice.from_val _ _
+  have hzv : ∀ n h, (zv n h).val = List.replicate n 0#u8 := fun n h => hzs n h
+  refine ⟨Slice Std.U8, ok, fun n _ _ => ok (.Ok (zs n.val (by scalar_tac))),
+    fun _ _ => ok (.Ok (zs 32 h32)), ok (.Ok (zv 16 h16)), fun _ => ok (.Ok (zs 73 h73)),
+    fun _ => ok (.Ok (zv 1 h1)), fun m _ => ok (.Ok (zv m.length (hs m), zv 12 h12, zv 16 h16)),
+    fun d _ _ _ => ok (.Ok (zs d.length (hs d))), ?_⟩
+  refine ⟨fun a => ⟨_, rfl⟩, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intro n prk info z h
+    cases Result.ok_injective h
+    exact ⟨_, rfl, by simp [hzs, Slice.length]⟩
+  · intro secret salt z h
+    cases Result.ok_injective h
+    exact ⟨_, rfl, by simp [hzs, Slice.length]⟩
+  · intro s h
+    cases Result.ok_injective h
+    simp [hzv]
+  · intro key z h
+    cases Result.ok_injective h
+    exact ⟨_, rfl, by simp [hzs, Slice.length]⟩
+  · intro p v h
+    cases Result.ok_injective h
+    simp [hzv]
+  · intro m k ct iv tag h
+    cases Result.ok_injective h
+    simp [hzv, Slice.length]
+  · intro data iv tag key p h
+    cases Result.ok_injective h
+    exact ⟨_, rfl, by simp [hzs, Slice.length]⟩
+  · exact ⟨0#usize, s0, s0, _, rfl⟩
+  · exact ⟨s0, s0, _, rfl⟩
+  · exact ⟨_, rfl⟩
+  · exact fun _ => ⟨_, rfl⟩
+  · exact fun _ => ⟨_, rfl⟩
+  · exact ⟨s0, s0, _, _, _, rfl⟩
+  · exact ⟨s0, s0, s0, s0, _, rfl⟩
 
 end Keystore2Verify.EcCrypto

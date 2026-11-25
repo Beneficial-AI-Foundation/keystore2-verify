@@ -1015,4 +1015,9 @@ recall ec_crypto_laws_satisfiable :
       (∃ m k ct iv tag, enc m k = ok (.Ok (ct, iv, tag))) ∧
       (∃ data iv tag key p, dec data iv tag key = ok (.Ok p))
 
+/-- info: 'Keystore2Verify.EcCrypto.ec_crypto_laws_satisfiable' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms ec_crypto_laws_satisfiable
+
 end Keystore2Verify.EcCrypto
