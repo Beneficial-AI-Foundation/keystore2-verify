@@ -9,12 +9,12 @@ namespace Keystore2Verify.Externals
 
 A set of laws that cannot hold together would make every theorem that assumes them empty. For
 each family of laws that share a carrier, these statements give some carrier and some functions
-for which all the laws hold. The proofs are `sorry`. The statements are for every element type
-of the queue and for every result type and context type of the error family. The models are a
-list of at most `Std.Usize.max` elements for the queue (`push_back` fails past `queueBound`),
-`ErrRoot × List String` for an error, and, for the secret vector, `Z := Slice U8` with `deref` the
-identity, so that `expand n _ _` returns `Ok` of `n` bytes, `extract` returns `Ok` of 32 bytes and
-the salt is `Ok` of 16 bytes.
+for which all the laws hold. The proofs are `sorry`. The queue statement covers every element type.
+The error statement chooses one carrier and classifier for all result and context types. The
+models are a list of at most `Std.Usize.max` elements for the queue (`push_back` fails past
+`queueBound`), `ErrRoot × List String` for an error, and, for the secret vector, `Z := Slice U8`
+with `deref` the identity, so that `expand n _ _` returns `Ok` of `n` bytes, `extract` returns
+`Ok` of 32 bytes and the salt is `Ok` of 16 bytes.
 
 The laws of the queue and error families, and the byte-reading laws, already force
 successful calls on the inputs they are stated for (their valid-input domains), so a model in
@@ -33,9 +33,9 @@ theorem vecdeque_laws_satisfiable (T : Type) :
       VecDequeSplitOffLaw view split_off := by
   sorry
 
-theorem anyhow_laws_satisfiable (T C : Type) :
-    ∃ (Err : Type) (root : Err → ErrRoot)
-      (newKs : error.Error → Result Err) (newSel : keystore2_selinux.Error → Result Err)
+theorem anyhow_laws_satisfiable :
+    ∃ (Err : Type) (root : Err → ErrRoot), ∀ (T C : Type),
+    ∃ (newKs : error.Error → Result Err) (newSel : keystore2_selinux.Error → Result Err)
       (newCrypto : keystore2_crypto.error.Error → Result Err)
       (fromKs : error.Error → Result Err) (fromSel : keystore2_selinux.Error → Result Err)
       (fromCrypto : keystore2_crypto.error.Error → Result Err)

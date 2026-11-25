@@ -27,6 +27,11 @@ Every law holds for the real Rust function, with these labels:
 * **idealisation: logging never panics.** Effects of logging are not modelled.
 * **target assumption.** The law depends on the target machine.
 
+An external call is a Lean function application. Equal arguments (including any explicit state)
+give the same result; policy, randomness or resource outcomes that change between identical calls
+are not represented. This is a limit of the model, not a determinism claim about a running
+Android system.
+
 A Lean value has the form `Result (core.result.Result T E)`. The outer layer `fail` is a Rust
 panic. The inner layer `Err` is a Rust error. Each law says what it means for each layer.
 -/
@@ -114,7 +119,9 @@ def ErrorContextLaw {Err C : Type} (root : Err → ErrRoot)
 `ks2-ext-anyhow-error-insts-anyhowcontextextstderror-ext-context`).
 `ext_context e c` never panics. The new error has the same root cause as `e`.
 Idealisation: allocation never fails. The context is moved into the new error, not dropped.
-Source: `anyhow` `src/context.rs`, where this method calls `Error::context`. -/
+Source: `anyhow` `src/context.rs`, where this method calls `Error::context`.
+Only the joint consistency statement `anyhow_laws_satisfiable` uses this law. The statements about
+the four Rust files take no hypothesis about this method. -/
 def ExtContextErrorLaw {Err C : Type} (root : Err → ErrRoot)
     (ext_context : Err → C → Result Err) : Prop :=
   ∀ e c, ∃ e', ext_context e c = ok e' ∧ root e' = root e
@@ -123,7 +130,9 @@ def ExtContextErrorLaw {Err C : Type} (root : Err → ErrRoot)
 `ks2-ext-anyhow-context-ext-stderror-blanket-ext-context`).
 `ext_context x c` never panics. The new error has the root cause `x`, of class `wrap x`.
 Idealisation: allocation never fails. The context is moved into the new error, not dropped.
-Source: `anyhow` `src/context.rs`, where this method calls `Error::from_context`. -/
+Source: `anyhow` `src/context.rs`, where this method calls `Error::from_context`.
+Only the joint consistency statement `anyhow_laws_satisfiable` uses this law. The statements about
+the four Rust files take no hypothesis about this method. -/
 def ExtContextBlanketLaw {Err E C : Type} (root : Err → ErrRoot) (wrap : E → ErrRoot)
     (ext_context : E → C → Result Err) : Prop :=
   ∀ x c, ∃ e, ext_context x c = ok e ∧ root e = wrap x
@@ -288,42 +297,48 @@ abbrev ZVecQueue : Type :=
 /-- Law for `VecDeque::new` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdequetglobal-new`).
 It is `VecDequeNewLaw` at the real axiom;
-see that law for what it says. -/
+see that law for what it says.
+No statement takes this law as a hypothesis. -/
 def ZVecQueueNewLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeNewLaw view (VecDequeTGlobal.new keystore2_crypto.zvec.ZVec)
 
 /-- Law for `VecDeque::len` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-len`).
 It is `VecDequeLenLaw` at the real axiom;
-see that law for what it says. -/
+see that law for what it says.
+No statement takes this law as a hypothesis. -/
 def ZVecQueueLenLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeLenLaw view VecDeque.len
 
 /-- Law for `VecDeque::is_empty` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-is-empty`).
 It is `VecDequeIsEmptyLaw` at the real axiom;
-see that law for what it says. -/
+see that law for what it says.
+No statement takes this law as a hypothesis. -/
 def ZVecQueueIsEmptyLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeIsEmptyLaw view VecDeque.is_empty
 
 /-- Law for `VecDeque::clear` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-clear`).
 It is `VecDequeClearLaw` at the real axiom;
-see that law for what it says. -/
+see that law for what it says.
+No statement takes this law as a hypothesis. -/
 def ZVecQueueClearLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeClearLaw view VecDeque.clear
 
 /-- Law for `VecDeque::push_back` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-push-back`).
 It is `VecDequePushBackLaw` at the real axiom;
-see that law for what it says. -/
+see that law for what it says.
+No statement takes this law as a hypothesis. -/
 def ZVecQueuePushBackLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequePushBackLaw view VecDeque.push_back
 
 /-- Law for `VecDeque::split_off` for `ZVec` (register record
 `ks2-ext-alloc-collections-vec-deque-vecdeque-split-off`).
 It is `VecDequeSplitOffLaw` at the real axiom;
-see that law for what it says, with the clone instance of the global allocator. -/
+see that law for what it says, with the clone instance of the global allocator.
+No statement takes this law as a hypothesis. -/
 def ZVecQueueSplitOffLaw (view : ZVecQueue → List keystore2_crypto.zvec.ZVec) : Prop :=
   VecDequeSplitOffLaw view (VecDeque.split_off core.clone.CloneGlobal)
 
@@ -406,12 +421,15 @@ data, and the helpers read the environment. Source: `keystore2/src/crypto/lib.rs
 /-- Law for `ZVec::deref` (register record
 `ks2-ext-keystore2-crypto-zvec-zvec-insts-coreopsderefderefsliceu8-deref`).
 `deref` never panics: the slice `elems[0..len]` always fits, because `len` never exceeds the
-size of the buffer. -/
+size of the buffer.
+No statement takes this law as a hypothesis. -/
 def ZVecDerefSpec : Prop := TotalLaw zvecDeref
 
 /-- Law for `Deref for keystore2_selinux::Context` (register record
 `ks2-ext-keystore2-selinux-context-insts-coreopsderefderefcstr-deref`).
-`deref` never panics. Source: `keystore2/selinux/src/lib.rs`, `impl Deref for Context`. -/
+This law assumes total dereference for every Lean `Context`. For `Raw p`, Rust's `Deref for
+Context` requires a pointer to a valid, live, NUL-terminated C string. The Lean constructor
+carries no proof of that condition. No statement assumes this law. -/
 def ContextDerefSpec : Prop :=
   TotalLaw contextDeref
 
@@ -445,7 +463,8 @@ def HkdfExtractLenLaw {Z : Type} (deref : Z → Result (Slice Std.U8))
 If the call returns `Ok z`, then `z` has 32 bytes. The view of `z` as a slice is the `deref`
 axiom of `ZVec`. Source: `crypto/lib.rs`, `hkdf_extract`, which shortens the buffer to the length
 BoringSSL reports, and `crypto/crypto.cpp`, which fixes the digest to SHA-256. That the report
-is 32 is a fact about BoringSSL, not about this repository. -/
+is 32 is a fact about BoringSSL, not about this repository.
+No statement takes this law as a hypothesis. -/
 def KeystoreCryptoHkdfExtractSpec : Prop :=
   HkdfExtractLenLaw zvecDeref
     keystore2_crypto.hkdf_extract

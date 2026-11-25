@@ -107,5 +107,9 @@ An opaque item has a signature in the translation and no body: Lean knows its ty
 Items of the standard library and of the other crates that have no Lean model are axioms in the
 generated file as well: 91 axioms in all. A statement that depends on one of them says so.
 
+An external call is a Lean function application. Equal arguments (including any explicit state) give
+the same result; policy, randomness or resource outcomes that change between identical calls are not
+represented. This is a limit of the model, not a determinism claim about a running Android system.
+
 `Extraction/translation.json` maps each Rust item to its Lean name. `Extraction/.fvs-publication.json`
 records the hashes of the published files.

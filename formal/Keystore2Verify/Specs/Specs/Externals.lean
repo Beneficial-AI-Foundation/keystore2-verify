@@ -14,9 +14,9 @@ recall vecdeque_laws_satisfiable (T : Type) :
       VecDequeClearLaw view clear ∧ VecDequePushBackLaw view push_back ∧
       VecDequeSplitOffLaw view split_off
 
-recall anyhow_laws_satisfiable (T C : Type) :
-    ∃ (Err : Type) (root : Err → ErrRoot)
-      (newKs : error.Error → Result Err) (newSel : keystore2_selinux.Error → Result Err)
+recall anyhow_laws_satisfiable :
+    ∃ (Err : Type) (root : Err → ErrRoot), ∀ (T C : Type),
+    ∃ (newKs : error.Error → Result Err) (newSel : keystore2_selinux.Error → Result Err)
       (newCrypto : keystore2_crypto.error.Error → Result Err)
       (fromKs : error.Error → Result Err) (fromSel : keystore2_selinux.Error → Result Err)
       (fromCrypto : keystore2_crypto.error.Error → Result Err)
