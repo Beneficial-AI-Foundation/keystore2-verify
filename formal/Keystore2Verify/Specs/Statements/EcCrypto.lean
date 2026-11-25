@@ -1239,6 +1239,24 @@ recall decrypt_message_ok (root : anyhow.Error → ErrRoot)
     (hdec : keystore2_crypto.aes_gcm_decrypt ct iv tag ks = ok (.Ok p)) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok (.Ok p)
 
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_ok' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_ok
+
 recall decrypt_message_ok_length (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hc : AnyCtxLaw root keystore2_crypto.zvec.ZVec)
@@ -1256,6 +1274,24 @@ recall decrypt_message_ok_length (root : anyhow.Error → ErrRoot)
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok
     (.Ok p) ∧ ∃ s, zvecDeref p = ok s ∧ s.length = ct.length
 
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_ok_length' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_ok_length
+
 recall decrypt_message_ok_length_of_result (root : anyhow.Error → ErrRoot)
     (hc131 : CryptoCtxLaw root keystore2_crypto.zvec.ZVec)
     (hlen : AesGcmDecryptSpec)
@@ -1263,6 +1299,24 @@ recall decrypt_message_ok_length_of_result (root : anyhow.Error → ErrRoot)
     (p : keystore2_crypto.zvec.ZVec)
     (h : ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok (.Ok p)) :
     ∃ s, zvecDeref p = ok s ∧ s.length = ct.length
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_ok_length_of_result' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_ok_length_of_result
 
 recall decrypt_message_ok_legacy (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -1288,11 +1342,46 @@ recall decrypt_message_ok_legacy (root : anyhow.Error → ErrRoot)
     (hdec2 : keystore2_crypto.aes_gcm_decrypt ct iv tag ks2 = ok (.Ok p)) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok (.Ok p)
 
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_ok_legacy' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_ok_legacy
+
 recall decrypt_message_err_public_key
     (self : ec_crypto.ECDHPrivateKey) (sender salt iv ct tag : Slice Std.U8)
     (e : anyhow.Error)
     (hpk : ec_crypto.ECDHPrivateKey.public_key self = ok (.Err e)) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok (.Err e)
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_err_public_key' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.BorrowedECPoint,
+keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint, keystore2_crypto.aes_gcm_decrypt,
+keystore2_crypto.ec_key_get0_public_key, keystore2_crypto.ec_point_oct_to_point,
+keystore2_crypto.ec_point_point_to_oct, keystore2_crypto.ecdh_compute_key,
+keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract, keystore2_crypto_bindgen.ec_point_st,
+alloc.fmt.format, keystore2_crypto.BorrowedECPoint.get_point,
+keystore2_crypto.OwnedECPoint.get_point, keystore2_crypto.zvec.ZVec,
+core.fmt.Arguments.from_str_nonconst, anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_err_public_key
 
 recall decrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -1305,6 +1394,24 @@ recall decrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
       (Vec.deref rpk) keystore2_crypto.EcdhComputeKeyVersion.Current = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok
     (.Err e') ∧ root e' = root e
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_err_agree_key' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_err_agree_key
 
 recall decrypt_message_err_legacy_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -1325,6 +1432,24 @@ recall decrypt_message_err_legacy_agree_key (root : anyhow.Error → ErrRoot)
       (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok
     (.Err e') ∧ root e' = root e
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_err_legacy_agree_key' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_err_legacy_agree_key
 
 recall decrypt_message_err_legacy_decrypt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -1351,10 +1476,45 @@ recall decrypt_message_err_legacy_decrypt (root : anyhow.Error → ErrRoot)
     ∃ e', ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = ok
     (.Err e') ∧ root e' = ErrRoot.crypto e
 
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_err_legacy_decrypt' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_err_legacy_decrypt
+
 recall decrypt_message_fail_public_key (self : ec_crypto.ECDHPrivateKey)
     (sender salt iv ct tag : Slice Std.U8)
     (x : Error) (hpk : ec_crypto.ECDHPrivateKey.public_key self = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_fail_public_key' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.BorrowedECPoint,
+keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint, keystore2_crypto.aes_gcm_decrypt,
+keystore2_crypto.ec_key_get0_public_key, keystore2_crypto.ec_point_oct_to_point,
+keystore2_crypto.ec_point_point_to_oct, keystore2_crypto.ecdh_compute_key,
+keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract, keystore2_crypto_bindgen.ec_point_st,
+alloc.fmt.format, keystore2_crypto.BorrowedECPoint.get_point,
+keystore2_crypto.OwnedECPoint.get_point, keystore2_crypto.zvec.ZVec,
+core.fmt.Arguments.from_str_nonconst, anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_fail_public_key
 
 recall decrypt_message_fail_agree_key (self : ec_crypto.ECDHPrivateKey)
     (sender salt iv ct tag : Slice Std.U8)
@@ -1363,6 +1523,23 @@ recall decrypt_message_fail_agree_key (self : ec_crypto.ECDHPrivateKey)
     (ha : ec_crypto.ECDHPrivateKey.agree_key self salt sender sender
       (Vec.deref rpk) keystore2_crypto.EcdhComputeKeyVersion.Current = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_fail_agree_key' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.BorrowedECPoint,
+keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint, keystore2_crypto.aes_gcm_decrypt,
+keystore2_crypto.ec_key_get0_public_key, keystore2_crypto.ec_point_oct_to_point,
+keystore2_crypto.ec_point_point_to_oct, keystore2_crypto.ecdh_compute_key,
+keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract, keystore2_crypto_bindgen.ec_point_st,
+alloc.fmt.format, keystore2_crypto.BorrowedECPoint.get_point,
+keystore2_crypto.OwnedECPoint.get_point, keystore2_crypto.zvec.ZVec,
+core.fmt.Arguments.from_str_nonconst, anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_fail_agree_key
 
 recall decrypt_message_fail_legacy_agree_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -1382,10 +1559,43 @@ recall decrypt_message_fail_legacy_agree_key (root : anyhow.Error → ErrRoot)
       (Vec.deref rpk) keystore2_crypto.EcdhComputeKeyVersion.LegacyTruncated = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x
 
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_fail_legacy_agree_key' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_fail_legacy_agree_key
+
 recall decrypt_message_closure_ignores_error
     (c : closure)
     (e1 e2 : keystore2_crypto.error.Error) :
     closureCallOnce c e1 = closureCallOnce c e2
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_closure_ignores_error' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, keystore2_crypto.ECKey,
+keystore2_crypto.OwnedECPoint, keystore2_crypto.aes_gcm_decrypt,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ecdh_compute_key,
+keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract, keystore2_crypto_bindgen.ec_point_st,
+alloc.fmt.format, keystore2_crypto.OwnedECPoint.get_point, keystore2_crypto.zvec.ZVec,
+core.fmt.Arguments.from_str_nonconst, anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_closure_ignores_error
 
 recall decrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -1399,6 +1609,24 @@ recall decrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     (x : Error)
     (hd : zvecDeref key = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_fail_deref_key' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_fail_deref_key
 
 recall decrypt_message_fail_first_decrypt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -1414,6 +1642,24 @@ recall decrypt_message_fail_first_decrypt (root : anyhow.Error → ErrRoot)
     (x : Error)
     (hdec : keystore2_crypto.aes_gcm_decrypt ct iv tag ks = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_fail_first_decrypt' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_fail_first_decrypt
 
 recall decrypt_message_fail_deref_legacy_key (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -1434,6 +1680,24 @@ recall decrypt_message_fail_deref_legacy_key (root : anyhow.Error → ErrRoot)
     (x : Error)
     (hd2 : zvecDeref key2 = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_fail_deref_legacy_key' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_fail_deref_legacy_key
 
 recall decrypt_message_fail_legacy_decrypt (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -1456,6 +1720,24 @@ recall decrypt_message_fail_legacy_decrypt (root : anyhow.Error → ErrRoot)
     (x : Error)
     (hdec2 : keystore2_crypto.aes_gcm_decrypt ct iv tag ks2 = fail x) :
     ec_crypto.ECDHPrivateKey.decrypt_message self sender salt iv ct tag = fail x
+
+/-- info: 'Keystore2Verify.EcCrypto.decrypt_message_fail_legacy_decrypt' depends on axioms:
+[propext, Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+keystore2_crypto.BorrowedECPoint, keystore2_crypto.ECKey, keystore2_crypto.OwnedECPoint,
+keystore2_crypto.aes_gcm_decrypt, keystore2_crypto.ec_key_get0_public_key,
+keystore2_crypto.ec_point_oct_to_point, keystore2_crypto.ec_point_point_to_oct,
+keystore2_crypto.ecdh_compute_key, keystore2_crypto.hkdf_expand, keystore2_crypto.hkdf_extract,
+keystore2_crypto_bindgen.ec_point_st, alloc.fmt.format,
+keystore2_crypto.BorrowedECPoint.get_point, keystore2_crypto.OwnedECPoint.get_point,
+keystore2_crypto.zvec.ZVec, core.fmt.Arguments.from_str_nonconst,
+anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+core.result.Result.Insts.AnyhowContext.context,
+keystore2_crypto.error.Error.Insts.CoreFmtDebug.fmt,
+keystore2_crypto.error.Error.Insts.CoreFmtDisplay.fmt,
+keystore2_crypto.zvec.ZVec.Insts.CoreOpsDerefDerefSliceU8.deref] -/
+#guard_msgs (whitespace := lax) in
+#print axioms decrypt_message_fail_legacy_decrypt
 
 recall ec_crypto_laws_satisfiable :
     ∃ (Z : Type) (deref : Z → Result (Slice Std.U8))
