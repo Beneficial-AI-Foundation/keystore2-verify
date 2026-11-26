@@ -11,7 +11,7 @@ These are abstract model obligations for the queue, error and byte-reading laws.
 statement covers each element type; the error statement chooses one classifier across result
 and context types. The crypto length laws are tested together by `ec_crypto_laws_satisfiable`.
 Neither module supplies a joint model for all closed contracts on concrete extracted symbols.
-The statements here, like the wrapper theorems, have `sorry` bodies.
+Each statement here is proved by an explicit model.
 -/
 
 theorem vecdeque_laws_satisfiable (T : Type) :
