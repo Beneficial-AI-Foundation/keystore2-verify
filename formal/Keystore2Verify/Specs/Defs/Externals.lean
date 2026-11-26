@@ -1,5 +1,8 @@
-import Keystore2Verify.Extraction.Keystore2
-import Mathlib.Data.Nat.Digits.Defs
+module
+public import Keystore2Verify.Extraction.Keystore2
+public import Mathlib.Data.Nat.Digits.Defs
+
+@[expose] public section
 
 /-!
 # Laws about external functions
