@@ -1,0 +1,46 @@
+Translation patch: keystore2::legacy_blob::LegacyBlobLoader::{extract_legacy_alias, remove_user_dir_if_empty, remove_super_key}
+
+Change: keystore2/src/legacy_blob.rs: five calls to `Result::ok` are written without it, each on its own line. `x.ok();` used as a statement becomes `let _ = x;`, `r.ok().unwrap_or(false)` becomes `matches!(r, Ok(true))`, and `r.ok()` as a value becomes `match r { Ok(alias) => Some(alias), Err(_) => None }`.
+Why: Aeneas translates `Result::ok` to an axiom named `core.result.Result.ok`. Inside the namespace `core.result.Result`, that name captures the `ok` of the Aeneas monad, so the translation of `Result::or_else` no longer builds in Lean (Aeneas issue #1554, open at the pinned release). These three functions are the only ones in the translated part of the crate that call `Result::ok`.
+Behaviour: unchanged. Each rewritten expression has the same value and the same effects, in the same order, as the original; no panic is added or removed.
+Classification: B
+Assumptions: none.
+Obligations: fork === upstream: each rewritten function behaves as the original on every input.
+Evidence: an independent equivalence review by three reviewers, accepted on 2 of 3; summarised in formal/EXTRACTION-ISSUES.md.
+Independent: yes
+
+diff --git a/keystore2/src/legacy_blob.rs b/keystore2/src/legacy_blob.rs
+--- a/keystore2/src/legacy_blob.rs
++++ b/keystore2/src/legacy_blob.rs
+@@ -883,7 +883,7 @@
+ 
+     fn extract_legacy_alias(encoded_alias: &str) -> Option<String> {
+         if !Self::is_keystore_alias(encoded_alias) {
+-            Self::decode_alias(encoded_alias).ok()
++            match Self::decode_alias(encoded_alias) { Ok(alias) => Some(alias), Err(_) => None }
+         } else {
+             None
+         }
+@@ -1230,7 +1230,7 @@
+     fn remove_user_dir_if_empty(&self, user: AndroidUserId) -> Result<()> {
+         if self.is_empty_user(user).context(ks_err!("Trying to check for empty user dir."))? {
+             let user_path = self.make_user_path_name(user);
+-            Self::with_retry_interrupted(|| fs::remove_dir(user_path.as_path())).ok();
++            let _ = Self::with_retry_interrupted(|| fs::remove_dir(user_path.as_path()));
+         }
+         Ok(())
+     }
+@@ -1346,10 +1346,10 @@
+     /// the user_<uid> directory as well.
+     pub fn remove_super_key(&self, user: AndroidUserId) {
+         let path = self.make_super_key_filename(user);
+-        Self::with_retry_interrupted(|| fs::remove_file(path.as_path())).ok();
+-        if self.is_empty_user(user).ok().unwrap_or(false) {
++        let _ = Self::with_retry_interrupted(|| fs::remove_file(path.as_path()));
++        if matches!(self.is_empty_user(user), Ok(true)) {
+             let path = self.make_user_path_name(user);
+-            Self::with_retry_interrupted(|| fs::remove_dir(path.as_path())).ok();
++            let _ = Self::with_retry_interrupted(|| fs::remove_dir(path.as_path()));
+         }
+     }
+ }
