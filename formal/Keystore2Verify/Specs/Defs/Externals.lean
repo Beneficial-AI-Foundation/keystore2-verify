@@ -1,5 +1,4 @@
 import Keystore2Verify.Extraction.Keystore2
-import Mathlib.Data.Nat.Digits.Defs
 
 /-!
 # Laws about external functions
@@ -341,7 +340,9 @@ end ZVecQueue
 /-! ## Standard library -/
 
 /-- The little-endian number of a list of bytes, first byte least significant. -/
-def leNat (bs : List Std.U8) : Nat := Nat.ofDigits 256 (bs.map (·.val))
+def leNat : List Std.U8 → Nat
+  | [] => 0
+  | b :: bs => b.val + 256 * leNat bs
 
 /-- Law for `core::mem::size_of` (register record `ks2-ext-core-mem-size-of`).
 For the types the code uses, the call never panics and gives the size in bytes: 4 for `u32`,
