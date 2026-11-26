@@ -1,9 +1,22 @@
 import Keystore2Verify.Specs.Defs.Permission
+import Keystore2Verify.Proofs.Lemmas.PermissionGrantTail
 
 namespace Keystore2Verify.Permission
 open Aeneas Aeneas.Std Result keystore2
 open core.ffi.c_str
 open Keystore2Verify.Externals
+open core.result.Result.Insts.CoreOpsTry renaming branch → tryBranch
+open core.result.Result.Insts.CoreOpsTry_traitFromResidualResult
+  renaming from_residual → fromResidual
+open core.fmt.rt.Argument renaming new_debug → argNewDebug
+open Aeneas.Std.core.fmt.Arguments renaming «new» → argumentsNew
+open core.result.Result.Insts.AnyhowContext renaming context → resultContext
+open anyhow.Error.Insts renaming AnyhowContextExtStdError → AnyhowExtStdError
+open anyhow.context.ext.StdError renaming Blanket → StdBlanket
+open keystore2_selinux.Error.Insts renaming CoreErrorError → SelinuxErrorError
+open permission.KeyPermSet.Insts renaming CoreConvertFromKeyPerm → keyPermIntoSet
+open permission.KeyPermSet.Insts.CoreIterTraitsCollectIntoIteratorKeyPermIntoIter
+  renaming into_iter → setIntoIter
 open permission.KeyPerm.Insts
 open CoreConvertFromI32 renaming «from» → keyPermFromI32
 
@@ -43,7 +56,11 @@ theorem check_grant_permission_foreign_app (root : anyhow.Error → ErrRoot)
     (hdom : key.domain = domainApp) (hne : caller_uid ≠ key.nspace) :
     ∃ e, permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Err e) ∧
       root e = deniedRoot := by
-  sorry
+  have hd' : key.domain = 0#iscalar := hdom
+  choose f hf1 hf2 using hctx.2
+  unfold permission.check_grant_permission
+  simp [hd', hne, keystore2_selinux.Error.perm, hf1]
+  exact (hf2 _ _).trans rfl
 
 /-- conditional: the domain is `APP`, the caller uid equals the namespace, and `getcon` returns an
 error `e`. The result is an error with the same root cause as `e`. Hypotheses: the `context` law
@@ -57,7 +74,12 @@ theorem check_grant_permission_app_getcon_err (root : anyhow.Error → ErrRoot)
     (e : anyhow.Error) (hget : keystore2_selinux.getcon = ok (.Err e)) :
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
         ok (.Err e') ∧ root e' = root e := by
-  sorry
+  have hd' : key.domain = 0#iscalar := hdom
+  choose f hf1 hf2 using hctx.2
+  unfold permission.check_grant_permission
+  simp [hd', heq, hget, hf1, tryBranch,
+    fromResidual]
+  exact hf2 _ _
 
 /-- conditional: the domain is `SELINUX` and the lookup of the namespace returns an error `e`. The
 result is an error with the same root cause as `e`. The uid is not compared. Hypotheses: the same
@@ -70,7 +92,12 @@ theorem check_grant_permission_selinux_lookup_err (root : anyhow.Error → ErrRo
     (e : anyhow.Error) (hlook : permission.lookup_keystore2_key_context key.nspace = ok (.Err e)) :
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
         ok (.Err e') ∧ root e' = root e := by
-  sorry
+  have hd' : key.domain = 2#iscalar := hdom
+  choose f hf1 hf2 using hctx.2
+  unfold permission.check_grant_permission
+  simp [hd', hlook, hf1, tryBranch,
+    fromResidual]
+  exact hf2 _ _
 
 /-- conditional: the domain is `APP`, the caller uid equals the namespace, and `getcon` fails with
 `x`. The result is `fail x`. Hypothesis: the outcome of `getcon`. No law is
@@ -81,7 +108,9 @@ theorem check_grant_permission_app_getcon_fail
     (hdom : key.domain = domainApp) (heq : caller_uid = key.nspace)
     (x : Error) (hget : keystore2_selinux.getcon = fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x := by
-  sorry
+  have hd' : key.domain = 0#iscalar := hdom
+  unfold permission.check_grant_permission
+  simp [hd', heq, hget]
 
 /-- conditional: the domain is `SELINUX` and the lookup of the namespace fails with `x`.
 The result is `fail x`; this equation does not identify the cause of the opaque failure. Hypothesis: the
@@ -92,7 +121,9 @@ theorem check_grant_permission_selinux_lookup_fail
     (hdom : key.domain = domainSelinux)
     (x : Error) (hlook : permission.lookup_keystore2_key_context key.nspace = fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x := by
-  sorry
+  have hd' : key.domain = 2#iscalar := hdom
+  unfold permission.check_grant_permission
+  simp [hd', hlook]
 
 /-- conditional: the domain is neither `APP` nor `SELINUX` (`GRANT`, `BLOB`, `KEY_ID` and every
 other number). The result is an error whose root cause is the keystore2 error with the response
@@ -107,7 +138,21 @@ theorem check_grant_permission_other_domain (root : anyhow.Error → ErrRoot)
     (happ : key.domain ≠ domainApp) (hsel : key.domain ≠ domainSelinux) :
     ∃ e, permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Err e) ∧
       root e = .ks sysError := by
-  sorry
+  have h0 : ¬ key.domain = 0#iscalar := happ
+  have h2 : ¬ key.domain = 2#iscalar := hsel
+  choose f hf1 hf2 using hctx.2
+  obtain ⟨s, hs⟩ := hfmt (Unit.unit : core.fmt.Arguments)
+  refine ⟨f sysError s, ?_, (hf2 _ _).trans rfl⟩
+  unfold permission.check_grant_permission
+  generalize key.domain = d at *
+  dsimp only
+  split
+  · exact absurd rfl h0
+  · exact absurd rfl h2
+  · simp [error.Error.sys, sysError, argNewDebug, argumentsNew,
+      core.hint.must_use]
+    erw [Std.bind_ok, Std.bind_ok, hs]
+    simp [hf1]
 
 /-- conditional: the target is `c` and the check of `Grant` returns an error `e`. The result is an
 error with the same root cause as `e`, whatever `access_vec` is. Hypotheses: the `context` laws
@@ -127,7 +172,8 @@ theorem check_grant_permission_grant_check_err (root : anyhow.Error → ErrRoot)
       permission.KeyPerm.Grant = ok (.Err e)) :
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
         ok (.Err e') ∧ root e' = root e := by
-  sorry
+  rw [grant_eq_tail root hctxC caller_uid caller_ctx access_vec key ctx htarget]
+  exact grant_tail_check_err root hctxU caller_ctx access_vec ctx c hc e hcheck
 
 /-- conditional: the target is `ctx` and the view of `ctx` as a `CStr` fails with `x`.
 The result is `fail x`, whatever `access_vec` is. Hypotheses: the `context` law for a
@@ -144,7 +190,8 @@ theorem check_grant_permission_deref_fail (root : anyhow.Error → ErrRoot)
         permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)))
     (x : Error) (hc : contextCStr ctx = fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x := by
-  sorry
+  rw [grant_eq_tail root hctxC caller_uid caller_ctx access_vec key ctx htarget]
+  exact grant_tail_deref_fail caller_ctx access_vec ctx x hc
 
 /-- conditional: the target is `c` and the check of `Grant` fails with `x`. The
 result is `fail x`, whatever `access_vec` is. Hypotheses: the `context` law for a context value
@@ -163,7 +210,8 @@ theorem check_grant_permission_grant_check_fail (root : anyhow.Error → ErrRoot
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.Grant = fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x := by
-  sorry
+  rw [grant_eq_tail root hctxC caller_uid caller_ctx access_vec key ctx htarget]
+  exact grant_tail_check_fail caller_ctx access_vec ctx c hc x hcheck
 
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, and `access_vec` has bit 3
 set (the value of `Grant`). The result is an error whose root cause is
@@ -187,7 +235,8 @@ theorem check_grant_permission_grant_in_set (root : anyhow.Error → ErrRoot)
     (hbit : HasBit access_vec 3) :
     ∃ e, permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Err e) ∧
       root e = deniedRoot := by
-  sorry
+  rw [grant_eq_tail root hctxC caller_uid caller_ctx access_vec key ctx htarget]
+  exact grant_tail_in_set root hctxU hsel caller_ctx access_vec ctx c hc hcheck hbit
 
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, `access_vec` has no bit set
 (the empty set), and bit 3 is therefore not set. The result is `Ok`. The loop over the permissions
@@ -208,7 +257,11 @@ theorem check_grant_permission_ok_empty (root : anyhow.Error → ErrRoot)
       permission.KeyPerm.Grant = ok (.Ok ()))
     (hempty : ∀ i, i < 32 → ¬ HasBit access_vec i) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Ok ()) := by
-  sorry
+  rw [grant_eq_tail root hctxC caller_uid caller_ctx access_vec key ctx htarget]
+  have hbit : ¬ HasBit access_vec 3 := hempty 3 (by omega)
+  rw [grant_tail_loop root hctxU caller_ctx access_vec ctx c hc hcheck hbit]
+  exact grant_loop_done caller_ctx ctx _ _
+    (grant_body_none caller_ctx ctx _ (by simp) (fun j _ hj32 hb => hempty j hj32 hb))
 
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, bit 3 of `access_vec` is not
 set, and for every set bit `i` the check of the permission `KeyPerm::from(1 << i)` returns `Ok`.
@@ -238,7 +291,10 @@ theorem check_grant_permission_ok (root : anyhow.Error → ErrRoot)
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ())) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Ok ()) := by
-  sorry
+  rw [grant_eq_tail root hctxC caller_uid caller_ctx access_vec key ctx htarget]
+  rw [grant_tail_loop root hctxU caller_ctx access_vec ctx c hc hcheck hbit]
+  exact grant_loop_ok hfmt root hctxS caller_ctx ctx c hc _ { vec := access_vec, pos := 0#u8 }
+    rfl (by simp) (fun j _ hj32 hb => hloop j hj32 hb)
 
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, bit 3 of `access_vec` is not
 set, `i` is a set bit, the checks of the permissions of the set bits below `i` return `Ok`, and the
@@ -276,7 +332,15 @@ theorem check_grant_permission_loop_err (root : anyhow.Error → ErrRoot)
       ok (.Err e)) :
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
         ok (.Err e') ∧ root e' = root e := by
-  sorry
+  rw [grant_eq_tail root hctxC caller_uid caller_ctx access_vec key ctx htarget]
+  rw [grant_tail_loop root hctxU caller_ctx access_vec ctx c hc hcheck hbit]
+  exact grant_loop_first hfmt root hctxS caller_ctx ctx c hc
+    (fun r => ∃ e', r = ok (.Err e') ∧ root e' = root e) access_vec i hi hset hlow
+    (fun it _ hnb => by
+      obtain ⟨e', hb, hr⟩ := grant_body_some_err (hfmt _) caller_ctx ctx c hc it i hnb kp hkp e
+        hbad root hctxS
+      exact ⟨e', grant_loop_done caller_ctx ctx it _ hb, hr⟩)
+    _ { vec := access_vec, pos := 0#u8 } rfl (by simp) rfl
 
 /-- conditional: the target is `c`, the check of `Grant` returns `Ok`, bit 3 of `access_vec` is not
 set, `i` is a set bit, the checks of the permissions of the set bits below `i` return `Ok`, and the check of the permission of bit `i` fails with `x`. The result is `fail x`. Hypotheses: the `context` laws of
@@ -306,7 +370,13 @@ theorem check_grant_permission_loop_fail (root : anyhow.Error → ErrRoot)
     (hbad : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
       fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x := by
-  sorry
+  rw [grant_eq_tail root hctxC caller_uid caller_ctx access_vec key ctx htarget]
+  rw [grant_tail_loop root hctxU caller_ctx access_vec ctx c hc hcheck hbit]
+  exact grant_loop_first hfmt root hctxS caller_ctx ctx c hc
+    (fun r => r = fail x) access_vec i hi hset hlow
+    (fun it _ hnb => grant_loop_fail caller_ctx ctx it x
+      (grant_body_some_fail caller_ctx ctx c hc it i hnb kp hkp x hbad))
+    _ { vec := access_vec, pos := 0#u8 } rfl (by simp) rfl
 
 /-- conditional: the function returns `Ok`. Then the access vector does not have bit 3 set (the
 value of `Grant`), the key domain is `APP` with the caller uid equal to the namespace and `getcon`
@@ -338,6 +408,11 @@ theorem check_grant_permission_of_ok (root : anyhow.Error → ErrRoot)
         ∀ i, i < 32 → HasBit access_vec i → ∃ kp, keyPermFromI32 (bitVal i) = ok kp ∧
           keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
             ok (.Ok ()) := by
-  sorry
+  obtain ⟨ctx, htarget⟩ := grant_front_inv root hctxC hsel hks caller_uid caller_ctx access_vec
+    key hok
+  rw [grant_eq_tail root hctxC caller_uid caller_ctx access_vec key ctx htarget] at hok
+  obtain ⟨hbit, c, hc, hcheck, hall⟩ :=
+    grant_tail_inv root hctxU hctxS hsel caller_ctx access_vec ctx hok
+  exact ⟨hbit, ctx, c, hc, htarget, hcheck, hall⟩
 
 end Keystore2Verify.Permission

@@ -1,9 +1,28 @@
 import Keystore2Verify.Specs.Defs.EcCrypto
+import Keystore2Verify.Proofs.EcCrypto.PublicKey
 
 namespace Keystore2Verify.EcCrypto
 open Aeneas Aeneas.Std Result keystore2
 open Keystore2Verify.Externals
 open alloc.vec
+open core.result.Result.Insts core.convert
+
+/-- Peel the first step off a successful `do` block: the bound computation succeeded. -/
+private theorem enc_bind_ok {α β : Type} {c : Result α} {f : α → Result β} {y : β}
+    (h : (do let a ← c; f a) = ok y) : ∃ a, c = ok a ∧ f a = ok y := by
+  cases c with
+  | ret a => exact ⟨a, rfl, by simpa using h⟩
+  | vis i k => simp at h
+  | div => simp at h
+
+/-- A `context` call that satisfies the law and returns `Ok v` was given `Ok v`. -/
+private theorem enc_ctx_ok_of {T E Er C : Type} {rE : E → ErrRoot} {rt : Er → ErrRoot}
+    {ctx : core.result.Result T E → C → Result (core.result.Result T Er)}
+    (hl : ResultContextLaw rE rt ctx) (r : core.result.Result T E) (c : C) (v : T)
+    (h : ctx r c = ok (.Ok v)) : r = .Ok v := by
+  cases r with
+  | Ok v' => rw [hl.1] at h; simp at h; rw [h]
+  | Err x => obtain ⟨e, he, -⟩ := hl.2 x c; rw [he] at h; simp at h
 
 /-- conditional: if `generate`, `public_key`, `generate_salt`, `agree_key` and `aes_gcm_encrypt` all
 return `Ok`, in this order, then `encrypt_message` returns `Ok (spk, salt, iv, ciphertext, tag)`:
@@ -36,7 +55,21 @@ theorem encrypt_message_ok (root : anyhow.Error → ErrRoot)
     (he : keystore2_crypto.aes_gcm_encrypt message ks = ok (.Ok (ct, iv, tag))) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = ok
     (.Ok (spk, salt, iv, ct, tag)) := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨a83, h83⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:83: public_key failed")
+  obtain ⟨s83, f83⟩ := hfmt a83
+  obtain ⟨a84, h84⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:84: generate_salt failed")
+  obtain ⟨s84, f84⟩ := hfmt a84
+  obtain ⟨a93, h93⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:93: agree_key failed")
+  obtain ⟨s93, f93⟩ := hfmt a93
+  obtain ⟨a95, h95⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:95: aes_gcm_encrypt failed")
+  obtain ⟨s95, f95⟩ := hfmt a95
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, hs, ha, hd, he, h82, f82, h83, f83, h84, f84, h93, f93, h95, f95,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1, hc83.1, hc84.1, hc93.1, hc95.1]
 
 /-- conditional: under the hypotheses of `encrypt_message_ok` and the length laws
 `KeystoreCryptoGenerateSaltSpec` and `AesGcmEncryptSpec`, the result of `encrypt_message` has a salt
@@ -68,7 +101,10 @@ theorem encrypt_message_ok_lengths (root : anyhow.Error → ErrRoot)
       ok (.Ok (spk, salt, iv, ct, tag)) ∧
       salt.val.length = 16 ∧ iv.val.length = 12 ∧ tag.val.length = 16 ∧
       ct.val.length = message.length := by
-  sorry
+  have h := encrypt_message_ok root hargs hfmt hc82 hc83 hc84 hc93 hc95 recipient message k spk
+    salt key ks ct iv tag hg hpk hs ha hd he
+  obtain ⟨hct, hiv, htag⟩ := haes _ _ _ _ _ he
+  exact ⟨h, hsalt _ hs, hiv, htag, hct⟩
 
 /-- conditional: if `encrypt_message` returns `Ok (spk, salt, iv, ct, tag)`, then `spk` has between
 1 and 133 bytes, `salt` has 16 bytes, `iv` has 12 bytes, `tag` has 16 bytes and `ct` is as long as
@@ -92,7 +128,85 @@ theorem encrypt_message_ok_lengths_of_result (root : anyhow.Error → ErrRoot)
     (1 ≤ spk.val.length ∧ spk.val.length ≤ 133) ∧
       salt.val.length = 16 ∧ iv.val.length = 12 ∧ tag.val.length = 16 ∧
       ct.val.length = message.length := by
-  sorry
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message at h
+  obtain ⟨r, -, h⟩ := enc_bind_ok h
+  obtain ⟨a, -, h⟩ := enc_bind_ok h
+  obtain ⟨s, -, h⟩ := enc_bind_ok h
+  obtain ⟨s1, -, h⟩ := enc_bind_ok h
+  obtain ⟨r1, -, h⟩ := enc_bind_ok h
+  rcases r1 with k | e
+  swap
+  · simp [CoreOpsTry.branch,
+      CoreOpsTry_traitFromResidualResult.from_residual,
+      FromSame.from] at h
+  obtain ⟨cf, hcf, h⟩ := enc_bind_ok h
+  simp [CoreOpsTry.branch] at hcf
+  subst hcf
+  dsimp only at h
+  obtain ⟨r2, hpk, h⟩ := enc_bind_ok h
+  obtain ⟨a1, -, h⟩ := enc_bind_ok h
+  obtain ⟨s2, -, h⟩ := enc_bind_ok h
+  obtain ⟨s3, -, h⟩ := enc_bind_ok h
+  obtain ⟨r3, hr3, h⟩ := enc_bind_ok h
+  rcases r3 with spk1 | e
+  swap
+  · simp [CoreOpsTry.branch,
+      CoreOpsTry_traitFromResidualResult.from_residual,
+      FromSame.from] at h
+  obtain ⟨cf, hcf, h⟩ := enc_bind_ok h
+  simp [CoreOpsTry.branch] at hcf
+  subst hcf
+  dsimp only at h
+  rw [enc_ctx_ok_of hc83 _ _ _ hr3] at hpk
+  obtain ⟨r4, hs4, h⟩ := enc_bind_ok h
+  obtain ⟨a2, -, h⟩ := enc_bind_ok h
+  obtain ⟨s4, -, h⟩ := enc_bind_ok h
+  obtain ⟨s5, -, h⟩ := enc_bind_ok h
+  obtain ⟨r5, hr5, h⟩ := enc_bind_ok h
+  rcases r5 with salt1 | e
+  swap
+  · simp [CoreOpsTry.branch,
+      CoreOpsTry_traitFromResidualResult.from_residual,
+      FromSame.from] at h
+  obtain ⟨cf, hcf, h⟩ := enc_bind_ok h
+  simp [CoreOpsTry.branch] at hcf
+  subst hcf
+  dsimp only at h
+  rw [enc_ctx_ok_of hc84 _ _ _ hr5] at hs4
+  obtain ⟨r6, -, h⟩ := enc_bind_ok h
+  obtain ⟨a3, -, h⟩ := enc_bind_ok h
+  obtain ⟨s8, -, h⟩ := enc_bind_ok h
+  obtain ⟨s9, -, h⟩ := enc_bind_ok h
+  obtain ⟨r7, -, h⟩ := enc_bind_ok h
+  rcases r7 with key | e
+  swap
+  · simp [CoreOpsTry.branch,
+      CoreOpsTry_traitFromResidualResult.from_residual,
+      FromSame.from] at h
+  obtain ⟨cf, hcf, h⟩ := enc_bind_ok h
+  simp [CoreOpsTry.branch] at hcf
+  subst hcf
+  dsimp only at h
+  obtain ⟨s10, -, h⟩ := enc_bind_ok h
+  obtain ⟨r8, hr8, h⟩ := enc_bind_ok h
+  obtain ⟨a4, -, h⟩ := enc_bind_ok h
+  obtain ⟨s11, -, h⟩ := enc_bind_ok h
+  obtain ⟨s12, -, h⟩ := enc_bind_ok h
+  obtain ⟨r9, hr9, h⟩ := enc_bind_ok h
+  rcases r9 with ⟨ct1, iv1, tag1⟩ | e
+  swap
+  · simp [CoreOpsTry.branch,
+      CoreOpsTry_traitFromResidualResult.from_residual,
+      FromSame.from] at h
+  obtain ⟨cf, hcf, h⟩ := enc_bind_ok h
+  simp [CoreOpsTry.branch] at hcf
+  subst hcf
+  dsimp only at h
+  rw [enc_ctx_ok_of hc95 _ _ _ hr9] at hr8
+  simp at h
+  obtain ⟨rfl, rfl, rfl, rfl, rfl⟩ := h
+  obtain ⟨hct, hiv, htag⟩ := haes _ _ _ _ _ hr8
+  exact ⟨public_key_ok_length_of_result root hc84 hoct _ _ hpk, hsalt _ hs4, hiv, htag, hct⟩
 
 /-- conditional: if `generate` returns `Err e`, then `encrypt_message` returns an error with the
 same root cause as `e`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the
@@ -107,7 +221,15 @@ theorem encrypt_message_err_generate (root : anyhow.Error → ErrRoot)
     (hg : ec_crypto.ECDHPrivateKey.generate = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.encrypt_message recipient message = ok (.Err e') ∧
       root e' = root e := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨e', h1, h2⟩ := hc82.2 e s82
+  refine ⟨e', ?_, h2⟩
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, h82, f82,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, h1]
 
 /-- conditional: if `generate` returns `Ok` and `public_key` returns `Err e`, then `encrypt_message`
 returns an error with the same root cause as `e`. Hypotheses: the shared laws for
@@ -125,7 +247,17 @@ theorem encrypt_message_err_public_key (root : anyhow.Error → ErrRoot)
     (hpk : ec_crypto.ECDHPrivateKey.public_key k = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.encrypt_message recipient message = ok (.Err e') ∧
       root e' = root e := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨a83, h83⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:83: public_key failed")
+  obtain ⟨s83, f83⟩ := hfmt a83
+  obtain ⟨e', h1, h2⟩ := hc83.2 e s83
+  refine ⟨e', ?_, h2⟩
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, h82, f82, h83, f83,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1, h1]
 
 /-- conditional: if `generate` and `public_key` return `Ok` and `generate_salt` returns `Err e`,
 then `encrypt_message` returns an error whose root cause is the crypto error `e`. Hypotheses: the
@@ -146,7 +278,19 @@ theorem encrypt_message_err_generate_salt (root : anyhow.Error → ErrRoot)
     (hs : keystore2_crypto.generate_salt = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.encrypt_message recipient message = ok (.Err e') ∧
       root e' = ErrRoot.crypto e := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨a83, h83⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:83: public_key failed")
+  obtain ⟨s83, f83⟩ := hfmt a83
+  obtain ⟨a84, h84⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:84: generate_salt failed")
+  obtain ⟨s84, f84⟩ := hfmt a84
+  obtain ⟨e', h1, h2⟩ := hc84.2 e s84
+  refine ⟨e', ?_, h2⟩
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, hs, h82, f82, h83, f83, h84, f84,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1, hc83.1, h1]
 
 /-- conditional: if the first three steps return `Ok` and `agree_key` returns `Err e`, then
 `encrypt_message` returns an error with the same root cause as `e`. The statement assumes only that
@@ -173,7 +317,21 @@ theorem encrypt_message_err_agree_key (root : anyhow.Error → ErrRoot)
       ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.encrypt_message recipient message = ok (.Err e') ∧
       root e' = root e := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨a83, h83⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:83: public_key failed")
+  obtain ⟨s83, f83⟩ := hfmt a83
+  obtain ⟨a84, h84⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:84: generate_salt failed")
+  obtain ⟨s84, f84⟩ := hfmt a84
+  obtain ⟨a93, h93⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:93: agree_key failed")
+  obtain ⟨s93, f93⟩ := hfmt a93
+  obtain ⟨e', h1, h2⟩ := hc93.2 e s93
+  refine ⟨e', ?_, h2⟩
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, hs, ha, h82, f82, h83, f83, h84, f84, h93, f93,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1, hc83.1, hc84.1, h1]
 
 /-- conditional: if the first four steps return `Ok` and `aes_gcm_encrypt` returns `Err e`, then
 `encrypt_message` returns an error whose root cause is the crypto error `e`. Hypotheses: the shared
@@ -204,7 +362,23 @@ theorem encrypt_message_err_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
     (he : keystore2_crypto.aes_gcm_encrypt message ks = ok (.Err e)) :
     ∃ e', ec_crypto.ECDHPrivateKey.encrypt_message recipient message = ok (.Err e') ∧
       root e' = ErrRoot.crypto e := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨a83, h83⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:83: public_key failed")
+  obtain ⟨s83, f83⟩ := hfmt a83
+  obtain ⟨a84, h84⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:84: generate_salt failed")
+  obtain ⟨s84, f84⟩ := hfmt a84
+  obtain ⟨a93, h93⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:93: agree_key failed")
+  obtain ⟨s93, f93⟩ := hfmt a93
+  obtain ⟨a95, h95⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:95: aes_gcm_encrypt failed")
+  obtain ⟨s95, f95⟩ := hfmt a95
+  obtain ⟨e', h1, h2⟩ := hc95.2 e s95
+  refine ⟨e', ?_, h2⟩
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, hs, ha, hd, he, h82, f82, h83, f83, h84, f84, h93, f93, h95, f95,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1, hc83.1, hc84.1, hc93.1, h1]
 
 /-- conditional: if `generate` returns `Ok` and `public_key` fails, then `encrypt_message` returns
 the same `fail x`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context`
@@ -218,7 +392,13 @@ theorem encrypt_message_fail_public_key (root : anyhow.Error → ErrRoot)
     (x : Error)
     (hpk : ec_crypto.ECDHPrivateKey.public_key k = fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, h82, f82,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1]
 
 /-- conditional: if the first three steps return `Ok` and `agree_key` fails, then `encrypt_message`
 returns the same `fail x`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the
@@ -240,7 +420,17 @@ theorem encrypt_message_fail_agree_key (root : anyhow.Error → ErrRoot)
       (Vec.deref spk) recipient keystore2_crypto.EcdhComputeKeyVersion.Current =
       fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨a83, h83⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:83: public_key failed")
+  obtain ⟨s83, f83⟩ := hfmt a83
+  obtain ⟨a84, h84⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:84: generate_salt failed")
+  obtain ⟨s84, f84⟩ := hfmt a84
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, hs, ha, h82, f82, h83, f83, h84, f84,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1, hc83.1, hc84.1]
 
 /-- conditional: if `generate` fails, then `encrypt_message` returns the same `fail x`. Hypothesis:
 the outcome of this call. No law is needed. -/
@@ -248,7 +438,8 @@ theorem encrypt_message_fail_generate (recipient message : Slice Std.U8)
     (x : Error)
     (hg : ec_crypto.ECDHPrivateKey.generate = fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
-  sorry
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg]
 /-- conditional: if `generate` and `public_key` return `Ok` and `generate_salt` fails, then
 `encrypt_message` returns the same `fail x`. Hypotheses: the shared laws for `from_str_nonconst` and
 `format`, the `context` laws at lines 82 and 83, and the outcomes of the earlier calls and of this
@@ -265,7 +456,15 @@ theorem encrypt_message_fail_generate_salt (root : anyhow.Error → ErrRoot)
     (x : Error)
     (hs : keystore2_crypto.generate_salt = fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨a83, h83⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:83: public_key failed")
+  obtain ⟨s83, f83⟩ := hfmt a83
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, hs, h82, f82, h83, f83,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1, hc83.1]
 /-- conditional: if `deref` of the derived key fails, then `encrypt_message` returns the same
 `fail x`. Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` laws at
 lines 82, 83, 84 and 93, and the outcomes of the earlier calls and of this one. -/
@@ -289,7 +488,19 @@ theorem encrypt_message_fail_deref_key (root : anyhow.Error → ErrRoot)
     (x : Error)
     (hd : zvecDeref key = fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨a83, h83⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:83: public_key failed")
+  obtain ⟨s83, f83⟩ := hfmt a83
+  obtain ⟨a84, h84⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:84: generate_salt failed")
+  obtain ⟨s84, f84⟩ := hfmt a84
+  obtain ⟨a93, h93⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:93: agree_key failed")
+  obtain ⟨s93, f93⟩ := hfmt a93
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, hs, ha, hd, h82, f82, h83, f83, h84, f84, h93, f93,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1, hc83.1, hc84.1, hc93.1]
 /-- conditional: if `aes_gcm_encrypt` fails, then `encrypt_message` returns the same `fail x`.
 Hypotheses: the shared laws for `from_str_nonconst` and `format`, the `context` laws at lines 82,
 83, 84 and 93, and the outcomes of the earlier calls and of this one. -/
@@ -314,6 +525,18 @@ theorem encrypt_message_fail_aes_gcm_encrypt (root : anyhow.Error → ErrRoot)
     (hd : zvecDeref key = ok ks)
     (he : keystore2_crypto.aes_gcm_encrypt message ks = fail x) :
     ec_crypto.ECDHPrivateKey.encrypt_message recipient message = fail x := by
-  sorry
+  obtain ⟨a82, h82⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:82: generate failed")
+  obtain ⟨s82, f82⟩ := hfmt a82
+  obtain ⟨a83, h83⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:83: public_key failed")
+  obtain ⟨s83, f83⟩ := hfmt a83
+  obtain ⟨a84, h84⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:84: generate_salt failed")
+  obtain ⟨s84, f84⟩ := hfmt a84
+  obtain ⟨a93, h93⟩ := hargs (toStr "keystore2/src/ec_crypto.rs:93: agree_key failed")
+  obtain ⟨s93, f93⟩ := hfmt a93
+  unfold ec_crypto.ECDHPrivateKey.encrypt_message
+  simp [hg, hpk, hs, ha, hd, he, h82, f82, h83, f83, h84, f84, h93, f93,
+    core.hint.must_use, CoreOpsTry.branch,
+    CoreOpsTry_traitFromResidualResult.from_residual,
+    FromSame.from, hc82.1, hc83.1, hc84.1, hc93.1]
 
 end Keystore2Verify.EcCrypto

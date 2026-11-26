@@ -25,16 +25,40 @@ recall key_perm_from_i32 (x : Std.I32) :
       (x.val ∈ keyPermNumbers → keyPermValue p = x.val) ∧
       (x.val ∉ keyPermNumbers → p = permission.KeyPerm.None)
 
+/-- info: 'Keystore2Verify.Permission.key_perm_from_i32' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_from_i32
+
+
 recall key_perm_into_i32 (p : permission.KeyPerm) :
     ∃ v, i32FromKeyPerm p = ok v ∧ v.val = keyPermValue p
+
+/-- info: 'Keystore2Verify.Permission.key_perm_into_i32' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_into_i32
+
 
 recall key_perm_round_trip (p : permission.KeyPerm) (v : Std.I32)
     (h : i32FromKeyPerm p = ok v) :
     keyPermFromI32 v = ok p
 
+/-- info: 'Keystore2Verify.Permission.key_perm_round_trip' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_round_trip
+
+
 recall key_perm_into_i32_injective (p q : permission.KeyPerm) (v : Std.I32)
     (hp : i32FromKeyPerm p = ok v)
     (hq : i32FromKeyPerm q = ok v) : p = q
+
+/-- info: 'Keystore2Verify.Permission.key_perm_into_i32_injective' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_into_i32_injective
+
 
 recall key_perm_name :
     keyPermName .None = ok (toStr "none") ∧
@@ -50,16 +74,45 @@ recall key_perm_name :
     keyPermName .UseDevId = ok (toStr "use_dev_id") ∧
     keyPermName .ConvertStorageKeyToEphemeral = ok (toStr "convert_storage_key_to_ephemeral")
 
+/-- info: 'Keystore2Verify.Permission.key_perm_name' depends on axioms: [propext, Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_name
+
+
 recall key_perm_name_injective (p q : permission.KeyPerm) (s : Str)
     (hp : keyPermName p = ok s) (hq : keyPermName q = ok s) : p = q
+
+/-- info: 'Keystore2Verify.Permission.key_perm_name_injective' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_name_injective
+
 
 recall key_perm_class_name (p : permission.KeyPerm) :
     keyPermClassName p = ok (toStr "keystore2_key")
 
+/-- info: 'Keystore2Verify.Permission.key_perm_class_name' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_class_name
+
+
 recall key_perm_clone (p : permission.KeyPerm) : keyPermClone p = ok p
+
+/-- info: 'Keystore2Verify.Permission.key_perm_clone' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in
+#print axioms key_perm_clone
+
 
 recall key_perm_eq (p q : permission.KeyPerm) :
     ∃ b, keyPermEq p q = ok b ∧ (b = true ↔ p = q)
+
+/-- info: 'Keystore2Verify.Permission.key_perm_eq' depends on axioms: [propext, Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_eq
+
 
 end KeyPerm
 
@@ -77,16 +130,40 @@ recall keystore_perm_from_i32 (x : Std.I32) :
       (x.val ∈ keystorePermNumbers → keystorePermValue p = x.val) ∧
       (x.val ∉ keystorePermNumbers → p = permission.KeystorePerm.None)
 
+/-- info: 'Keystore2Verify.Permission.keystore_perm_from_i32' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_from_i32
+
+
 recall keystore_perm_into_i32 (p : permission.KeystorePerm) :
     ∃ v, i32FromKeystorePerm p = ok v ∧ v.val = keystorePermValue p
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_into_i32' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_into_i32
+
 
 recall keystore_perm_round_trip (p : permission.KeystorePerm) (v : Std.I32)
     (h : i32FromKeystorePerm p = ok v) :
     keystorePermFromI32 v = ok p
 
+/-- info: 'Keystore2Verify.Permission.keystore_perm_round_trip' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_round_trip
+
+
 recall keystore_perm_into_i32_injective (p q : permission.KeystorePerm) (v : Std.I32)
     (hp : i32FromKeystorePerm p = ok v)
     (hq : i32FromKeystorePerm q = ok v) : p = q
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_into_i32_injective' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_into_i32_injective
+
 
 recall keystore_perm_name :
     keystorePermName .None = ok (toStr "none") ∧
@@ -106,16 +183,46 @@ recall keystore_perm_name :
     keystorePermName .GetAttestationKey = ok (toStr "get_attestation_key") ∧
     keystorePermName .GetLastAuthTime = ok (toStr "get_last_auth_time")
 
+/-- info: 'Keystore2Verify.Permission.keystore_perm_name' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_name
+
+
 recall keystore_perm_name_injective (p q : permission.KeystorePerm) (s : Str)
     (hp : keystorePermName p = ok s) (hq : keystorePermName q = ok s) : p = q
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_name_injective' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_name_injective
+
 
 recall keystore_perm_class_name (p : permission.KeystorePerm) :
     keystorePermClassName p = ok (toStr "keystore2")
 
+/-- info: 'Keystore2Verify.Permission.keystore_perm_class_name' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_class_name
+
+
 recall keystore_perm_clone (p : permission.KeystorePerm) : keystorePermClone p = ok p
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_clone' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_clone
+
 
 recall keystore_perm_eq (p q : permission.KeystorePerm) :
     ∃ b, keystorePermEq p q = ok b ∧ (b = true ↔ p = q)
+
+/-- info: 'Keystore2Verify.Permission.keystore_perm_eq' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms keystore_perm_eq
+
 
 end KeystorePerm
 
@@ -132,21 +239,61 @@ open CoreCmpPartialOrdKeyPermSet renaming partial_cmp → setPartialCmp
 recall key_perm_set_from_key_perm (p : permission.KeyPerm) :
     ∃ s, setFromKeyPerm p = ok s ∧ s.val = keyPermValue p
 
+/-- info: 'Keystore2Verify.Permission.key_perm_set_from_key_perm' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_from_key_perm
+
+
 recall key_perm_set_from_i32 (x : Std.I32) : setFromI32 x = ok x
+
+/-- info: 'Keystore2Verify.Permission.key_perm_set_from_i32' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_from_i32
+
 
 recall i32_from_key_perm_set (s : permission.KeyPermSet) :
     i32FromKeyPermSet s = ok s
 
+/-- info: 'Keystore2Verify.Permission.i32_from_key_perm_set' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms i32_from_key_perm_set
+
+
 recall key_perm_set_clone (s : permission.KeyPermSet) : setClone s = ok s
+
+/-- info: 'Keystore2Verify.Permission.key_perm_set_clone' depends on axioms: [propext,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_clone
+
 
 recall key_perm_set_eq (a b : permission.KeyPermSet) :
     ∃ r, setEq a b = ok r ∧ (r = true ↔ a = b)
 
+/-- info: 'Keystore2Verify.Permission.key_perm_set_eq' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in
+#print axioms key_perm_set_eq
+
+
 recall key_perm_set_cmp (a b : permission.KeyPermSet) :
     setCmp a b = ok (compare a.val b.val)
 
+/-- info: 'Keystore2Verify.Permission.key_perm_set_cmp' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs in
+#print axioms key_perm_set_cmp
+
+
 recall key_perm_set_partial_cmp (a b : permission.KeyPermSet) :
     setPartialCmp a b = ok (some (compare a.val b.val))
+
+/-- info: 'Keystore2Verify.Permission.key_perm_set_partial_cmp' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_partial_cmp
+
 
 end KeyPermSet
 
@@ -159,10 +306,22 @@ recall includes_ok {T : Type} (inst : core.convert.Into T permission.KeyPermSet)
     ∃ b, permission.KeyPermSet.includes inst self other = ok b ∧
       (b = true ↔ Includes self o)
 
+/-- info: 'Keystore2Verify.Permission.includes_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms includes_ok
+
 recall includes_fail {T : Type} (inst : core.convert.Into T permission.KeyPermSet)
     (self : permission.KeyPermSet) (other : T) (x : Error)
     (h : inst.into other = fail x) :
     permission.KeyPermSet.includes inst self other = fail x
+
+/-- info: 'Keystore2Verify.Permission.includes_fail' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms includes_fail
 
 recall includes_key_perm (self : permission.KeyPermSet) (p : permission.KeyPerm) :
     ∃ o b, CoreConvertFromKeyPerm.from p = ok o ∧
@@ -170,19 +329,43 @@ recall includes_key_perm (self : permission.KeyPermSet) (p : permission.KeyPerm)
         (core.convert.IntoFrom CoreConvertFromKeyPerm) self p = ok b ∧
       (b = true ↔ Includes self o)
 
+/-- info: 'Keystore2Verify.Permission.includes_key_perm' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms includes_key_perm
+
+
 recall includes_i32 (self : permission.KeyPermSet) (x : Std.I32) :
     ∃ b, permission.KeyPermSet.includes
         (core.convert.IntoFrom CoreConvertFromI32) self x = ok b ∧
       (b = true ↔ Includes self x)
+
+/-- info: 'Keystore2Verify.Permission.includes_i32' depends on axioms: [propext, Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms includes_i32
+
 
 recall includes_key_perm_set (self other : permission.KeyPermSet) :
     ∃ b, permission.KeyPermSet.includes
         (core.convert.IntoFrom (core.convert.FromSame permission.KeyPermSet)) self other = ok b ∧
       (b = true ↔ Includes self other)
 
+/-- info: 'Keystore2Verify.Permission.includes_key_perm_set' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms includes_key_perm_set
+
+
 recall includes_div {T : Type} (inst : core.convert.Into T permission.KeyPermSet)
     (self : permission.KeyPermSet) (other : T) (h : inst.into other = .div) :
     permission.KeyPermSet.includes inst self other = .div
+
+/-- info: 'Keystore2Verify.Permission.includes_div' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms includes_div
 
 end Includes
 
@@ -196,21 +379,51 @@ open permission.KeyPerm.Insts.CoreConvertFromI32 renaming «from» → keyPermFr
 recall into_iter_new (v : permission.KeyPermSet) :
     IntoIter.new v = ok { vec := v, pos := 0#u8 }
 
+/-- info: 'Keystore2Verify.Permission.into_iter_new' depends on axioms: [propext, Classical.choice,
+ Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms into_iter_new
+
+
 recall key_perm_set_into_iter (v : permission.KeyPermSet) :
     CoreIterTraitsCollectIntoIteratorKeyPermIntoIter.into_iter v =
       ok { vec := v, pos := 0#u8 }
+
+/-- info: 'Keystore2Verify.Permission.key_perm_set_into_iter' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms key_perm_set_into_iter
+
 
 recall into_iter_next_some (it : permission.perm.IntoIter) (i : Nat)
     (hi : NextBit it.vec it.pos.val i) :
     ∃ kp it', keyPermFromI32 (bitVal i) = ok kp ∧ iterNext it = ok (some kp, it') ∧
       it'.vec = it.vec ∧ it'.pos.val = i + 1
 
+/-- info: 'Keystore2Verify.Permission.into_iter_next_some' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms into_iter_next_some
+
+
 recall into_iter_next_none (it : permission.perm.IntoIter) (hpos : it.pos.val ≤ 32)
     (hnone : ∀ j, it.pos.val ≤ j → j < 32 → ¬ HasBit it.vec j) :
     ∃ it', iterNext it = ok (none, it') ∧ it'.vec = it.vec ∧ it'.pos.val = 32
 
+/-- info: 'Keystore2Verify.Permission.into_iter_next_none' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms into_iter_next_none
+
+
 recall into_iter_next_pos_too_large (it : permission.perm.IntoIter) (hpos : 32 < it.pos.val) :
     ∃ x, iterNext it = fail x
+
+/-- info: 'Keystore2Verify.Permission.into_iter_next_pos_too_large' depends on axioms: [propext,
+ Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms into_iter_next_pos_too_large
+
 
 end IntoIter
 
@@ -227,12 +440,49 @@ recall check_keystore_permission_ok (root : anyhow.Error → ErrRoot)
       perm = ok (.Ok ())) :
     permission.check_keystore_permission caller_ctx perm = ok (.Ok ())
 
+/-- info: 'Keystore2Verify.Permission.check_keystore_permission_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ core.result.Result.Insts.AnyhowContext.context] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_keystore_permission_ok
+
 recall check_keystore_permission_getcon_err (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (caller_ctx : CStr) (perm : permission.KeystorePerm)
     (e : anyhow.Error) (hget : keystore2_selinux.getcon = ok (.Err e)) :
     ∃ e', permission.check_keystore_permission caller_ctx perm = ok (.Err e') ∧
       root e' = root e
+
+/-- info: 'Keystore2Verify.Permission.check_keystore_permission_getcon_err'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ core.result.Result.Insts.AnyhowContext.context] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_keystore_permission_getcon_err
 
 recall check_keystore_permission_check_err (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -243,10 +493,46 @@ recall check_keystore_permission_check_err (root : anyhow.Error → ErrRoot)
       perm = ok (.Err e)) :
     permission.check_keystore_permission caller_ctx perm = ok (.Err e)
 
+/-- info: 'Keystore2Verify.Permission.check_keystore_permission_check_err'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ core.result.Result.Insts.AnyhowContext.context] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_keystore_permission_check_err
+
 recall check_keystore_permission_getcon_fail (caller_ctx : CStr)
     (perm : permission.KeystorePerm) (x : Error)
     (hget : keystore2_selinux.getcon = fail x) :
     permission.check_keystore_permission caller_ctx perm = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_keystore_permission_getcon_fail'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ core.result.Result.Insts.AnyhowContext.context] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_keystore_permission_getcon_fail
 
 recall check_keystore_permission_check_fail (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -257,12 +543,50 @@ recall check_keystore_permission_check_fail (root : anyhow.Error → ErrRoot)
       perm = fail x) :
     permission.check_keystore_permission caller_ctx perm = fail x
 
+/-- info: 'Keystore2Verify.Permission.check_keystore_permission_check_fail'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ core.result.Result.Insts.AnyhowContext.context] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_keystore_permission_check_fail
+
 recall check_keystore_permission_deref_fail (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (caller_ctx : CStr) (perm : permission.KeystorePerm)
     (ctx : keystore2_selinux.Context) (x : Error)
     (hget : keystore2_selinux.getcon = ok (.Ok ctx)) (hc : contextCStr ctx = fail x) :
     permission.check_keystore_permission caller_ctx perm = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_keystore_permission_deref_fail'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ core.result.Result.Insts.AnyhowContext.context] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_keystore_permission_deref_fail
 
 recall check_keystore_permission_ok_of_result (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -271,6 +595,25 @@ recall check_keystore_permission_ok_of_result (root : anyhow.Error → ErrRoot)
     ∃ ctx c, keystore2_selinux.getcon = ok (.Ok ctx) ∧ contextCStr ctx = ok c ∧
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c perm =
         ok (.Ok ())
+
+/-- info: 'Keystore2Verify.Permission.check_keystore_permission_ok_of_result'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ core.result.Result.Insts.AnyhowContext.context] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_keystore_permission_ok_of_result
 
 end CheckKeystorePermission
 
@@ -287,6 +630,34 @@ recall check_grant_permission_foreign_app (root : anyhow.Error → ErrRoot)
     ∃ e, permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Err e) ∧
       root e = deniedRoot
 
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_foreign_app'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_foreign_app
+
 recall check_grant_permission_app_getcon_err (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
@@ -295,6 +666,34 @@ recall check_grant_permission_app_getcon_err (root : anyhow.Error → ErrRoot)
     (e : anyhow.Error) (hget : keystore2_selinux.getcon = ok (.Err e)) :
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
         ok (.Err e') ∧ root e' = root e
+
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_app_getcon_err'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_app_getcon_err
 
 recall check_grant_permission_selinux_lookup_err (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -305,12 +704,68 @@ recall check_grant_permission_selinux_lookup_err (root : anyhow.Error → ErrRoo
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
         ok (.Err e') ∧ root e' = root e
 
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_selinux_lookup_err'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_selinux_lookup_err
+
 recall check_grant_permission_app_getcon_fail
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
     (access_vec : permission.KeyPermSet) (key : KeyDesc)
     (hdom : key.domain = domainApp) (heq : caller_uid = key.nspace)
     (x : Error) (hget : keystore2_selinux.getcon = fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_app_getcon_fail'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_app_getcon_fail
 
 recall check_grant_permission_selinux_lookup_fail
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
@@ -319,6 +774,34 @@ recall check_grant_permission_selinux_lookup_fail
     (x : Error) (hlook : permission.lookup_keystore2_key_context key.nspace = fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x
 
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_selinux_lookup_fail'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_selinux_lookup_fail
+
 recall check_grant_permission_other_domain (root : anyhow.Error → ErrRoot)
     (hfmt : AllocFmtFormatSpec) (hctx : KsStringCtxLaw root)
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
@@ -326,6 +809,34 @@ recall check_grant_permission_other_domain (root : anyhow.Error → ErrRoot)
     (happ : key.domain ≠ domainApp) (hsel : key.domain ≠ domainSelinux) :
     ∃ e, permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Err e) ∧
       root e = .ks sysError
+
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_other_domain'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_other_domain
 
 recall check_grant_permission_grant_check_err (root : anyhow.Error → ErrRoot)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -342,6 +853,34 @@ recall check_grant_permission_grant_check_err (root : anyhow.Error → ErrRoot)
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
         ok (.Err e') ∧ root e' = root e
 
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_grant_check_err'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_grant_check_err
+
 recall check_grant_permission_deref_fail (root : anyhow.Error → ErrRoot)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (caller_uid : utils.AppUid) (caller_ctx : CStr)
@@ -353,6 +892,34 @@ recall check_grant_permission_deref_fail (root : anyhow.Error → ErrRoot)
         permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)))
     (x : Error) (hc : contextCStr ctx = fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_deref_fail'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_deref_fail
 
 recall check_grant_permission_grant_check_fail (root : anyhow.Error → ErrRoot)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -367,6 +934,34 @@ recall check_grant_permission_grant_check_fail (root : anyhow.Error → ErrRoot)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.Grant = fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_grant_check_fail'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_grant_check_fail
 
 recall check_grant_permission_grant_in_set (root : anyhow.Error → ErrRoot)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -384,6 +979,34 @@ recall check_grant_permission_grant_in_set (root : anyhow.Error → ErrRoot)
     ∃ e, permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Err e) ∧
       root e = deniedRoot
 
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_grant_in_set'
+ depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_grant_in_set
+
 recall check_grant_permission_ok_empty (root : anyhow.Error → ErrRoot)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (hctxU : AnyhowStrCtxLaw root Unit)
@@ -398,6 +1021,33 @@ recall check_grant_permission_ok_empty (root : anyhow.Error → ErrRoot)
       permission.KeyPerm.Grant = ok (.Ok ()))
     (hempty : ∀ i, i < 32 → ¬ HasBit access_vec i) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Ok ())
+
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_ok_empty' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_ok_empty
 
 recall check_grant_permission_ok (root : anyhow.Error → ErrRoot)
     (hfmt : AllocFmtFormatSpec)
@@ -417,6 +1067,33 @@ recall check_grant_permission_ok (root : anyhow.Error → ErrRoot)
       keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
         ok (.Ok ())) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = ok (.Ok ())
+
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_ok
 
 recall check_grant_permission_loop_err (root : anyhow.Error → ErrRoot)
     (hfmt : AllocFmtFormatSpec)
@@ -443,6 +1120,33 @@ recall check_grant_permission_loop_err (root : anyhow.Error → ErrRoot)
     ∃ e', permission.check_grant_permission caller_uid caller_ctx access_vec key =
         ok (.Err e') ∧ root e' = root e
 
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_loop_err' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_loop_err
+
 recall check_grant_permission_loop_fail (root : anyhow.Error → ErrRoot)
     (hfmt : AllocFmtFormatSpec)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
@@ -467,6 +1171,33 @@ recall check_grant_permission_loop_fail (root : anyhow.Error → ErrRoot)
       fail x) :
     permission.check_grant_permission caller_uid caller_ctx access_vec key = fail x
 
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_loop_fail' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_loop_fail
+
 recall check_grant_permission_of_ok (root : anyhow.Error → ErrRoot)
     (hctxC : AnyhowStrCtxLaw root keystore2_selinux.Context)
     (hctxU : AnyhowStrCtxLaw root Unit) (hctxS : AnyhowStringCtxLaw root Unit)
@@ -487,6 +1218,33 @@ recall check_grant_permission_of_ok (root : anyhow.Error → ErrRoot)
           keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c kp =
             ok (.Ok ())
 
+/-- info: 'Keystore2Verify.Permission.check_grant_permission_of_ok' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound,
+ anyhow.Error,
+ binder.ExceptionCode,
+ binder.StatusCode,
+ keystore2_selinux.check_permission,
+ keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context,
+ alloc.fmt.format,
+ Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt,
+ alloc.ffi.c_str.CString,
+ CStr,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context,
+ error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt,
+ keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt,
+ keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt,
+ anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_grant_permission_of_ok
+
 end CheckGrantPermission
 
 section CheckKeyPermission
@@ -499,11 +1257,41 @@ recall check_key_permission_covered
     (hcov : Covers perm access_vector) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = ok (.Ok ())
 
+/-- info: 'Keystore2Verify.Permission.check_key_permission_covered' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_covered
+
+
 recall check_key_permission_none_perm
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (key : KeyDesc)
     (av : permission.KeyPermSet) :
     permission.check_key_permission caller_uid caller_ctx permission.KeyPerm.None key (some av) =
       ok (.Ok ())
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_none_perm' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_none_perm
+
 
 recall check_key_permission_foreign_app (root : anyhow.Error → ErrRoot)
     (hctx : SelinuxStrCtxLaw root)
@@ -513,6 +1301,20 @@ recall check_key_permission_foreign_app (root : anyhow.Error → ErrRoot)
     (hdom : key.domain = domainApp) (hne : caller_uid ≠ key.nspace) :
     ∃ e, permission.check_key_permission caller_uid caller_ctx perm key access_vector =
         ok (.Err e) ∧ root e = deniedRoot
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_foreign_app' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_foreign_app
 
 recall check_key_permission_app_getcon_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -525,6 +1327,20 @@ recall check_key_permission_app_getcon_err (root : anyhow.Error → ErrRoot)
     ∃ e', permission.check_key_permission caller_uid caller_ctx perm key access_vector =
         ok (.Err e') ∧ root e' = root e
 
+/-- info: 'Keystore2Verify.Permission.check_key_permission_app_getcon_err' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_app_getcon_err
+
 recall check_key_permission_lookup_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
@@ -536,6 +1352,20 @@ recall check_key_permission_lookup_err (root : anyhow.Error → ErrRoot)
     ∃ e', permission.check_key_permission caller_uid caller_ctx perm key access_vector =
         ok (.Err e') ∧ root e' = root e
 
+/-- info: 'Keystore2Verify.Permission.check_key_permission_lookup_err' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_lookup_err
+
 recall check_key_permission_app_getcon_fail
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
     (key : KeyDesc) (access_vector : Option permission.KeyPermSet)
@@ -543,6 +1373,20 @@ recall check_key_permission_app_getcon_fail
     (hdom : key.domain = domainApp) (heq : caller_uid = key.nspace)
     (x : Error) (hget : keystore2_selinux.getcon = fail x) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_app_getcon_fail' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_app_getcon_fail
 
 recall check_key_permission_lookup_fail
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
@@ -552,6 +1396,20 @@ recall check_key_permission_lookup_fail
     (x : Error) (hlook : permission.lookup_keystore2_key_context key.nspace = fail x) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = fail x
 
+/-- info: 'Keystore2Verify.Permission.check_key_permission_lookup_fail' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_lookup_fail
+
 recall check_key_permission_grant_not_granted (root : anyhow.Error → ErrRoot)
     (hfmt : AllocFmtFormatSpec) (hctx : SelinuxStringCtxLaw root)
     (caller_uid : utils.AppUid) (caller_ctx : CStr) (perm : permission.KeyPerm)
@@ -559,6 +1417,20 @@ recall check_key_permission_grant_not_granted (root : anyhow.Error → ErrRoot)
     (hnc : ¬ Covers perm (some av)) (hdom : key.domain = domainGrant) :
     ∃ e, permission.check_key_permission caller_uid caller_ctx perm key (some av) =
         ok (.Err e) ∧ root e = deniedRoot
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_grant_not_granted' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_grant_not_granted
 
 recall check_key_permission_grant_no_vector (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -568,6 +1440,20 @@ recall check_key_permission_grant_no_vector (root : anyhow.Error → ErrRoot)
     ∃ e, permission.check_key_permission caller_uid caller_ctx perm key none = ok (.Err e) ∧
       root e = .ks sysError
 
+/-- info: 'Keystore2Verify.Permission.check_key_permission_grant_no_vector' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_grant_no_vector
+
 recall check_key_permission_key_id (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : KsStringCtxLaw root)
@@ -576,6 +1462,20 @@ recall check_key_permission_key_id (root : anyhow.Error → ErrRoot)
     (hnc : ¬ Covers perm access_vector) (hdom : key.domain = domainKeyId) :
     ∃ e, permission.check_key_permission caller_uid caller_ctx perm key access_vector =
         ok (.Err e) ∧ root e = .ks sysError
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_key_id' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_key_id
 
 recall check_key_permission_unknown_domain (root : anyhow.Error → ErrRoot)
     (hfmt : AllocFmtFormatSpec) (hctx : KsStringCtxLaw root)
@@ -587,6 +1487,20 @@ recall check_key_permission_unknown_domain (root : anyhow.Error → ErrRoot)
     (h4 : key.domain ≠ domainKeyId) :
     ∃ e, permission.check_key_permission caller_uid caller_ctx perm key access_vector =
         ok (.Err e) ∧ root e = .ks invalidArgumentError
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_unknown_domain' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_unknown_domain
 
 recall check_key_permission_blob_manage_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -601,6 +1515,20 @@ recall check_key_permission_blob_manage_err (root : anyhow.Error → ErrRoot)
       permission.KeyPerm.ManageBlob = ok (.Err e)) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector =
       ok (.Err e)
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_blob_manage_err' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_blob_manage_err
 
 recall check_key_permission_app_selinux_check_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -617,6 +1545,20 @@ recall check_key_permission_app_selinux_check_ok (root : anyhow.Error → ErrRoo
       perm = ok (.Ok ())) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector =
       ok (.Ok ())
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_app_selinux_check_ok' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_app_selinux_check_ok
 
 recall check_key_permission_app_selinux_check_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -635,6 +1577,20 @@ recall check_key_permission_app_selinux_check_err (root : anyhow.Error → ErrRo
     permission.check_key_permission caller_uid caller_ctx perm key access_vector =
       ok (.Err e)
 
+/-- info: 'Keystore2Verify.Permission.check_key_permission_app_selinux_check_err' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_app_selinux_check_err
+
 recall check_key_permission_blob_check_ok (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
@@ -650,6 +1606,20 @@ recall check_key_permission_blob_check_ok (root : anyhow.Error → ErrRoot)
       perm = ok (.Ok ())) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector =
       ok (.Ok ())
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_blob_check_ok' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_blob_check_ok
 
 recall check_key_permission_blob_check_err (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -668,6 +1638,20 @@ recall check_key_permission_blob_check_err (root : anyhow.Error → ErrRoot)
     permission.check_key_permission caller_uid caller_ctx perm key access_vector =
       ok (.Err e)
 
+/-- info: 'Keystore2Verify.Permission.check_key_permission_blob_check_err' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_blob_check_err
+
 recall check_key_permission_app_selinux_deref_fail (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
@@ -681,6 +1665,20 @@ recall check_key_permission_app_selinux_deref_fail (root : anyhow.Error → ErrR
         permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx)))
     (x : Error) (hc : contextCStr ctx = fail x) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_app_selinux_deref_fail' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_app_selinux_deref_fail
 
 recall check_key_permission_app_selinux_check_fail (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -698,6 +1696,20 @@ recall check_key_permission_app_selinux_check_fail (root : anyhow.Error → ErrR
       perm = fail x) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = fail x
 
+/-- info: 'Keystore2Verify.Permission.check_key_permission_app_selinux_check_fail' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_app_selinux_check_fail
+
 recall check_key_permission_blob_deref_fail (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
     (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
@@ -708,6 +1720,20 @@ recall check_key_permission_blob_deref_fail (root : anyhow.Error → ErrRoot)
     (hlook : permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx))
     (x : Error) (hc : contextCStr ctx = fail x) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_blob_deref_fail' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_blob_deref_fail
 
 recall check_key_permission_blob_manage_fail (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -721,6 +1747,20 @@ recall check_key_permission_blob_manage_fail (root : anyhow.Error → ErrRoot)
     (hmanage : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       permission.KeyPerm.ManageBlob = fail x) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_blob_manage_fail' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_blob_manage_fail
 
 recall check_key_permission_blob_check_fail (root : anyhow.Error → ErrRoot)
     (hargs : CoreFmtArgumentsFromStrNonconstSpec) (hfmt : AllocFmtFormatSpec)
@@ -737,6 +1777,20 @@ recall check_key_permission_blob_check_fail (root : anyhow.Error → ErrRoot)
     (hcheck : keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
       perm = fail x) :
     permission.check_key_permission caller_uid caller_ctx perm key access_vector = fail x
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_blob_check_fail' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_blob_check_fail
 
 recall check_key_permission_of_ok (root : anyhow.Error → ErrRoot)
     (hctx : AnyhowStringCtxLaw root keystore2_selinux.Context)
@@ -758,6 +1812,20 @@ recall check_key_permission_of_ok (root : anyhow.Error → ErrRoot)
             permission.lookup_keystore2_key_context key.nspace = ok (.Ok ctx) ∧
             keystore2_selinux.check_permission Keystore2_selinuxClassPermission caller_ctx c
               permission.KeyPerm.ManageBlob = ok (.Ok ())))
+
+/-- info: 'Keystore2Verify.Permission.check_key_permission_of_ok' depends on axioms: [propext,
+ Classical.choice, Quot.sound, anyhow.Error, binder.ExceptionCode, binder.StatusCode,
+ keystore2_selinux.check_permission, keystore2_selinux.getcon,
+ permission.lookup_keystore2_key_context, alloc.fmt.format, Shared0T.Insts.CoreFmtDisplay.fmt,
+ Str.Insts.CoreFmtDisplay.fmt, alloc.ffi.c_str.CString, CStr, core.fmt.Arguments.from_str_nonconst,
+ anyhow.Error.Insts.AnyhowContextExtStdError.ext_context, error.Error.Insts.CoreFmtDebug.fmt,
+ error.Error.Insts.CoreFmtDisplay.fmt, keystore2_selinux.Context.Insts.CoreOpsDerefDerefCStr.deref,
+ keystore2_selinux.Error.Insts.CoreFmtDebug.fmt, keystore2_selinux.Error.Insts.CoreFmtDisplay.fmt,
+ alloc.string.String.Insts.CoreFmtDisplay.fmt, anyhow.context.ext.StdError.Blanket.ext_context,
+ core.result.Result.Insts.AnyhowContext.context,
+ android_system_keystore2.aidl.android.system.keystore2.Domain.Domain.Insts.CoreFmtDebug.fmt] -/
+#guard_msgs (whitespace := lax) in
+#print axioms check_key_permission_of_ok
 
 end CheckKeyPermission
 

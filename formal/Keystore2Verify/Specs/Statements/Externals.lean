@@ -14,6 +14,11 @@ recall vecdeque_laws_satisfiable (T : Type) :
       VecDequeClearLaw view clear ∧ VecDequePushBackLaw view push_back ∧
       VecDequeSplitOffLaw view split_off
 
+/-- info: 'Keystore2Verify.Externals.vecdeque_laws_satisfiable' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms vecdeque_laws_satisfiable
+
 recall anyhow_laws_satisfiable :
     ∃ (Err : Type) (root : Err → ErrRoot), ∀ (T C : Type),
     ∃ (newKs : error.Error → Result Err) (newSel : keystore2_selinux.Error → Result Err)
@@ -41,10 +46,20 @@ recall anyhow_laws_satisfiable :
       ResultContextLaw ErrRoot.selinux root resSel ∧
       ResultContextLaw ErrRoot.crypto root resCrypto
 
+/-- info: 'Keystore2Verify.Externals.anyhow_laws_satisfiable' depends on axioms:
+[propext, Quot.sound, binder.ExceptionCode, binder.StatusCode] -/
+#guard_msgs (whitespace := lax) in
+#print axioms anyhow_laws_satisfiable
+
 recall std_laws_satisfiable :
     ∃ (u32 : Array Std.U8 4#usize → Result Std.U32) (i32 : Array Std.U8 4#usize → Result Std.I32)
       (i64 : Array Std.U8 8#usize → Result Std.I64),
       FromNeBytesLaw 4#usize (fun x => x.bv) u32 ∧ FromNeBytesLaw 4#usize (fun x => x.bv) i32 ∧
       FromNeBytesLaw 8#usize (fun x => x.bv) i64
+
+/-- info: 'Keystore2Verify.Externals.std_laws_satisfiable' depends on axioms:
+[propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms std_laws_satisfiable
 
 end Keystore2Verify.Externals

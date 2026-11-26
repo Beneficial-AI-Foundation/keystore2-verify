@@ -1,4 +1,4 @@
-import Keystore2Verify.Specs.Defs.SwKeyblob
+import Keystore2Verify.Proofs.Lemmas.SwKeyblobReaders
 
 namespace Keystore2Verify.SwKeyblob
 open Aeneas Aeneas.Std Result keystore2
@@ -11,7 +11,7 @@ law `SizeOfLaw Std.U32 4` for `size_of`. -/
 theorem consume_u32_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrFmtLaws root)
     (hsize : SizeOfLaw Std.U32 4) (data : Slice Std.U8) (h : data.val.length < 4) :
     ∃ e, sw_keyblob.consume_u32 data = ok (.Err e, data) ∧ IsBlobErr root e := by
-  sorry
+  exact consume_u32_err_aux root hlaw hsize data h
 
 /-- conditional: on a slice of at least 4 bytes, `consume_u32` returns the number that the first
 4 bytes spell in host byte order (little-endian: `u32At`), and the slice moves forward by 4
@@ -20,5 +20,5 @@ theorem consume_u32_ok (hsize : SizeOfLaw Std.U32 4) (hfrom : CoreNumU32FromNeBy
     (data : Slice Std.U8) (h : 4 ≤ data.val.length) :
     ∃ x data', sw_keyblob.consume_u32 data = ok (.Ok x, data') ∧
       x.val = u32At data.val 0 ∧ data'.val = data.val.drop 4 := by
-  sorry
+  exact consume_u32_ok_aux hsize hfrom data h
 end Keystore2Verify.SwKeyblob

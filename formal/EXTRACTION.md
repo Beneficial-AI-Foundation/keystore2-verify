@@ -131,8 +131,9 @@ represented. This is a limit of the model, not a determinism claim about a runni
   equal derived key bytes at the sender and recipient, and inverse AES operations on those bytes.
   The present length contracts supply none of these identities.
 
-The theorem origins use `sorry` at this milestone. Building the recalls checks their types, not
-that the statements are true or their external hypotheses hold on Android.
+The theorem origins are proved. Building the recalls checks that each restatement is the proved
+statement, and the guard after each recall pins the axioms its proof rests on. Neither checks that
+the external hypotheses hold on Android.
 
 `Extraction/translation.json` maps each Rust item to its Lean name. `Extraction/.fvs-publication.json`
 records the hashes of the published files.

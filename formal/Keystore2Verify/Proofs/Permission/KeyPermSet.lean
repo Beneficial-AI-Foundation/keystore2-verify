@@ -10,42 +10,44 @@ open CoreCloneClone renaming clone → setClone
 open CoreCmpPartialEqKeyPermSet renaming eq → setEq
 open CoreCmpOrd renaming cmp → setCmp
 open CoreCmpPartialOrdKeyPermSet renaming partial_cmp → setPartialCmp
+open core.cmp.impls
 
 /-- exact: `KeyPermSet::from(KeyPerm)` never fails. The set is the number of the permission
 (`keyPermValue`), so `None` gives the empty set and every other variant gives one bit. -/
 theorem key_perm_set_from_key_perm (p : permission.KeyPerm) :
     ∃ s, setFromKeyPerm p = ok s ∧ s.val = keyPermValue p := by
-  sorry
+  refine ⟨IScalar.cast .I32 (read_discriminant p), by simp [setFromKeyPerm, lift], ?_⟩
+  cases p <;> rfl
 
 /-- exact: `KeyPermSet::from(i32)` never fails and keeps every bit, the bits that are no `KeyPerm`
 included. -/
 theorem key_perm_set_from_i32 (x : Std.I32) : setFromI32 x = ok x := by
-  sorry
+  rfl
 
 /-- exact: `i32::from(KeyPermSet)` never fails and returns the number of the set unchanged. -/
 theorem i32_from_key_perm_set (s : permission.KeyPermSet) :
     i32FromKeyPermSet s = ok s := by
-  sorry
+  rfl
 
 /-- exact: `clone` returns the same set. -/
 theorem key_perm_set_clone (s : permission.KeyPermSet) : setClone s = ok s := by
-  sorry
+  rfl
 
 /-- exact: `eq` never fails and is `true` exactly when the two numbers are equal. -/
 theorem key_perm_set_eq (a b : permission.KeyPermSet) :
     ∃ r, setEq a b = ok r ∧ (r = true ↔ a = b) := by
-  sorry
+  exact ⟨_, rfl, by simp⟩
 
 /-- exact: `cmp` never fails and compares the numbers as signed `i32` values. It is not the
 inclusion of sets: for example the set with every bit (the number -1) is less than the empty
 set. -/
 theorem key_perm_set_cmp (a b : permission.KeyPermSet) :
     setCmp a b = ok (compare a.val b.val) := by
-  sorry
+  simp [setCmp, CoreCmpOrd.cmp, OrdI32.cmp]
 
 /-- exact: `partial_cmp` never fails and returns `Some` of the result of `cmp`. -/
 theorem key_perm_set_partial_cmp (a b : permission.KeyPermSet) :
     setPartialCmp a b = ok (some (compare a.val b.val)) := by
-  sorry
+  simp [setPartialCmp, setCmp, CoreCmpOrd.cmp, OrdI32.cmp]
 
 end Keystore2Verify.Permission

@@ -11,12 +11,24 @@ open keystore2.android_hardware_security_keymint.aidl.android.hardware.security.
 theorem consume_u8_err (root : anyhow.Error → ErrRoot) (hlaw : BlobErrLaws root)
     (hfirst : CoreSliceFirstSpec) (data : Slice Std.U8) (h : data.val = []) :
     ∃ e, sw_keyblob.consume_u8 data = ok (.Err e, data) ∧ IsBlobErr root e := by
-  sorry
+  obtain ⟨⟨hnew, hctx, hfmt⟩, hstr⟩ := hlaw
+  obtain ⟨e0, he0, hr0⟩ := hnew (error.Error.Km ErrorCode.ErrorCode.INVALID_KEY_BLOB)
+  obtain ⟨a, ha⟩ := hstr (toStr "keystore2/src/sw_keyblob.rs:303: failed to find 1 byte")
+  obtain ⟨s, hs⟩ := hfmt a
+  obtain ⟨e1, he1, hr1⟩ := hctx e0 s
+  have hf := hfirst data
+  simp only [h, List.head?_nil] at hf
+  refine ⟨e1, ?_, by unfold IsBlobErr; rw [hr1, hr0]⟩
+  unfold sw_keyblob.consume_u8
+  simp [hf, he0, ha, hs, core.hint.must_use, he1]
 
 /-- conditional: on a slice that starts with the byte `b`, `consume_u8` returns `Ok b`, and the
 slice moves forward by one byte. Hypothesis: the law `CoreSliceFirstSpec` for `first`. -/
 theorem consume_u8_ok (hfirst : CoreSliceFirstSpec) (data : Slice Std.U8) (b : Std.U8)
     (rest : List Std.U8) (h : data.val = b :: rest) :
     ∃ data', sw_keyblob.consume_u8 data = ok (.Ok b, data') ∧ data'.val = rest := by
-  sorry
+  have hf := hfirst data
+  simp only [h, List.head?_cons] at hf
+  unfold sw_keyblob.consume_u8
+  simp [hf, core.slice.index.SliceIndexRangeFromUsizeSlice.index, Slice.drop, h]
 end Keystore2Verify.SwKeyblob
