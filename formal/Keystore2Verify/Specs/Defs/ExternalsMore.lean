@@ -27,4 +27,15 @@ fails (the clone copies the `mac` vector). Source: the AIDL stand-in derives `Cl
 def HardwareAuthTokenCloneSpec : Prop :=
   HardwareAuthTokenCloneAssumption HardwareAuthToken.HardwareAuthToken.Insts.CoreCloneClone.clone
 
+/-- Assumption about an external function, over the function `must_use`: the call never panics and
+returns its argument. -/
+def AnyhowMustUseAssumption (must_use : anyhow.Error → Result anyhow.Error) : Prop :=
+  ∀ e : anyhow.Error, must_use e = ok e
+
+/-- Assumption about an external function: `anyhow::__private::must_use` (record
+`ks2-ext-anyhow-private-must-use`) never panics and returns its argument. It is
+`AnyhowMustUseAssumption` at the extracted symbol. Source: anyhow's `must_use` returns the error it
+is given. -/
+def AnyhowMustUseSpec : Prop := AnyhowMustUseAssumption anyhow.__private.must_use
+
 end Keystore2Verify.ExternalsMore

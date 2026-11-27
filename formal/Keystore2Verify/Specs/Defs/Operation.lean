@@ -1,4 +1,5 @@
 import Keystore2Verify.Specs.Defs.Externals
+import Keystore2Verify.Specs.Defs.ExternalsMore
 
 /-!
 # Definitions for the statements about `operation.rs`
@@ -31,14 +32,13 @@ def AnyhowKindTraitNewSpec (root : anyhow.Error → ErrRoot) : Prop :=
     (core.convert.IntoFrom (anyhow.Error.Insts.CoreConvertFrom error.Error.Insts.CoreErrorError)))
 
 /-- Assumption about an external function, over the function `must_use`: the call never panics and
-returns its argument.
-Record `ks2-ext-anyhow-private-must-use`. -/
+returns its argument. -/
 def AnyhowMustUseAssumption (must_use : anyhow.Error → Result anyhow.Error) : Prop :=
   ∀ e : anyhow.Error, must_use e = ok e
 
-/-- The closed instance of `AnyhowMustUseAssumption` for `anyhow::__private::must_use` (record
-`ks2-ext-anyhow-private-must-use`). -/
-def AnyhowMustUseSpec : Prop := AnyhowMustUseAssumption anyhow.__private.must_use
+/-- `anyhow::__private::must_use` never panics and returns its argument: the shared assumption about
+this external function, `ExternalsMore.AnyhowMustUseSpec`. -/
+abbrev AnyhowMustUseSpec : Prop := ExternalsMore.AnyhowMustUseSpec
 
 /-- Assumption about an external function, over the function `and_then` and the closure instance
 `inst`: on `None` the call returns `None`; on `Some x` it returns the result of calling the

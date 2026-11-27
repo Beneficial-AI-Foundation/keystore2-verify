@@ -509,9 +509,9 @@ argument. -/
 def AnyhowMustUseAssumption (must_use : anyhow.Error → Result anyhow.Error) : Prop :=
   ∀ e, must_use e = ok e
 
-/-- Assumption about `anyhow::__private::must_use` (record `ks2-ext-anyhow-private-must-use`). -/
-def AnyhowMustUseSpec : Prop :=
-  AnyhowMustUseAssumption anyhow.__private.must_use
+/-- `anyhow::__private::must_use` never panics and returns its argument: the shared assumption about
+this external function, `ExternalsMore.AnyhowMustUseSpec`. -/
+abbrev AnyhowMustUseSpec : Prop := ExternalsMore.AnyhowMustUseSpec
 
 /-! ### Locked keys and parameters -/
 
