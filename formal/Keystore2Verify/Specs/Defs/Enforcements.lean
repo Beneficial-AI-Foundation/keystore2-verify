@@ -1,4 +1,5 @@
 import Keystore2Verify.Specs.Defs.Externals
+import Keystore2Verify.Specs.Defs.ExternalsMore
 import Keystore2Verify.Specs.Defs.Permission
 
 /-!
@@ -95,11 +96,9 @@ Idealisation: allocation never fails. -/
 def CloneIdAssumption {T : Type} (clone : T → Result T) : Prop :=
   ∀ x, clone x = ok x
 
-/-- Assumption about an external function (register record
-`ks2-ext-android-hardware-security-keymint-aidl-android-hardware-security-keymint-hardwareauthtoken-hardwareauthtoken-insts-corecloneclone-clone`).
-`HardwareAuthToken::clone` returns an equal token and does not panic. The type is a plain data
-struct whose derived `Clone` copies each field. -/
-def AuthTokenCloneSpec : Prop := CloneIdAssumption authTokenClone
+/-- The clone of a `HardwareAuthToken` never panics and returns an equal token: the shared
+assumption about this external function, `ExternalsMore.HardwareAuthTokenCloneSpec`. -/
+abbrev AuthTokenCloneSpec : Prop := ExternalsMore.HardwareAuthTokenCloneSpec
 
 /-- Assumption about an external function (register record
 `ks2-ext-core-option-option-insts-corecloneclone-clone`).

@@ -1,4 +1,5 @@
 import Keystore2Verify.Specs.Defs.Externals
+import Keystore2Verify.Specs.Defs.ExternalsMore
 
 /-!
 # Definitions for the statements about `database/perboot.rs`
@@ -39,13 +40,9 @@ def HardwareAuthTokenCloneAssumption
       Result HardwareAuthToken.HardwareAuthToken) : Prop :=
   ∀ t, clone t = ok t
 
-/-- Assumption about an external function: the clone of a `HardwareAuthToken` (register record
-`ks2-ext-android-hardware-security-keymint-aidl-android-hardware-security-keymint-hardwareauthtoken-hardwareauthtoken-insts-corecloneclone-clone`).
-It is `HardwareAuthTokenCloneAssumption` at the extracted symbol. Idealisation: allocation never
-fails (the clone copies the `mac` vector). Source: the AIDL stand-in derives `Clone` for
-`HardwareAuthToken`, and a derived clone copies each field. -/
-def HardwareAuthTokenCloneSpec : Prop :=
-  HardwareAuthTokenCloneAssumption hatClone
+/-- The clone of a `HardwareAuthToken` never panics and returns an equal token: the shared
+assumption about this external function, `ExternalsMore.HardwareAuthTokenCloneSpec`. -/
+abbrev HardwareAuthTokenCloneSpec : Prop := ExternalsMore.HardwareAuthTokenCloneSpec
 
 /-- The number of a secure user id as a signed 64 bit integer. -/
 abbrev idNum (x : utils.SecureUserId) : Int := (x : Std.I64).val

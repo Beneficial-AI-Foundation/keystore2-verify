@@ -1,4 +1,5 @@
 import Keystore2Verify.Specs.Defs.Externals
+import Keystore2Verify.Specs.Defs.ExternalsMore
 
 /-!
 # Definitions for the statements about the types of `database.rs`
@@ -214,10 +215,9 @@ def HardwareAuthTokenCloneAssumption (clone : HardwareAuthToken.HardwareAuthToke
     Result HardwareAuthToken.HardwareAuthToken) : Prop :=
   ∀ t, clone t = ok t
 
-/-- Assumption about `HardwareAuthToken::clone` (record
-`ks2-ext-android-hardware-security-keymint-aidl-android-hardware-security-keymint-hardwareauthtoken-hardwareauthtoken-insts-corecloneclone-clone`). -/
-def HardwareAuthTokenCloneSpec : Prop :=
-  HardwareAuthTokenCloneAssumption hardwareAuthTokenClone
+/-- The clone of a `HardwareAuthToken` never panics and returns an equal token: the shared
+assumption about this external function, `ExternalsMore.HardwareAuthTokenCloneSpec`. -/
+abbrev HardwareAuthTokenCloneSpec : Prop := ExternalsMore.HardwareAuthTokenCloneSpec
 
 /-! ### `HashMap<i64, V>`
 
