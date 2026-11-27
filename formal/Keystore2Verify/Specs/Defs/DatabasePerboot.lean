@@ -6,8 +6,8 @@ import Keystore2Verify.Specs.Defs.ExternalsMore
 
 The per-boot database keeps its auth tokens in a `HashSet` behind a `RwLock`. The translation
 leaves both opaque, so the statements only follow the values that the opaque calls return. This
-file holds the two assumptions about external functions that those statements need. Nothing here
-is an axiom.
+file holds the assumption about the equality of two authenticator types, and an abbreviation of
+the shared assumption about the clone of an auth token. Nothing here is an axiom.
 -/
 
 namespace Keystore2Verify.DatabasePerboot

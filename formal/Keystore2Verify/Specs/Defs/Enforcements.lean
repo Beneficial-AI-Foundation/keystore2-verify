@@ -5,8 +5,9 @@ import Keystore2Verify.Specs.Defs.Permission
 /-!
 # Definitions for the statements about `enforcements.rs`
 
-The `context` assumptions at the call sites of the file, the two new assumptions about external
-functions (`clone` of an auth token and of an optional timestamp token), and the pure model of
+The `context` assumptions at the call sites of the file, the assumptions about two external
+functions (`clone` of an auth token, shared with other spec files, and of an optional timestamp
+token), and the pure model of
 `super_encryption_required`. Nothing here is an axiom.
 -/
 
@@ -89,7 +90,7 @@ abbrev RecvStrCtxAssumption (root : anyhow.Error → ErrRoot) : Prop :=
       (StdBlanket RecvErrorError)
       (Shared0T.Insts.CoreFmtDisplay Str.Insts.CoreFmtDisplay))
 
-/-! ## New assumptions about external functions -/
+/-! ## Assumptions about external functions -/
 
 /-- Assumption about an external function `clone`: it never panics and returns an equal value.
 Idealisation: allocation never fails. -/
