@@ -256,6 +256,7 @@ dependencies = [
  "serde",
  "structured_log",
  "thiserror",
+ "watchdog_rs",
 ]
 
 [[package]]
@@ -559,6 +560,10 @@ checksum = "b67efb37e106e55ce722a510d6b5f9c17f083e5fc79afc2badeb12cc313d9487"
 dependencies = [
  "wit-bindgen",
 ]
+
+[[package]]
+name = "watchdog_rs"
+version = "0.0.0"
 
 [[package]]
 name = "wit-bindgen"

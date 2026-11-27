@@ -38,6 +38,7 @@ members = [
     "fvs-harness/models/keystore2_hal_names",
     "fvs-harness/models/postprocessor_client",
     "fvs-harness/models/rkpd_client",
+    "fvs-harness/models/watchdog_rs",
 ]
 # Trees that carry their own manifests and are not part of this build.
 exclude = [

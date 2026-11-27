@@ -13,9 +13,9 @@ path = "src/lib.rs"
 
 [features]
 default = []
-# Off in this layout: the watchdog crate is not part of the workspace, and the code has its own
-# `cfg(not(feature = "watchdog"))` path. Turning it on needs that crate as a dependency.
-watchdog = []
+# On in Soong (keystore2/Android.bp). Pass `--features watchdog` with `--no-default-features`; the
+# `watchdog_rs` crate is the model in fvs-harness/models/watchdog_rs.
+watchdog = ["dep:watchdog_rs"]
 keystore2_blob_test_utils = []
 
 [dependencies]
@@ -43,6 +43,7 @@ keystore2_apc_compat = { path = "../fvs-harness/models/keystore2_apc_compat" }
 keystore2_hal_names = { path = "../fvs-harness/models/keystore2_hal_names" }
 postprocessor_client = { path = "../fvs-harness/models/postprocessor_client" }
 rkpd_client = { path = "../fvs-harness/models/rkpd_client" }
+watchdog_rs = { path = "../fvs-harness/models/watchdog_rs", optional = true }
 keystore2_crypto = { path = "src/crypto" }
 keystore2_km_compat = { path = "src/km_compat" }
 keystore2_selinux = { path = "selinux" }
