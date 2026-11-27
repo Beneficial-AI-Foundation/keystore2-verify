@@ -1,3 +1,10 @@
 01-errno-platform-accessor.patch
-02-watchdog-off-path-public.patch
 03-legacy-blob-result-ok.patch
+04-grant-delete-sql-without-format.patch
+05-pragma-sql-without-format.patch
+06-rkp-instance-name-without-format.patch
+07-legacy-entry-filename-without-format.patch
+08-blob-filename-without-format.patch
+09-chr-filename-without-format.patch
+10-user-path-name-without-format.patch
+11-is-empty-user-without-format.patch

@@ -1,0 +1,23 @@
+Translation patch: keystore2::database::KeystoreDB::delete_received_grants
+
+Change: keystore2/src/database.rs:2488: each `format!` on this line is replaced, on the same line, by a block that builds the same `String` with `to_owned`, `push_str` and `to_string`: the DELETE statement is built from the literal text before `{AID_USER_OFFSET}`, the decimal rendering of the constant and the literal text after it.
+Why: the translation models the arguments of `format!` as `()` (`core::fmt::Arguments` is `Unit` in the Aeneas library), so the translated function ran a statement whose text the translation left undetermined. `to_owned`, `push_str` and `to_string` are translated as calls whose results depend on their arguments.
+Behaviour: unchanged. The statement text is the same; the bound parameter `user.0` is unchanged. `Display` of a string or an integer with no format options writes the same bytes as `push_str` of the string or of the integer's `to_string`. The string is built at the same point and lives at least as long; no panic is added or removed (allocation failure aborts in both).
+Classification: B
+Assumptions: none.
+Obligations: fork === upstream: the rewritten function behaves as the original on every input.
+Evidence: an independent equivalence review by three reviewers, accepted on 2 of 3; summarised in formal/EXTRACTION-ISSUES.md.
+Independent: yes
+
+diff --git a/keystore2/src/database.rs b/keystore2/src/database.rs
+--- a/keystore2/src/database.rs
++++ b/keystore2/src/database.rs
+@@ -2485,7 +2485,7 @@
+     fn delete_received_grants(tx: &Transaction, user: AndroidUserId) -> Result<bool> {
+         let updated = tx
+             .execute(
+-                &format!("DELETE FROM persistent.grant WHERE cast ( (grantee/{AID_USER_OFFSET}) as int) = ?;"),
++                &{ let mut sql = "DELETE FROM persistent.grant WHERE cast ( (grantee/".to_owned(); sql.push_str(&AID_USER_OFFSET.to_string()); sql.push_str(") as int) = ?;"); sql },
+                 params![user.0],
+             )
+             .context(format!(

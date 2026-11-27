@@ -1,0 +1,25 @@
+Translation patch: keystore2::legacy_blob::LegacyBlobLoader::make_legacy_keystore_entry_filename
+
+Change: keystore2/src/legacy_blob.rs:933, 934: each `format!` on these lines is replaced, on the same line, by a block that builds the same `String` with `to_owned`, `push_str` and `to_string`: the directory `user_{user}` and the file name `{uid}_{encoded_alias}` are built from their literal parts and the decimal renderings of the user and the uid. The reserved-alias check above is unchanged.
+Why: the translation models the arguments of `format!` as `()` (`core::fmt::Arguments` is `Unit` in the Aeneas library), so the translated function gave the same path for every user, uid and alias. `to_owned`, `push_str` and `to_string` are translated as calls whose results depend on their arguments.
+Behaviour: unchanged. The two path components are the same, pushed in the same order. `Display` of a string or an integer with no format options writes the same bytes as `push_str` of the string or of the integer's `to_string`. The string is built at the same point and lives at least as long; no panic is added or removed (allocation failure aborts in both).
+Classification: B
+Assumptions: none.
+Obligations: fork === upstream: the rewritten function behaves as the original on every input.
+Evidence: an independent equivalence review by three reviewers, accepted on 2 of 3; summarised in formal/EXTRACTION-ISSUES.md.
+Independent: yes
+
+diff --git a/keystore2/src/legacy_blob.rs b/keystore2/src/legacy_blob.rs
+--- a/keystore2/src/legacy_blob.rs
++++ b/keystore2/src/legacy_blob.rs
+@@ -930,8 +930,8 @@
+         let mut path = self.path.clone();
+         let user = uid.owning_user();
+         let encoded_alias = Self::encode_alias(alias);
+-        path.push(format!("user_{}", user.0));
+-        path.push(format!("{}_{}", uid.0, encoded_alias));
++        path.push({ let mut dir = "user_".to_owned(); dir.push_str(&user.0.to_string()); dir });
++        path.push({ let mut name = uid.0.to_string(); name.push_str("_"); name.push_str(&encoded_alias); name });
+         Some(path)
+     }
+ 

@@ -32,13 +32,49 @@ byte-identical.
 ## Input
 
 The extraction applies the patches in `translation-patches/series` to a copy of the tree and selects the
-`keystore2` crate. Cargo arguments: `--locked --lib --package keystore2 --no-default-features`.
+`keystore2` crate. Cargo arguments: `--locked --lib --package keystore2 --no-default-features --features watchdog`.
 
-The publication records neither the host triple nor the effective Cargo target; it also does not
-record whether the [macOS-only clock patch](../fvs-harness/host-patches/macos-clock-boottime.patch) was applied. A successful build on another host does
-not recover that information. For regeneration, record `rustc -vV`, the effective target
-(including Cargo configuration and environment), and the applied patch list, then compare both
-output hashes with `Extraction/.fvs-publication.json`.
+## Build configuration
+
+- **Features.** Soong builds `libkeystore2` with the `watchdog` feature (`keystore2/Android.bp`, lines 77-79), so
+  the translation follows that build: `--no-default-features --features watchdog`. The other feature,
+  `keystore2_blob_test_utils`, is for tests and is off. Charon runs Cargo itself (`charon cargo`) and receives the
+  same Cargo arguments, so Cargo and Charon see the same feature selection.
+- **The watchdog.** `watchdog_rs` is the model in [`fvs-harness/models/watchdog_rs`](../fvs-harness/models/watchdog_rs):
+  the public API of `keystore2/watchdog` (`Watchdog::new`, `Watchdog::watch`, `Watchdog::watch_with` and the
+  `WatchPoint` guard, which is neither `Send` nor `Sync`), with opaque types and no bodies. keystore2's global
+  watchdog `watchdog_helper::watchdog::WD` (a `LazyLock<Arc<Watchdog>>`) is excluded, because Aeneas cannot
+  translate its `fn() -> _` type, so the three helpers that read it (`watch`, `watch_millis`, `watch_millis_with`)
+  are opaque. In Lean they return `Option watchdog_rs.WatchPoint`, and nothing more is known about them.
+- **Target.** The host, `aarch64-unknown-linux-gnu`; no Cargo configuration file or environment variable selects
+  another target, and the [macOS-only clock patch](../fvs-harness/host-patches/macos-clock-boottime.patch) was not
+  applied. `rustc +nightly-2026-09-17 -vV` printed `rustc 1.100.0-nightly (923c95cdf 2026-09-16)`, commit
+  `923c95cdf5ba65cea505aa2ea829f578e1506ed8`, LLVM 23.1.1.
+- **Tools.** Aeneas `nightly-2026.11.09-5a392f4`, Charon 0.1.315, Rust `nightly-2026-09-17` and FVS 3.0.0-rc3 (table
+  above).
+
+To regenerate on another host, record the same facts and compare both output hashes with
+`Extraction/.fvs-publication.json`.
+
+## `format!` arguments
+
+The Aeneas Lean library models `core::fmt::Arguments` as `Unit`, so `format!(..)` translates to
+`alloc.fmt.format ()`, whose result cannot depend on the values being formatted. Where such a string reaches SQL, a
+file path or a Binder service name, the translation would give one result for inputs that Rust tells apart.
+
+- **Patched.** The 12 calls of this kind in translated functions are rewritten by the translation patches `04` to
+  `11` (one per function: `KeystoreDB::delete_received_grants` and `KeystoreDB::pragma` in `database.rs`,
+  `get_remotely_provisioned_component_name` in `globals.rs`, and `make_legacy_keystore_entry_filename`,
+  `make_blob_filename`, `make_chr_filename`, `make_user_path_name` and `is_empty_user` in `legacy_blob.rs`). Each
+  builds the same string with `to_owned`, `push_str` and `to_string`, which translate as calls on their inputs.
+- **Inside opaque functions.** The same kind of call at `database.rs` lines 2657, 2722, 2816 and 3069 (SQL),
+  `legacy_blob.rs` lines 856 and 1066 (path prefixes), `globals.rs` lines 207, 214 and 386 and
+  `shared_secret_negotiation.rs` line 165 (service names), and `super_key.rs` line 904 (a key descriptor) is in a
+  function that is opaque for another reason, so no erased string reaches a Lean definition from there.
+- **`error::anyhow_error_to_cstring`** (`error.rs` lines 234-235) is opaque: its result is the formatted error, and
+  the translated body ignored the error.
+- **Diagnostics.** Every other `format!` builds text for logs, error contexts or metrics output. In the translation
+  that text does not depend on its arguments.
 
 ## Charon arguments
 
@@ -661,6 +697,10 @@ and included items; each one has a row in [`EXTRACTION-ISSUES.md`](EXTRACTION-IS
 --exclude crate::key_parameter::serialize_primitive
 --exclude crate::key_parameter::deserialize_primitive
 --opaque crate::error::_::fmt
+--opaque crate::error::anyhow_error_to_cstring
+--exclude crate::watchdog_helper::watchdog::WD
+--opaque crate::watchdog_helper::watchdog::watch_millis
+--opaque crate::watchdog_helper::watchdog::watch_millis_with
 ```
 
 Aeneas arguments: `-backend lean -emit-json -filter-trait-methods`.
@@ -698,7 +738,7 @@ are opaque for the same reasons as before:
 | the `Debug` and `Display` impls of `keystore2::error::Error` | Kept opaque so that the axiom lists printed after the statements of the first stage stay as they were merged. |
 
 Items of the standard library and of the other crates that have no Lean model are axioms in the
-generated file as well: 931 axioms in all. A statement that depends on one of them says so.
+generated file as well: 932 axioms in all. A statement that depends on one of them says so.
 
 An external call is a Lean function application. Equal arguments (including any explicit state) give
 the same result; policy, randomness or resource outcomes that change between identical calls are not

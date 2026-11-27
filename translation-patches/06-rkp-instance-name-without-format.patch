@@ -1,0 +1,32 @@
+Translation patch: keystore2::globals::get_remotely_provisioned_component_name
+
+Change: keystore2/src/globals.rs:433, 441: each `format!` on these lines is replaced, on the same line, by a block that builds the same `String` with `to_owned`, `push_str` and `to_string`: both service names (TRUSTED_ENVIRONMENT and STRONGBOX) are built from the descriptor followed by the literal `/default` or `/strongbox`.
+Why: the translation models the arguments of `format!` as `()` (`core::fmt::Arguments` is `Unit` in the Aeneas library), so the translated function gave the same service name for both security levels. `to_owned`, `push_str` and `to_string` are translated as calls whose results depend on their arguments.
+Behaviour: unchanged. Each branch builds the descriptor followed by its literal suffix, as before. `Display` of a string or an integer with no format options writes the same bytes as `push_str` of the string or of the integer's `to_string`. The string is built at the same point and lives at least as long; no panic is added or removed (allocation failure aborts in both).
+Classification: B
+Assumptions: none.
+Obligations: fork === upstream: the rewritten function behaves as the original on every input.
+Evidence: an independent equivalence review by three reviewers, accepted on 2 of 3; summarised in formal/EXTRACTION-ISSUES.md.
+Independent: yes
+
+diff --git a/keystore2/src/globals.rs b/keystore2/src/globals.rs
+--- a/keystore2/src/globals.rs
++++ b/keystore2/src/globals.rs
+@@ -430,7 +430,7 @@
+ 
+     match *security_level {
+         SecurityLevel::TRUSTED_ENVIRONMENT => {
+-            let instance = format!("{remote_prov_descriptor}/default");
++            let instance = { let mut name = remote_prov_descriptor.to_owned(); name.push_str("/default"); name };
+             if is_declared(&instance)? {
+                 Some(instance)
+             } else {
+@@ -438,7 +438,7 @@
+             }
+         }
+         SecurityLevel::STRONGBOX => {
+-            let instance = format!("{remote_prov_descriptor}/strongbox");
++            let instance = { let mut name = remote_prov_descriptor.to_owned(); name.push_str("/strongbox"); name };
+             if is_declared(&instance)? {
+                 Some(instance)
+             } else {
