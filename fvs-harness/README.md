@@ -13,7 +13,7 @@ The stand-in crates use `#![feature(register_tool)]`, so a nightly toolchain is 
 branch was built with `nightly-2026-09-17`.
 
 ```sh
-RUSTUP_TOOLCHAIN=nightly-2026-09-17 cargo check --locked --lib -p keystore2 --no-default-features
+RUSTUP_TOOLCHAIN=nightly-2026-09-17 cargo check --locked --lib -p keystore2 --no-default-features --features watchdog
 ```
 
 That command succeeds only after the translation patches are applied to a copy of the tree (next
@@ -33,32 +33,34 @@ transitive versions are those Cargo resolved when the lock was made.
 
 ## Patches
 
-Upstream files stay as they are. Six lines in two files do not compile outside Android, so they
-are kept as patches against a copy.
+Upstream files stay as they are. Two lines of `utils.rs` do not compile outside Android, so they are
+kept as a patch against a copy (`01`). The other patches of `translation-patches/series` (`03` to `11`) reshape
+code so that Aeneas translates it faithfully; [`formal/EXTRACTION-ISSUES.md`](../formal/EXTRACTION-ISSUES.md)
+describes them and their review.
 
 | Patch | File | Why | Where |
 |---|---|---|---|
 | `translation-patches/01-errno-platform-accessor.patch` | `keystore2/src/utils.rs` | `libc` defines `__errno` only for Android and the NetBSD family. The patch picks the platform's errno accessor by `cfg` and leaves the Android code as it was. | every host |
-| `translation-patches/02-watchdog-off-path-public.patch` | `keystore2/src/watchdog_helper.rs` | The module used when the `watchdog` feature is off keeps `watch` and `watch_millis` private and has no `DEFAULT_TIMEOUT_MS`. Soong always builds with the feature on, so this path was never compiled. | every host |
 | `fvs-harness/host-patches/macos-clock-boottime.patch` | `keystore2/src/utils.rs` | `libc` has no `CLOCK_BOOTTIME` for macOS. The patch reads `CLOCK_MONOTONIC` there. It is not in the series because a Linux host does not need it, and it changes what the function reads (classification B). | macOS only |
 
 The host patch has the header of a translation patch. The patch engine applies only `series`, so
 to use the engine on a macOS host, copy the file into `translation-patches/` of a working copy,
 append its name to `series` there, and give it the equivalence-gate packet that a B patch needs.
-The engine's `check` accepts the three patches together.
+The engine's `check` accepts the host patch together with the series.
 
 Each patch keeps the line count of every hunk, so line numbers in later reports still point at
-the upstream lines. Without the patches the check fails with 100 errors on macOS; with the two
-series patches only, the one remaining error on macOS is `CLOCK_BOOTTIME` at `utils.rs:519`, and
-`--target x86_64-unknown-linux-gnu` and `--target aarch64-unknown-linux-gnu` pass.
+the upstream lines. With the series applied, the check above passes on a Linux host (checked on
+`aarch64-unknown-linux-gnu`, 2026-11-27). On macOS the host patch is needed as well (`CLOCK_BOOTTIME` at
+`utils.rs:519`).
 
-The `watchdog` feature stays off: `keystore2/Cargo.toml` declares it empty and the `watchdog_rs`
-crate is not in the workspace. Turning it on needs that crate as a dependency.
+The `watchdog` feature is on, as in Soong (`keystore2/Android.bp`, lines 77-79): `keystore2/Cargo.toml` wires it
+to `models/watchdog_rs`, a model of `keystore2/watchdog` with its public API and no bodies. Without the feature
+`keystore2` does not compile: the module for that case keeps `watch` and `watch_millis` private, as upstream.
 
 ## Layout
 
 ```
-Cargo.toml, Cargo.lock           workspace of 31 members; hals, mls and prng_seeder/test are excluded
+Cargo.toml, Cargo.lock           workspace of 32 members; hals, mls and prng_seeder/test are excluded
 keystore2/                       the core crate; Cargo.toml added next to the sources
 keystore2/selinux, message_macro,
 keystore2/src/crypto, km_compat  upstream helper crates reused unchanged; one Cargo.toml each
@@ -72,14 +74,14 @@ fvs-harness/
   util/                          rustutils, keystore2_flags, structured_log, bssl_crypto
   bindgen/                       selinux_bindgen, keystore2_crypto_bindgen
   models/                        keystore2_aaid, keystore2_apc_compat, keystore2_hal_names,
-                                 rkpd_client, postprocessor_client
+                                 rkpd_client, postprocessor_client, watchdog_rs
   host-patches/                  patches for one host only
 ```
 
-The crate under verification is `keystore2`. The other 30 members are support: four reused
-upstream crates, 14 AIDL stand-ins, `binder`, four util stand-ins, two bindgen stand-ins and five
-models. The `watchdog_rs`, `legacykeystore`, `test_utils`, `tests/`, fuzzers and the daemon `main`
-are not in the workspace.
+The crate under verification is `keystore2`. The other 31 members are support: four reused
+upstream crates, 14 AIDL stand-ins, `binder`, four util stand-ins, two bindgen stand-ins and six
+models. Not in the workspace: the upstream `watchdog_rs` crate (`models/watchdog_rs` stands for it),
+`legacykeystore`, `test_utils`, `tests/`, the fuzzers and the daemon `main`.
 
 ## How the stand-ins work
 
@@ -101,7 +103,7 @@ are not in the workspace.
   opaque with no attribute, and the AIDL crates carry no attribute.
 - **Flags.** `keystore2_flags` has the six flags keystore2 reads. Each is opaque, not fixed to
   its production value.
-- **Models.** The five model crates copy the public API of the upstream crate: `Error` enums,
+- **Models.** The six model crates copy the public API of the upstream crate: `Error` enums,
   constants and signatures are exact, bodies are missing.
 
 ## Provenance
@@ -146,7 +148,7 @@ compat, maintenance and metrics are generated from the `.aidl` files already in 
 
 - Every in-repo library crate is declared in the root `Cargo.toml`: a crate that is missing there
   is not seen by the workflow and a crate that is present is a target unless declared otherwise.
-  Declare the 30 support crates as non-targets.
+  Declare the 31 support crates as non-targets.
 - `keystore2/src/crypto` and `keystore2/src/km_compat` sit inside `keystore2/`. Their manifests
   use `[lib] path = "lib.rs"`. File ownership follows the longest directory prefix.
 - `rustfmt.toml` at the repository root is a symbolic link into the Android build tree and dangles

@@ -2848,24 +2848,6 @@ axiom alloc.collections.vec_deque.VecDeque.split_off
 @[rust_type "alloc::ffi::c_str::CString"]
 axiom alloc.ffi.c_str.CString : Type
 
-/-- [alloc::ffi::c_str::NulError]
-    Source: '/rustc/library/alloc/src/ffi/c_str.rs', lines 132:0-132:19
-    Name pattern: [alloc::ffi::c_str::NulError]
-    Visibility: public -/
-@[rust_type "alloc::ffi::c_str::NulError"]
-axiom alloc.ffi.c_str.NulError : Type
-
-/-- [alloc::ffi::c_str::{alloc::ffi::c_str::CString}::new]:
-    Source: '/rustc/library/alloc/src/ffi/c_str.rs', lines 257:4-257:67
-    Name pattern: [alloc::ffi::c_str::{alloc::ffi::c_str::CString}::new]
-    Visibility: public -/
-@[rust_fun "alloc::ffi::c_str::{alloc::ffi::c_str::CString}::new"]
-axiom alloc.ffi.c_str.CString.new
-  {T : Type _} (coreconvertIntoTVecU8Inst : core.convert.Into T (alloc.vec.Vec
-  Std.U8)) :
-  T → Result (core.result.Result alloc.ffi.c_str.CString
-    alloc.ffi.c_str.NulError)
-
 /-- [alloc::ffi::c_str::{impl core::ops::deref::Deref<core::ffi::c_str::CStr> for alloc::ffi::c_str::CString}::deref]:
     Source: '/rustc/library/alloc/src/ffi/c_str.rs', lines 725:4-725:28
     Name pattern: [alloc::ffi::c_str::{core::ops::deref::Deref<alloc::ffi::c_str::CString, core::ffi::c_str::CStr>}::deref]
@@ -3116,25 +3098,6 @@ axiom alloc.string.String.Insts.CoreOpsDerefDerefStr.deref
 @[rust_fun "alloc::string::{alloc::string::ToString<@T>}::to_string"]
 axiom alloc.string.ToString.Blanket.to_string
   {T : Type _} (corefmtDisplayInst : core.fmt.Display T) : T → Result String
-
-/-- [alloc::string::{impl core::convert::From<alloc::string::String> for alloc::vec::Vec<u8>}::from]:
-    Source: '/rustc/library/alloc/src/string.rs', lines 3389:4-3389:38
-    Name pattern: [alloc::string::{core::convert::From<alloc::vec::Vec<u8>, alloc::string::String>}::from]
-    Visibility: public -/
-@[rust_fun
-  "alloc::string::{core::convert::From<alloc::vec::Vec<u8>, alloc::string::String>}::from"]
-axiom alloc.vec.VecU8.Insts.CoreConvertFromString.from
-  : String → Result (alloc.vec.Vec Std.U8)
-
-/-- Trait implementation: [alloc::string::{impl core::convert::From<alloc::string::String> for alloc::vec::Vec<u8>}]
-    Source: '/rustc/library/alloc/src/string.rs', lines 3376:0-3376:29
-    Name pattern: [core::convert::From<alloc::vec::Vec<u8>, alloc::string::String>] -/
-@[reducible, rust_trait_impl
-  "core::convert::From<alloc::vec::Vec<u8>, alloc::string::String>"]
-def alloc.vec.VecU8.Insts.CoreConvertFromString : core.convert.From
-  (alloc.vec.Vec Std.U8) String := {
-  «from» := alloc.vec.VecU8.Insts.CoreConvertFromString.from
-}
 
 /-- [alloc::sync::Arc]
     Source: '/rustc/library/alloc/src/sync.rs', lines 274:0-277:1
@@ -9804,6 +9767,13 @@ axiom rustutils.android.users.multiuser_get_user_id
 axiom Shared0T.Insts.ThiserrorDisplayAsDisplayASharedAT.as_display
   {T : Type _} (corefmtDisplayInst : core.fmt.Display T) : T → Result T
 
+/-- [watchdog_rs::WatchPoint]
+    Source: 'fvs-harness/models/watchdog_rs/src/lib.rs', lines 15:0-15:21
+    Name pattern: [watchdog_rs::WatchPoint]
+    Visibility: public -/
+@[rust_type "watchdog_rs::WatchPoint"]
+axiom watchdog_rs.WatchPoint : Type
+
 /-- [keystore2::apc::Error]
     Source: 'keystore2/src/apc.rs', lines 44:0-52:1
     Visibility: public -/
@@ -10475,17 +10445,11 @@ impl_def error.Error.Insts.CoreErrorError : core.error.Error error.Error := {
   fmtDisplayInst := error.Error.Insts.CoreFmtDisplay
 }
 
-/-- [keystore2::watchdog_helper::watchdog::WatchPoint]
-    Source: 'keystore2/src/watchdog_helper.rs', lines 58:4-58:28
-    Visibility: public -/
-@[reducible]
-def watchdog_helper.watchdog.WatchPoint := Unit
-
 /-- [keystore2::watchdog_helper::watchdog::watch]:
-    Source: 'keystore2/src/watchdog_helper.rs', lines 64:4-66:5
+    Source: 'keystore2/src/watchdog_helper.rs', lines 39:4-41:5
     Visibility: public -/
 axiom watchdog_helper.watchdog.watch
-  : Str → Result (Option watchdog_helper.watchdog.WatchPoint)
+  : Str → Result (Option watchdog_rs.WatchPoint)
 
 /-- [keystore2::key_parameter::KeyParameterValue]
     Source: 'keystore2/src/key_parameter.rs', lines 348:8-353:9; this code is generated from a macro invocation at: 'keystore2/src/key_parameter.rs', lines 822:0-1050:1
@@ -20471,14 +20435,11 @@ def database.KeystoreDB.get_table_size
     s
 
 /-- [keystore2::watchdog_helper::watchdog::watch_millis_with]:
-    Source: 'keystore2/src/watchdog_helper.rs', lines 68:4-74:5
+    Source: 'keystore2/src/watchdog_helper.rs', lines 45:4-51:5
     Visibility: public -/
-def watchdog_helper.watchdog.watch_millis_with
-  {T0 : Type _} (corefmtDebugInst : core.fmt.Debug T0) (s : Str) (i : Std.U64)
-  (t : T0) :
-  Result (Option watchdog_helper.watchdog.WatchPoint)
-  := do
-  ok none
+axiom watchdog_helper.watchdog.watch_millis_with
+  {T0 : Type _} (corefmtDebugInst : core.fmt.Debug T0) :
+  Str → Std.U64 → T0 → Result (Option watchdog_rs.WatchPoint)
 
 /-- [keystore2::database::{keystore2::database::KeystoreDB}::get_storage_stat]:
     Source: 'keystore2/src/database.rs', lines 1257:4-1309:5
@@ -21970,31 +21931,23 @@ def database.KeystoreDB.delete_received_grants
   := do
   let c ←
     rusqlite.transaction.Transaction.Insts.CoreOpsDerefDerefConnection.deref tx
+  let sql ←
+    Str.Insts.AllocBorrowToOwnedString.to_owned (toStr
+      "DELETE FROM persistent.grant WHERE cast ( (grantee/")
   let i ← utils.AID_USER_OFFSET
-  let a ← core.fmt.rt.Argument.new_display U32.Insts.CoreFmtDisplay i
-  let a1 ←
-    core.fmt.Arguments.new
-      (Array.make 69#usize [
-        51#u8, 68#u8, 69#u8, 76#u8, 69#u8, 84#u8, 69#u8, 32#u8, 70#u8, 82#u8,
-        79#u8, 77#u8, 32#u8, 112#u8, 101#u8, 114#u8, 115#u8, 105#u8, 115#u8,
-        116#u8, 101#u8, 110#u8, 116#u8, 46#u8, 103#u8, 114#u8, 97#u8, 110#u8,
-        116#u8, 32#u8, 87#u8, 72#u8, 69#u8, 82#u8, 69#u8, 32#u8, 99#u8, 97#u8,
-        115#u8, 116#u8, 32#u8, 40#u8, 32#u8, 40#u8, 103#u8, 114#u8, 97#u8,
-        110#u8, 116#u8, 101#u8, 101#u8, 47#u8, 192#u8, 14#u8, 41#u8, 32#u8,
-        97#u8, 115#u8, 32#u8, 105#u8, 110#u8, 116#u8, 41#u8, 32#u8, 61#u8,
-        32#u8, 63#u8, 59#u8, 0#u8
-        ]) (Array.make 1#usize [ a ])
-  let s ← alloc.fmt.format a1
-  let s1 ← core.hint.must_use s
-  let s2 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref s1
+  let s ← alloc.string.ToString.Blanket.to_string U32.Insts.CoreFmtDisplay i
+  let s1 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref s
+  let sql1 ← alloc.string.String.push_str sql s1
+  let sql2 ← alloc.string.String.push_str sql1 (toStr ") as int) = ?;")
+  let s2 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref sql2
   let dyn := Dyn.mk _ I32.Insts.RusqliteTypesTo_sqlToSql user
   let s3 := Array.to_slice (Array.make 1#usize [ dyn ])
   let r ←
     rusqlite.Connection.execute Shared0SliceShared1P.Insts.RusqliteParamsParams
       c s2 s3
-  let a2 ←
+  let a ←
     core.fmt.rt.Argument.new_debug utils.AndroidUserId.Insts.CoreFmtDebug user
-  let a3 ←
+  let a1 ←
     core.fmt.Arguments.new
       (Array.make 57#usize [
         36#u8, 84#u8, 114#u8, 121#u8, 105#u8, 110#u8, 103#u8, 32#u8, 116#u8,
@@ -22004,8 +21957,8 @@ def database.KeystoreDB.delete_received_grants
         32#u8, 192#u8, 17#u8, 32#u8, 102#u8, 114#u8, 111#u8, 109#u8, 32#u8,
         111#u8, 116#u8, 104#u8, 101#u8, 114#u8, 32#u8, 97#u8, 112#u8, 112#u8,
         115#u8, 46#u8, 0#u8
-        ]) (Array.make 1#usize [ a2 ])
-  let s4 ← alloc.fmt.format a3
+        ]) (Array.make 1#usize [ a ])
+  let s4 ← alloc.fmt.format a1
   let s5 ← core.hint.must_use s4
   let r1 ←
     core.result.Result.Insts.AnyhowContext.context
@@ -22705,12 +22658,12 @@ axiom database.KeystoreDB.get_app_uids_affected_by_sid
     database.KeystoreDB)
 
 /-- [keystore2::database::{keystore2::database::KeystoreDB}::pragma::{closure}]
-    Source: 'keystore2/src/database.rs', lines 3128:65-3128:81 -/
+    Source: 'keystore2/src/database.rs', lines 3128:104-3128:120 -/
 @[reducible]
 def database.KeystoreDB.pragma.closure (T : Type _) := Unit
 
 /-- [keystore2::database::{keystore2::database::KeystoreDB}::pragma::{impl core::ops::function::FnOnce<(&'_0 rusqlite::row::Row<'_1>,), core::result::Result<T, rusqlite::error::Error>> for keystore2::database::{keystore2::database::KeystoreDB}::pragma::{closure}<T>}::call_once]:
-    Source: 'keystore2/src/database.rs', lines 3128:65-3128:81 -/
+    Source: 'keystore2/src/database.rs', lines 3128:104-3128:120 -/
 def
   database.KeystoreDB.pragma.closure.Insts.CoreOpsFunctionFnOnceTupleShared0RowResultTError.call_once
   {T : Type _} (rusqlitetypesfrom_sqlFromSqlInst :
@@ -22722,7 +22675,7 @@ def
     rusqlitetypesfrom_sqlFromSqlInst tupled_args 0#usize
 
 /-- Trait implementation: [keystore2::database::{keystore2::database::KeystoreDB}::pragma::{impl core::ops::function::FnOnce<(&'_0 rusqlite::row::Row<'_1>,), core::result::Result<T, rusqlite::error::Error>> for keystore2::database::{keystore2::database::KeystoreDB}::pragma::{closure}<T>}]
-    Source: 'keystore2/src/database.rs', lines 3128:65-3128:81 -/
+    Source: 'keystore2/src/database.rs', lines 3128:104-3128:120 -/
 @[reducible]
 def
   database.KeystoreDB.pragma.closure.Insts.CoreOpsFunctionFnOnceTupleShared0RowResultTError
@@ -22744,37 +22697,31 @@ def database.KeystoreDB.pragma
   («name» : Str) :
   Result ((core.result.Result T anyhow.Error) × database.KeystoreDB)
   := do
+  let sql ←
+    Str.Insts.AllocBorrowToOwnedString.to_owned (toStr "PRAGMA persistent.")
+  let sql1 ← alloc.string.String.push_str sql «name»
+  let s ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref sql1
+  let r ←
+    rusqlite.Connection.query_row Tuple.Insts.RusqliteParamsParams
+      (database.KeystoreDB.pragma.closure.Insts.CoreOpsFunctionFnOnceTupleShared0RowResultTError
+      rusqlitetypesfrom_sqlFromSqlInst) self.conn s () ()
   let a ←
     core.fmt.rt.Argument.new_display (Shared0T.Insts.CoreFmtDisplay
       Str.Insts.CoreFmtDisplay) «name»
   let a1 ←
-    core.fmt.Arguments.new
-      (Array.make 21#usize [
-        18#u8, 80#u8, 82#u8, 65#u8, 71#u8, 77#u8, 65#u8, 32#u8, 112#u8, 101#u8,
-        114#u8, 115#u8, 105#u8, 115#u8, 116#u8, 101#u8, 110#u8, 116#u8, 46#u8,
-        192#u8, 0#u8
-        ]) (Array.make 1#usize [ a ])
-  let s ← alloc.fmt.format a1
-  let s1 ← core.hint.must_use s
-  let s2 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref s1
-  let r ←
-    rusqlite.Connection.query_row Tuple.Insts.RusqliteParamsParams
-      (database.KeystoreDB.pragma.closure.Insts.CoreOpsFunctionFnOnceTupleShared0RowResultTError
-      rusqlitetypesfrom_sqlFromSqlInst) self.conn s2 () ()
-  let a2 ←
     core.fmt.Arguments.new
       (Array.make 25#usize [
         22#u8, 102#u8, 97#u8, 105#u8, 108#u8, 101#u8, 100#u8, 32#u8, 116#u8,
         111#u8, 32#u8, 114#u8, 101#u8, 97#u8, 100#u8, 32#u8, 112#u8, 114#u8,
         97#u8, 103#u8, 109#u8, 97#u8, 32#u8, 192#u8, 0#u8
         ]) (Array.make 1#usize [ a ])
-  let s3 ← alloc.fmt.format a2
-  let s4 ← core.hint.must_use s3
+  let s1 ← alloc.fmt.format a1
+  let s2 ← core.hint.must_use s1
   let r1 ←
     core.result.Result.Insts.AnyhowContext.context
       (anyhow.context.ext.StdError.Blanket
       rusqlite.error.Error.Insts.CoreErrorError)
-      alloc.string.String.Insts.CoreFmtDisplay r s4
+      alloc.string.String.Insts.CoreFmtDisplay r s2
   ok (r1, self)
 
 /-- [keystore2::ec_crypto::ECDHPrivateKey]
@@ -25479,44 +25426,8 @@ axiom error.into_logged_binder : anyhow.Error → Result binder.Status
 /-- [keystore2::error::anyhow_error_to_cstring]:
     Source: 'keystore2/src/error.rs', lines 234:0-242:1
     Visibility: public -/
-def error.anyhow_error_to_cstring
-  (e : anyhow.Error) : Result (Option alloc.ffi.c_str.CString) := do
-  let a ←
-    core.fmt.rt.Argument.new_debug (core.fmt.DebugShared
-      anyhow.Error.Insts.CoreFmtDebug) e
-  let a1 ←
-    core.fmt.Arguments.new (Array.make 2#usize [ 192#u8, 0#u8 ])
-      (Array.make 1#usize [ a ])
-  let s ← alloc.fmt.format a1
-  let s1 ← core.hint.must_use s
-  let r ←
-    alloc.ffi.c_str.CString.new (core.convert.IntoFrom
-      alloc.vec.VecU8.Insts.CoreConvertFromString) s1
-  match r with
-  | core.result.Result.Ok msg => ok (some msg)
-  | core.result.Result.Err _ =>
-    let b ←
-      core.cmp.PartialOrd.le.trait_default
-        log.Level.Insts.CoreCmpPartialOrdLevelFilter log.Level.Warn
-        log.STATIC_MAX_LEVEL
-    if b
-    then
-      let lf ← log.max_level
-      let b1 ←
-        core.cmp.PartialOrd.le.trait_default
-          log.Level.Insts.CoreCmpPartialOrdLevelFilter log.Level.Warn lf
-      if b1
-      then
-        let a2 ←
-          core.fmt.Arguments.from_str (toStr
-            "Cannot convert error message to CStr. It contained a nul byte.")
-        let l ← log.__private_api.loc
-        log.__private_api.log Tuple.Insts.Log__private_apiSealedKVs
-          log.__private_api.GlobalLogger.Insts.LogLog () a2 log.Level.Warn
-          (toStr "keystore2::error", toStr "keystore2::error", l) ()
-        ok none
-      else ok none
-    else ok none
+axiom error.anyhow_error_to_cstring
+  : anyhow.Error → Result (Option alloc.ffi.c_str.CString)
 
 /-- [keystore2::error::SerializedError]
     Source: 'keystore2/src/error.rs', lines 262:0-262:36
@@ -26112,34 +26023,25 @@ def globals.get_remotely_provisioned_component_name
       android_hardware_security_rkp.aidl.android.hardware.security.keymint.IRemotelyProvisionedComponent.BpRemotelyProvisionedComponent
   match security_level with
   | 1#iscalar =>
-    let a ←
-      core.fmt.rt.Argument.new_display (Shared0T.Insts.CoreFmtDisplay
-        Str.Insts.CoreFmtDisplay) remote_prov_descriptor
-    let a1 ←
-      core.fmt.Arguments.new
-        (Array.make 11#usize [
-          192#u8, 8#u8, 47#u8, 100#u8, 101#u8, 102#u8, 97#u8, 117#u8, 108#u8,
-          116#u8, 0#u8
-          ]) (Array.make 1#usize [ a ])
-    let s ← alloc.fmt.format a1
-    let «instance» ← core.hint.must_use s
-    let s1 ←
-      alloc.string.String.Insts.CoreOpsDerefDerefStr.deref «instance»
-    let r ← binder.is_declared s1
+    let «name» ←
+      Str.Insts.AllocBorrowToOwnedString.to_owned remote_prov_descriptor
+    let name1 ← alloc.string.String.push_str «name» (toStr "/default")
+    let s ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref name1
+    let r ← binder.is_declared s
     let cf ← core.result.Result.Insts.CoreOpsTry.branch r
     match cf with
     | core.ops.control_flow.ControlFlow.Continue val =>
       let o ← if val
-                then ok (some «instance»)
+                then ok (some name1)
                 else ok none
       let ec ←
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.HARDWARE_TYPE_UNAVAILABLE
       let r1 ← core.option.Option.ok_or o (error.Error.Km ec)
-      let a2 ←
+      let a ←
         core.fmt.rt.Argument.new_debug
           android_hardware_security_keymint.aidl.android.hardware.security.keymint.SecurityLevel.SecurityLevel.Insts.CoreFmtDebug
           security_level
-      let a3 ←
+      let a1 ←
         core.fmt.Arguments.new
           (Array.make 65#usize [
             62#u8, 107#u8, 101#u8, 121#u8, 115#u8, 116#u8, 111#u8, 114#u8,
@@ -26150,45 +26052,36 @@ def globals.get_remotely_provisioned_component_name
             116#u8, 32#u8, 114#u8, 112#u8, 99#u8, 32#u8, 102#u8, 111#u8,
             114#u8, 32#u8, 115#u8, 101#u8, 99#u8, 32#u8, 108#u8, 101#u8,
             118#u8, 101#u8, 108#u8, 32#u8, 192#u8, 0#u8
-            ]) (Array.make 1#usize [ a2 ])
-      let s2 ← alloc.fmt.format a3
-      let s3 ← core.hint.must_use s2
+            ]) (Array.make 1#usize [ a ])
+      let s1 ← alloc.fmt.format a1
+      let s2 ← core.hint.must_use s1
       core.result.Result.Insts.AnyhowContext.context
         (anyhow.context.ext.StdError.Blanket error.Error.Insts.CoreErrorError)
-        alloc.string.String.Insts.CoreFmtDisplay r1 s3
+        alloc.string.String.Insts.CoreFmtDisplay r1 s2
     | core.ops.control_flow.ControlFlow.Break residual =>
       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
         String (anyhow.Error.Insts.CoreConvertFrom
         binder.StatusCode.Insts.CoreErrorError) residual
   | 2#iscalar =>
-    let a ←
-      core.fmt.rt.Argument.new_display (Shared0T.Insts.CoreFmtDisplay
-        Str.Insts.CoreFmtDisplay) remote_prov_descriptor
-    let a1 ←
-      core.fmt.Arguments.new
-        (Array.make 13#usize [
-          192#u8, 10#u8, 47#u8, 115#u8, 116#u8, 114#u8, 111#u8, 110#u8, 103#u8,
-          98#u8, 111#u8, 120#u8, 0#u8
-          ]) (Array.make 1#usize [ a ])
-    let s ← alloc.fmt.format a1
-    let «instance» ← core.hint.must_use s
-    let s1 ←
-      alloc.string.String.Insts.CoreOpsDerefDerefStr.deref «instance»
-    let r ← binder.is_declared s1
+    let «name» ←
+      Str.Insts.AllocBorrowToOwnedString.to_owned remote_prov_descriptor
+    let name1 ← alloc.string.String.push_str «name» (toStr "/strongbox")
+    let s ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref name1
+    let r ← binder.is_declared s
     let cf ← core.result.Result.Insts.CoreOpsTry.branch r
     match cf with
     | core.ops.control_flow.ControlFlow.Continue val =>
       let o ← if val
-                then ok (some «instance»)
+                then ok (some name1)
                 else ok none
       let ec ←
         android_hardware_security_keymint.aidl.android.hardware.security.keymint.ErrorCode.ErrorCode.HARDWARE_TYPE_UNAVAILABLE
       let r1 ← core.option.Option.ok_or o (error.Error.Km ec)
-      let a2 ←
+      let a ←
         core.fmt.rt.Argument.new_debug
           android_hardware_security_keymint.aidl.android.hardware.security.keymint.SecurityLevel.SecurityLevel.Insts.CoreFmtDebug
           security_level
-      let a3 ←
+      let a1 ←
         core.fmt.Arguments.new
           (Array.make 65#usize [
             62#u8, 107#u8, 101#u8, 121#u8, 115#u8, 116#u8, 111#u8, 114#u8,
@@ -26199,12 +26092,12 @@ def globals.get_remotely_provisioned_component_name
             116#u8, 32#u8, 114#u8, 112#u8, 99#u8, 32#u8, 102#u8, 111#u8,
             114#u8, 32#u8, 115#u8, 101#u8, 99#u8, 32#u8, 108#u8, 101#u8,
             118#u8, 101#u8, 108#u8, 32#u8, 192#u8, 0#u8
-            ]) (Array.make 1#usize [ a2 ])
-      let s2 ← alloc.fmt.format a3
-      let s3 ← core.hint.must_use s2
+            ]) (Array.make 1#usize [ a ])
+      let s1 ← alloc.fmt.format a1
+      let s2 ← core.hint.must_use s1
       core.result.Result.Insts.AnyhowContext.context
         (anyhow.context.ext.StdError.Blanket error.Error.Insts.CoreErrorError)
-        alloc.string.String.Insts.CoreFmtDisplay r1 s3
+        alloc.string.String.Insts.CoreFmtDisplay r1 s2
     | core.ops.control_flow.ControlFlow.Break residual =>
       core.result.Result.Insts.CoreOpsTry_traitFromResidualResult.from_residual
         String (anyhow.Error.Insts.CoreConvertFrom
@@ -34029,15 +33922,13 @@ def legacy_blob.LegacyBlobLoader.make_user_path_name
   Result std.path.PathBuf
   := do
   let path ← std.path.PathBuf.Insts.CoreCloneClone.clone self.path
-  let a ← core.fmt.rt.Argument.new_display I32.Insts.CoreFmtDisplay user
-  let a1 ←
-    core.fmt.Arguments.new
-      (Array.make 8#usize [
-        5#u8, 117#u8, 115#u8, 101#u8, 114#u8, 95#u8, 192#u8, 0#u8
-        ]) (Array.make 1#usize [ a ])
-  let s ← alloc.fmt.format a1
-  let s1 ← core.hint.must_use s
-  std.path.PathBuf.push alloc.string.String.Insts.CoreConvertAsRefPath path s1
+  let dir ← Str.Insts.AllocBorrowToOwnedString.to_owned (toStr "user_")
+  let s ←
+    alloc.string.ToString.Blanket.to_string I32.Insts.CoreFmtDisplay user
+  let s1 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref s
+  let dir1 ← alloc.string.String.push_str dir s1
+  std.path.PathBuf.push alloc.string.String.Insts.CoreConvertAsRefPath path
+    dir1
 
 /-- [keystore2::legacy_blob::{keystore2::legacy_blob::LegacyBlobLoader}::make_chr_filename]:
     Source: 'keystore2/src/legacy_blob.rs', lines 950:4-956:5 -/
@@ -34047,34 +33938,22 @@ def legacy_blob.LegacyBlobLoader.make_chr_filename
   Result std.path.PathBuf
   := do
   let user_id ← utils.AppUid.owning_user uid
-  let a ←
-    core.fmt.rt.Argument.new_display (Shared0T.Insts.CoreFmtDisplay
-      Str.Insts.CoreFmtDisplay) «prefix»
-  let a1 ←
-    core.fmt.rt.Argument.new_display (Shared0T.Insts.CoreFmtDisplay
-      Str.Insts.CoreFmtDisplay) «alias»
-  let a2 ←
-    core.fmt.Arguments.new
-      (Array.make 5#usize [ 192#u8, 1#u8, 95#u8, 192#u8, 0#u8 ])
-      (Array.make 2#usize [ a, a1 ])
-  let s ← alloc.fmt.format a2
-  let s1 ← core.hint.must_use s
-  let s2 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref s1
-  let encoded_alias ← legacy_blob.LegacyBlobLoader.encode_alias s2
+  let prefixed ← Str.Insts.AllocBorrowToOwnedString.to_owned «prefix»
+  let prefixed1 ← alloc.string.String.push_str prefixed (toStr "_")
+  let prefixed2 ← alloc.string.String.push_str prefixed1 «alias»
+  let s ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref prefixed2
+  let encoded_alias ← legacy_blob.LegacyBlobLoader.encode_alias s
   let path ← legacy_blob.LegacyBlobLoader.make_user_path_name self user_id
-  let a3 ← core.fmt.rt.Argument.new_display I64.Insts.CoreFmtDisplay uid
-  let a4 ←
-    core.fmt.rt.Argument.new_display alloc.string.String.Insts.CoreFmtDisplay
-      encoded_alias
-  let a5 ←
-    core.fmt.Arguments.new
-      (Array.make 11#usize [
-        1#u8, 46#u8, 192#u8, 5#u8, 95#u8, 99#u8, 104#u8, 114#u8, 95#u8, 192#u8,
-        0#u8
-        ]) (Array.make 2#usize [ a3, a4 ])
-  let s3 ← alloc.fmt.format a5
-  let s4 ← core.hint.must_use s3
-  std.path.PathBuf.push alloc.string.String.Insts.CoreConvertAsRefPath path s4
+  let «name» ← Str.Insts.AllocBorrowToOwnedString.to_owned (toStr ".")
+  let s1 ←
+    alloc.string.ToString.Blanket.to_string I64.Insts.CoreFmtDisplay uid
+  let s2 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref s1
+  let name1 ← alloc.string.String.push_str «name» s2
+  let name2 ← alloc.string.String.push_str name1 (toStr "_chr_")
+  let s3 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref encoded_alias
+  let name3 ← alloc.string.String.push_str name2 s3
+  std.path.PathBuf.push alloc.string.String.Insts.CoreConvertAsRefPath path
+    name3
 
 /-- [keystore2::legacy_blob::{keystore2::legacy_blob::LegacyBlobLoader}::read_generic_blob]:
     Source: 'keystore2/src/legacy_blob.rs', lines 778:4-788:5 -/
@@ -35869,30 +35748,23 @@ def legacy_blob.LegacyBlobLoader.make_legacy_keystore_entry_filename
     let path ← std.path.PathBuf.Insts.CoreCloneClone.clone self.path
     let user ← utils.AppUid.owning_user uid
     let encoded_alias ← legacy_blob.LegacyBlobLoader.encode_alias «alias»
-    let a ← core.fmt.rt.Argument.new_display I32.Insts.CoreFmtDisplay user
-    let a1 ←
-      core.fmt.Arguments.new
-        (Array.make 8#usize [
-          5#u8, 117#u8, 115#u8, 101#u8, 114#u8, 95#u8, 192#u8, 0#u8
-          ]) (Array.make 1#usize [ a ])
-    let s ← alloc.fmt.format a1
-    let s1 ← core.hint.must_use s
+    let dir ← Str.Insts.AllocBorrowToOwnedString.to_owned (toStr "user_")
+    let s ←
+      alloc.string.ToString.Blanket.to_string I32.Insts.CoreFmtDisplay user
+    let s1 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref s
+    let dir1 ← alloc.string.String.push_str dir s1
     let path1 ←
       std.path.PathBuf.push alloc.string.String.Insts.CoreConvertAsRefPath path
-        s1
-    let a2 ← core.fmt.rt.Argument.new_display I64.Insts.CoreFmtDisplay uid
-    let a3 ←
-      core.fmt.rt.Argument.new_display alloc.string.String.Insts.CoreFmtDisplay
-        encoded_alias
-    let a4 ←
-      core.fmt.Arguments.new
-        (Array.make 5#usize [ 192#u8, 1#u8, 95#u8, 192#u8, 0#u8 ])
-        (Array.make 2#usize [ a2, a3 ])
-    let s2 ← alloc.fmt.format a4
-    let s3 ← core.hint.must_use s2
+        dir1
+    let «name» ←
+      alloc.string.ToString.Blanket.to_string I64.Insts.CoreFmtDisplay uid
+    let name1 ← alloc.string.String.push_str «name» (toStr "_")
+    let s2 ←
+      alloc.string.String.Insts.CoreOpsDerefDerefStr.deref encoded_alias
+    let name2 ← alloc.string.String.push_str name1 s2
     let path2 ←
       std.path.PathBuf.push alloc.string.String.Insts.CoreConvertAsRefPath
-        path1 s3
+        path1 name2
     ok (some path2)
 
 /-- [keystore2::legacy_blob::{keystore2::legacy_blob::LegacyBlobLoader}::read_legacy_keystore_entry::{closure}]
@@ -36406,17 +36278,14 @@ def legacy_blob.LegacyBlobLoader.is_empty_user
   Result (core.result.Result Bool anyhow.Error)
   := do
   let user_path ← std.path.PathBuf.Insts.CoreCloneClone.clone self.path
-  let a ← core.fmt.rt.Argument.new_display I32.Insts.CoreFmtDisplay user
-  let a1 ←
-    core.fmt.Arguments.new
-      (Array.make 8#usize [
-        5#u8, 117#u8, 115#u8, 101#u8, 114#u8, 95#u8, 192#u8, 0#u8
-        ]) (Array.make 1#usize [ a ])
-  let s ← alloc.fmt.format a1
-  let s1 ← core.hint.must_use s
+  let dir ← Str.Insts.AllocBorrowToOwnedString.to_owned (toStr "user_")
+  let s ←
+    alloc.string.ToString.Blanket.to_string I32.Insts.CoreFmtDisplay user
+  let s1 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref s
+  let dir1 ← alloc.string.String.push_str dir s1
   let user_path1 ←
     std.path.PathBuf.push alloc.string.String.Insts.CoreConvertAsRefPath
-      user_path s1
+      user_path dir1
   let p ← std.path.PathBuf.as_path user_path1
   let b ← std.path.Path.is_dir p
   if b
@@ -36425,10 +36294,10 @@ def legacy_blob.LegacyBlobLoader.is_empty_user
       legacy_blob.LegacyBlobLoader.with_retry_interrupted
         legacy_blob.LegacyBlobLoader.is_empty_user.closure.Insts.CoreOpsFunctionFnTupleResultReadDirError
         user_path1
-    let a2 ←
+    let a ←
       core.fmt.Arguments.from_str_nonconst (toStr
         "keystore2/src/legacy_blob.rs:995: Failed to open legacy user dir.")
-    let s2 ← alloc.fmt.format a2
+    let s2 ← alloc.fmt.format a
     let s3 ← core.hint.must_use s2
     let r1 ←
       core.result.Result.Insts.AnyhowContext.context
@@ -37136,32 +37005,19 @@ def legacy_blob.LegacyBlobLoader.make_blob_filename
   Result std.path.PathBuf
   := do
   let user ← utils.AppUid.owning_user uid
-  let a ←
-    core.fmt.rt.Argument.new_display (Shared0T.Insts.CoreFmtDisplay
-      Str.Insts.CoreFmtDisplay) «prefix»
-  let a1 ←
-    core.fmt.rt.Argument.new_display (Shared0T.Insts.CoreFmtDisplay
-      Str.Insts.CoreFmtDisplay) «alias»
-  let a2 ←
-    core.fmt.Arguments.new
-      (Array.make 5#usize [ 192#u8, 1#u8, 95#u8, 192#u8, 0#u8 ])
-      (Array.make 2#usize [ a, a1 ])
-  let s ← alloc.fmt.format a2
-  let s1 ← core.hint.must_use s
-  let s2 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref s1
-  let encoded_alias ← legacy_blob.LegacyBlobLoader.encode_alias s2
+  let prefixed ← Str.Insts.AllocBorrowToOwnedString.to_owned «prefix»
+  let prefixed1 ← alloc.string.String.push_str prefixed (toStr "_")
+  let prefixed2 ← alloc.string.String.push_str prefixed1 «alias»
+  let s ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref prefixed2
+  let encoded_alias ← legacy_blob.LegacyBlobLoader.encode_alias s
   let path ← legacy_blob.LegacyBlobLoader.make_user_path_name self user
-  let a3 ← core.fmt.rt.Argument.new_display I64.Insts.CoreFmtDisplay uid
-  let a4 ←
-    core.fmt.rt.Argument.new_display alloc.string.String.Insts.CoreFmtDisplay
-      encoded_alias
-  let a5 ←
-    core.fmt.Arguments.new
-      (Array.make 5#usize [ 192#u8, 1#u8, 95#u8, 192#u8, 0#u8 ])
-      (Array.make 2#usize [ a3, a4 ])
-  let s3 ← alloc.fmt.format a5
-  let s4 ← core.hint.must_use s3
-  std.path.PathBuf.push alloc.string.String.Insts.CoreConvertAsRefPath path s4
+  let «name» ←
+    alloc.string.ToString.Blanket.to_string I64.Insts.CoreFmtDisplay uid
+  let name1 ← alloc.string.String.push_str «name» (toStr "_")
+  let s1 ← alloc.string.String.Insts.CoreOpsDerefDerefStr.deref encoded_alias
+  let name2 ← alloc.string.String.push_str name1 s1
+  std.path.PathBuf.push alloc.string.String.Insts.CoreConvertAsRefPath path
+    name2
 
 /-- [keystore2::legacy_blob::{keystore2::legacy_blob::LegacyBlobLoader}::make_super_key_filename]:
     Source: 'keystore2/src/legacy_blob.rs', lines 958:4-962:5 -/
@@ -41737,9 +41593,7 @@ axiom operation.Operation.new
 /-- [keystore2::operation::{keystore2::operation::Operation}::watch]:
     Source: 'keystore2/src/operation.rs', lines 258:4-261:5 -/
 axiom operation.Operation.watch
-  :
-  operation.Operation → Str → Result (Option
-    watchdog_helper.watchdog.WatchPoint)
+  : operation.Operation → Str → Result (Option watchdog_rs.WatchPoint)
 
 /-- [keystore2::operation::{keystore2::operation::Operation}::get_pruning_info]:
     Source: 'keystore2/src/operation.rs', lines 263:4-287:5 -/
@@ -43944,13 +43798,10 @@ axiom remote_provisioning.RemProvState.get_rkpd_attestation_key_and_certs
     × (alloc.vec.Vec Std.U8))) anyhow.Error)
 
 /-- [keystore2::watchdog_helper::watchdog::watch_millis]:
-    Source: 'keystore2/src/watchdog_helper.rs', lines 60:4-62:5
+    Source: 'keystore2/src/watchdog_helper.rs', lines 34:4-36:5
     Visibility: public -/
-def watchdog_helper.watchdog.watch_millis
-  (s : Str) (i : Std.U64) :
-  Result (Option watchdog_helper.watchdog.WatchPoint)
-  := do
-  ok none
+axiom watchdog_helper.watchdog.watch_millis
+  : Str → Std.U64 → Result (Option watchdog_rs.WatchPoint)
 
 /-- [keystore2::remote_provisioning::get_rkpd_attestation_key]:
     Source: 'keystore2/src/remote_provisioning.rs', lines 147:0-159:1 -/
@@ -44024,14 +43875,14 @@ axiom security_level.KeystoreSecurityLevel.new_native_binder
 axiom security_level.KeystoreSecurityLevel.watch_millis
   :
   security_level.KeystoreSecurityLevel → Str → Std.U64 → Result (Option
-    watchdog_helper.watchdog.WatchPoint)
+    watchdog_rs.WatchPoint)
 
 /-- [keystore2::security_level::{keystore2::security_level::KeystoreSecurityLevel}::watch]:
     Source: 'keystore2/src/security_level.rs', lines 129:4-132:5 -/
 axiom security_level.KeystoreSecurityLevel.watch
   :
   security_level.KeystoreSecurityLevel → Str → Result (Option
-    watchdog_helper.watchdog.WatchPoint)
+    watchdog_rs.WatchPoint)
 
 /-- [keystore2::security_level::{keystore2::security_level::KeystoreSecurityLevel}::store_new_key]:
     Source: 'keystore2/src/security_level.rs', lines 134:4-237:5 -/
@@ -52068,9 +51919,15 @@ def utils.setpriority (prio : Std.I32) : Result Unit := do
 axiom utils.self_renice : Std.I32 → Result Unit
 
 /-- [keystore2::watchdog_helper::watchdog::DEFAULT_TIMEOUT_MS]
-    Source: 'keystore2/src/watchdog_helper.rs', lines 58:29-58:69
+    Source: 'keystore2/src/watchdog_helper.rs', lines 26:4-26:44
     Visibility: public -/
 @[global_simps, irreducible]
 def watchdog_helper.watchdog.DEFAULT_TIMEOUT_MS : Std.U64 := 500#u64
+
+/-- [keystore2::watchdog_helper::watchdog::DEFAULT_TIMEOUT]
+    Source: 'keystore2/src/watchdog_helper.rs', lines 28:4-28:80 -/
+@[global_simps, irreducible]
+def watchdog_helper.watchdog.DEFAULT_TIMEOUT : Result core.time.Duration :=
+  core.time.Duration.from_millis watchdog_helper.watchdog.DEFAULT_TIMEOUT_MS
 
 end keystore2

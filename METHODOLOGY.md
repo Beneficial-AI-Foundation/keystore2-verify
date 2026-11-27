@@ -17,6 +17,9 @@ The translation is made in two steps:
 2. Aeneas turns the LLBC into a pure Lean model:
    `formal/Keystore2Verify/Extraction/Keystore2.lean`.
 
+The crate is built as Soong builds it, with the `watchdog` feature on (`--no-default-features --features
+watchdog`); `formal/EXTRACTION.md` records the feature set, the target and the tool versions.
+
 Both run through the extraction engine of FVS 3.0.0-rc3, which prepares a copy of the tree, applies
 the translation patches, runs the tools under a pinned toolchain and records the hashes of every
 input and output. `formal/EXTRACTION.md` lists the tool versions, the arguments and how to
@@ -62,8 +65,28 @@ equivalent to the original and asked to work FVS's equivalence checklist. The se
 Each seat's verdict and score is listed with the patch in `formal/EXTRACTION-ISSUES.md`; the full
 reports are kept with the project's run records.
 
-The two earlier patches (`01-errno-platform-accessor`, `02-watchdog-off-path-public`) only make the
-crate compile on the build host and were accepted by the repository owner.
+The first patch (`01-errno-platform-accessor`) only makes the crate compile on the build host and was
+accepted by the repository owner. A second one (`02-watchdog-off-path-public`) made the module for a build
+without the `watchdog` feature compile; it was removed when the translation moved to the Android build, with the
+feature on.
+
+### Patches for `format!`
+
+The Aeneas Lean library models the arguments of `format!` as `()`, so a translated `format!` gives the same
+string for every input. Patches `04` to `11` rewrite the 12 such calls whose string reaches SQL, a file path or a
+Binder service name (`formal/EXTRACTION.md`, "`format!` arguments"). Besides the council, each was checked in
+three ways:
+
+- **A differential test.** A generated Rust program runs the original and the patched code of the eight functions,
+  copied byte for byte from the two source trees, on the same inputs: users and uids at the edges of their types,
+  empty and escaped aliases and prefixes, reserved prefixes, several PRAGMA names, every security level, and a real
+  directory for `is_empty_user`. All 2,501 comparisons agree, and the strings for contrasting inputs are the ones
+  the format strings describe.
+- **Erasure probes.** For each parameter of the patched functions, of `make_super_key_filename` (which builds on
+  `make_user_path_name`) and of `anyhow_error_to_cstring`, a Lean `example` claims by `rfl` that the function gives
+  the same result when only that parameter changes (26 claims, three of them on literal inputs). Before this
+  change, 12 of them were provable, although Rust tells the inputs apart; now none is.
+- **The stage C check.** `lake build --wfail` builds the merged statements and proofs unchanged.
 
 ## Changes to the tools
 
@@ -75,6 +98,9 @@ council before use, and each leaves every earlier extraction byte-identical:
 - the engine lets an extraction pass Aeneas's `-filter-trait-methods` option, so that instances of
   traits the Aeneas Lean library models (`Iterator`, `core::error::Error`) carry only the methods
   that model declares.
+
+`fvs-harness/models/watchdog_rs` was added: a model of the `keystore2/watchdog` crate with its public API and
+no bodies, so that the crate builds with the `watchdog` feature on.
 
 One stand-in was changed: `fvs-harness/models/postprocessor_client` defines its error type as
 `PostProcessorError` and re-exports it as `Error`, because Aeneas names a trait impl after the last

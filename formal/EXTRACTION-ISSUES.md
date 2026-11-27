@@ -21,13 +21,14 @@ Resolutions:
 | Class | Tool | Items | Known issue (all open at the pinned release unless said) |
 |---|---|---:|---|
 | `dyn` trait objects (types, casts, method calls) | Aeneas | 77 | 1343, 1500 |
-| `LazyLock<_, fn() -> _>` statics and other arrow types | Aeneas | 42 | none found |
+| `LazyLock<_, fn() -> _>` statics and other arrow types | Aeneas | 46 | none found |
 | Nested borrows | Aeneas | 50 | 1503, 1234, 1170 |
 | Early returns, `?`, `break` or `continue` inside loops | Aeneas | 12 | 822 |
 | Loop and borrow state that does not join | Aeneas | 19 | 930, 1282, 1349, 1266, 804, 1214 |
 | Trait items: generic associated types, associated-type constraints | Aeneas | 8 | none found |
 | Builds or reads a type Aeneas cannot declare | Aeneas | 14 | none found |
-| Calls an excluded or failing item | Aeneas | 7 | none found |
+| Calls an excluded or failing item | Aeneas | 6 | none found |
+| `format!` arguments are `()` in the Aeneas Lean library (`core::fmt::Arguments` is `Unit`) | Lean model | 9 | none found |
 | Lean name clashes and name capture | Lean | 12 | 1554 |
 | Generated Lean that does not elaborate | Lean | 29 | 1584 (fixed after the pinned release) |
 | Other internal errors | Aeneas | 121 | none specific |
@@ -86,8 +87,42 @@ Result: accepted, 3 of 3. Every reviewer found each rewritten line to have the s
 paths and panics as the original. The other uses of `Result::ok` (`legacy_blob.rs` line 1005, `async_task.rs` lines 58
 and 65) are in functions that stay opaque for other reasons.
 
+### `04` to `11`: the `format!` sites
+
+The Aeneas Lean library models the arguments of `format!` as `()`, so a translated `format!` gives one string for
+every input. Each patch rewrites, on the same line, the `format!` calls of one function whose string reaches SQL, a
+file path or a Binder service name. The new code builds the same `String` with `to_owned`, `push_str` and `to_string`,
+which are translated as calls on their inputs. The diagnostic `format!` calls next to them are unchanged.
+
+| Patch | Function | Lines | Claude Code, Fable 5.2 | Codex, GPT-6.2 Astra | Antigravity, Gemini Carbon | Result |
+|---|---|---|---|---|---|---|
+| `04` | `delete_received_grants` | `database.rs` 2488 | 9/10 approve | 7/10 reject | 10/10 approve | accepted, 2 of 3 |
+| `05` | `pragma` | `database.rs` 3128 | 10/10 approve | 7/10 reject | 10/10 approve | accepted, 2 of 3 |
+| `06` | `get_remotely_provisioned_component_name` | `globals.rs` 433, 441 | 10/10 approve | 10/10 approve | 10/10 approve | accepted, 3 of 3 |
+| `07` | `make_legacy_keystore_entry_filename` | `legacy_blob.rs` 933, 934 | 9/10 approve | 7/10 reject | 10/10 approve | accepted, 2 of 3 |
+| `08` | `make_blob_filename` | `legacy_blob.rs` 942, 944 | 9/10 approve | 7/10 reject | 10/10 approve | accepted, 2 of 3 |
+| `09` | `make_chr_filename` | `legacy_blob.rs` 952, 954 | 9/10 approve | 7/10 reject | 10/10 approve | accepted, 2 of 3 |
+| `10` | `make_user_path_name` | `legacy_blob.rs` 966 | 9/10 approve | 7/10 reject | 10/10 approve | accepted, 2 of 3 |
+| `11` | `is_empty_user` | `legacy_blob.rs` 990 | 9/10 approve | 7/10 reject | 10/10 approve | accepted, 2 of 3 |
+
+Each seat reviewed each patch separately. Checks besides the council: a differential test of the original and
+patched code (2,501 comparisons, none differ), erasure probes in Lean (12 equalities of different inputs were
+provable by `rfl` before the patches and none after), and the stage C build (see `METHODOLOGY.md`).
+
+Dissent (Astra, on all but `06`): the patched code asks the allocator for different blocks than `format!` does (a
+separate `String` for `to_string`, and a first reservation of another size). Both versions abort when an allocation
+is refused, but under memory exhaustion one version can abort where the other goes on. Fable and Carbon judged
+allocation requests to be outside the agreed observer set (return values, error results as callers distinguish them,
+external effects, panic occurrence and the file and line it reports). For `06` the requests are the same as the
+original's. Astra's alternative, a named helper that keeps the original `format!` and stays opaque, keeps the requests
+exactly but leaves each string to an assumption about keystore2 code.
+
 ## Changes to the tools and the stand-ins
 
+- `fvs-harness/models/watchdog_rs` (new) models the upstream `watchdog_rs` crate (`keystore2/watchdog`): its public
+  API with opaque types and no bodies. With it, `keystore2` is built with the `watchdog` feature on, as Soong builds
+  it, and the patch `02-watchdog-off-path-public`, which made the feature-off module compile, is no longer in the
+  series. keystore2's global watchdog `WD` is excluded and the three helpers that read it are opaque (rows below).
 - FVS's extraction engine accepts the standard library's own registry dependencies (`hashbrown 0.17.1`),
   checked against the toolchain's `library/Cargo.lock` and the cached archive. Without it the engine refused
   every extraction that uses `HashMap`.
@@ -161,6 +196,7 @@ and 65) are in functions that stay opaque for other reasons.
 | `crate::database::_::column_result` | `keystore2/src/database.rs:309` | Internal error: please file an issue | opaque |
 | `crate::database::_::count_keys` | `rusqlite-0.32.1/src/lib.rs:182` | Unsized cast between dynamic traits: unimplemented case | opaque |
 | `crate::database::_::create_key_entry_internal` | `rusqlite-0.32.1/src/lib.rs:182` | Unsized cast between dynamic traits: unimplemented case | opaque |
+| `crate::database::_::delete_received_grants` | `keystore2/src/database.rs:2485` | its `format!` arguments are `()` in the Aeneas Lean library (`core::fmt::Arguments` is `Unit`), so the DELETE query did not depend on `AID_USER_OFFSET` | patched (`04-grant-delete-sql-without-format`) |
 | `crate::database::_::do_table_size_query` | `keystore2/src/database.rs:1213` | Internal error: please file an issue | opaque |
 | `crate::database::_::drop` | `keystore2/src/database.rs:630` | Arrow types are not supported yet | opaque |
 | `crate::database::_::fmt` | `keystore2/src/database.rs:129` | Internal error: please file an issue | opaque |
@@ -188,6 +224,7 @@ and 65) are in functions that stay opaque for other reasons.
 | `crate::database::_::name` | `keystore2/src/database.rs:123` | Unreachable | opaque |
 | `crate::database::_::new` | `keystore2/src/database.rs:949` | Unimplemented: found an occurrence of a lifetime constraint relating | opaque |
 | `crate::database::_::per_uid_counts` | `keystore2/src/database.rs:1313` | Internal error: please file an issue | opaque |
+| `crate::database::_::pragma` | `keystore2/src/database.rs:3126` | its `format!` arguments are `()` in the Aeneas Lean library (`core::fmt::Arguments` is `Unit`), so the query was the same for every PRAGMA name | patched (`05-pragma-sql-without-format`) |
 | `crate::database::_::rebind_alias` | `rusqlite-0.32.1/src/lib.rs:182` | Unsized cast between dynamic traits: unimplemented case | opaque |
 | `crate::database::_::remove_key_rows` | `rusqlite-0.32.1/src/lib.rs:182` | Unsized cast between dynamic traits: unimplemented case | opaque |
 | `crate::database::_::set_blob` | `keystore2/src/database.rs:1668` | Internal error: please file an issue | opaque |
@@ -219,6 +256,7 @@ and 65) are in functions that stay opaque for other reasons.
 | `crate::error::Error` | `keystore2/src/error.rs:62` | Internal error: please file an issue | body included |
 | `crate::error::_::fmt` | `keystore2/src/error.rs` | keeps stage C frozen: with these `Debug`/`Display` bodies translated, the `#print axioms` guards of the merged stage C statement files print a different axiom list | opaque |
 | `crate::error::_::sys` | `keystore2/src/error.rs:90` | kept from stage C: a constant or small library function that stage C's statements and proofs need with its body | body included |
+| `crate::error::anyhow_error_to_cstring` | `keystore2/src/error.rs:234` | its result is the `format!` rendering of the error, and the Aeneas Lean library models `format!` arguments as `()`, so the translated body ignored the error | opaque |
 | `crate::error::anyhow_error_to_serialized_error` | `keystore2/src/error.rs:277` | Lean: "declaration contains universe level metavariables" (a `dyn` type whose universe Lean cannot infer) | opaque |
 | `crate::error::get_log_level` | `keystore2/src/error.rs:115` | Lean: "declaration contains universe level metavariables" (a `dyn` type whose universe Lean cannot infer) | opaque |
 | `crate::error::into_logged_binder` | `keystore2/src/error.rs:225` | Error when registering the name for id: keystore2::error::{impl core::ops::function::FnOnce<(anyhow::Error,), binder::Status> for keystore2::error::into_logged_binder}::call_once: | opaque |
@@ -247,6 +285,7 @@ and 65) are in functions that stay opaque for other reasons.
 | `crate::globals::get_keymint_dev_by_uuid` | `keystore2/src/globals.rs:360` | Arrow types are not supported yet | opaque |
 | `crate::globals::get_keymint_device` | `keystore2/src/globals.rs:341` | Arrow types are not supported yet | opaque |
 | `crate::globals::get_keymint_devices` | `keystore2/src/globals.rs:372` | Arrow types are not supported yet | opaque |
+| `crate::globals::get_remotely_provisioned_component_name` | `keystore2/src/globals.rs:427` | its `format!` arguments are `()` in the Aeneas Lean library (`core::fmt::Arguments` is `Unit`), so both security levels got the same service name | patched (`06-rkp-instance-name-without-format`) |
 | `crate::globals::get_timestamp_service` | `keystore2/src/globals.rs:415` | Could not find: trait_impl_id: 555 | opaque |
 | `crate::globals::keymint_service_name` | `keystore2/src/globals.rs:200` | Internal error: please file an issue | opaque |
 | `crate::key_parameter::_::_::deserialize` | `keystore2/src/key_parameter.rs:825` | Inconsistent projection: | opaque |
@@ -283,12 +322,17 @@ and 65) are in functions that stay opaque for other reasons.
 | `crate::legacy_blob::_::extract_keystore_alias` | `keystore2/src/legacy_blob.rs:1000` | Internal error: please file an issue | opaque |
 | `crate::legacy_blob::_::extract_legacy_alias` | `keystore2/src/legacy_blob.rs:884` | calls `Result::ok`; that axiom captures the `ok` of the Aeneas monad inside `core.result.Result.or_else`, which stage C needs (Aeneas issue 1554) | patched (`03-legacy-blob-result-ok`) |
 | `crate::legacy_blob::_::is_empty` | `keystore2/src/legacy_blob.rs:972` | Early returns inside of loops are not supported yet | opaque |
+| `crate::legacy_blob::_::is_empty_user` | `keystore2/src/legacy_blob.rs:988` | its `format!` arguments are `()` in the Aeneas Lean library (`core::fmt::Arguments` is `Unit`), so the directory tested was the same for every user | patched (`11-is-empty-user-without-format`) |
 | `crate::legacy_blob::_::is_keystore_alias` | `keystore2/src/legacy_blob.rs:756` | Could not find: trait_impl_id: 1275 | opaque |
 | `crate::legacy_blob::_::list_keystore_entries_for_uid` | `keystore2/src/legacy_blob.rs:876` | passes a `&String` as a string pattern (`impl Pattern for &String`, which needs the excluded `Pattern`) | opaque |
 | `crate::legacy_blob::_::list_keystore_entries_for_user` | `keystore2/src/legacy_blob.rs:1037` | Internal error: please file an issue | opaque |
 | `crate::legacy_blob::_::list_legacy_keystore_entries_for_uid` | `keystore2/src/legacy_blob.rs:876` | passes a `&String` as a string pattern (`impl Pattern for &String`, which needs the excluded `Pattern`) | opaque |
 | `crate::legacy_blob::_::list_legacy_keystore_entries_for_user` | `keystore2/src/legacy_blob.rs:895` | Internal error: please file an issue | opaque |
 | `crate::legacy_blob::_::load_by_uid_alias` | `keystore2/src/legacy_blob.rs:1258` | Could not match the contexts | opaque |
+| `crate::legacy_blob::_::make_blob_filename` | `keystore2/src/legacy_blob.rs:940` | its `format!` arguments are `()` in the Aeneas Lean library (`core::fmt::Arguments` is `Unit`), so the file name was the same for every prefix, alias and uid | patched (`08-blob-filename-without-format`) |
+| `crate::legacy_blob::_::make_chr_filename` | `keystore2/src/legacy_blob.rs:950` | its `format!` arguments are `()` in the Aeneas Lean library (`core::fmt::Arguments` is `Unit`), so the file name was the same for every prefix, alias and uid | patched (`09-chr-filename-without-format`) |
+| `crate::legacy_blob::_::make_legacy_keystore_entry_filename` | `keystore2/src/legacy_blob.rs:921` | its `format!` arguments are `()` in the Aeneas Lean library (`core::fmt::Arguments` is `Unit`), so the path was the same for every user, uid and alias | patched (`07-legacy-entry-filename-without-format`) |
+| `crate::legacy_blob::_::make_user_path_name` | `keystore2/src/legacy_blob.rs:964` | its `format!` arguments are `()` in the Aeneas Lean library (`core::fmt::Arguments` is `Unit`), so the directory was the same for every user | patched (`10-user-path-name-without-format`) |
 | `crate::legacy_blob::_::move_keystore_entry` | `keystore2/src/legacy_blob.rs:1178` | Breaks to outer loops are not supported yet | opaque |
 | `crate::legacy_blob::_::new_from_stream` | `keystore2/src/legacy_blob.rs:366` | Dynamic trait types are not supported yet | opaque |
 | `crate::legacy_blob::_::new_from_stream_decrypt_with` | `keystore2/src/legacy_blob.rs:489` | Unsupported cast to a dynamic trait | opaque |
@@ -502,7 +546,10 @@ and 65) are in functions that stay opaque for other reasons.
 | `crate::utils::self_renice` | `keystore2/src/utils.rs:876` | Nested borrows are not supported yet | opaque |
 | `crate::utils::upgrade_keyblob_and_perform_op` | `keystore2/src/utils.rs:372` | Dynamic trait types are not supported yet | opaque |
 | `crate::utils::upgrade_keyblob_if_required_with` | `keystore2/src/utils.rs:418` | Unsized cast between dynamic traits: unimplemented case | opaque |
-| `crate::watchdog_helper::watchdog::watch` |  | calls an item that is excluded (Aeneas stops with `Not_found` in `FunsAnalysis`) | opaque |
+| `crate::watchdog_helper::watchdog::WD` | `keystore2/src/watchdog_helper.rs:31` | Arrow types are not supported yet (`LazyLock<Arc<Watchdog>>`, whose second type parameter defaults to `fn() -> Arc<Watchdog>`) | excluded |
+| `crate::watchdog_helper::watchdog::watch` | `keystore2/src/watchdog_helper.rs:39` | reads the global watchdog `WD`, which is excluded (Aeneas: "Arrow types are not supported yet") | opaque |
+| `crate::watchdog_helper::watchdog::watch_millis` | `keystore2/src/watchdog_helper.rs:34` | reads the global watchdog `WD`, which is excluded (Aeneas: "Arrow types are not supported yet") | opaque |
+| `crate::watchdog_helper::watchdog::watch_millis_with` | `keystore2/src/watchdog_helper.rs:45` | reads the global watchdog `WD`, which is excluded (Aeneas: "Arrow types are not supported yet") | opaque |
 | `alloc::vec::into_iter::_::try_fold` | `std: core/src/iter/traits/iterator.rs:42` | a where-clause that fixes an associated type (`trait_type_constraints`), which Aeneas rejects in trait method signatures (fatal sanity check) | excluded |
 | `android_hardware_security_keymint::aidl::android::hardware::security::keymint::BeginResult::BeginResult` |  | Aeneas cannot translate this type's declaration (a field holds a `dyn` trait object), so the type is kept opaque | opaque |
 | `android_hardware_security_keymint::aidl::android::hardware::security::keymint::EcCurve::_::P_224` |  | kept from stage C: a constant or small library function that stage C's statements and proofs need with its body | body included |
