@@ -1,0 +1,23 @@
+Translation patch: keystore2::database::KeystoreDB::pragma
+
+Change: keystore2/src/database.rs:3128: each `format!` on this line is replaced, on the same line, by a block that builds the same `String` with `to_owned`, `push_str` and `to_string`: the query is built from the literal `PRAGMA persistent.` followed by `name`. The diagnostic `format!` on the next line is unchanged.
+Why: the translation models the arguments of `format!` as `()` (`core::fmt::Arguments` is `Unit` in the Aeneas library), so the translated function read the same PRAGMA for every name. `to_owned`, `push_str` and `to_string` are translated as calls whose results depend on their arguments.
+Behaviour: unchanged. The query text is `PRAGMA persistent.` followed by `name`, as before. `Display` of a string or an integer with no format options writes the same bytes as `push_str` of the string or of the integer's `to_string`. The string is built at the same point and lives at least as long; no panic is added or removed (allocation failure aborts in both).
+Classification: B
+Assumptions: none.
+Obligations: fork === upstream: the rewritten function behaves as the original on every input.
+Evidence: an independent equivalence review by three reviewers, accepted on 2 of 3; summarised in formal/EXTRACTION-ISSUES.md.
+Independent: yes
+
+diff --git a/keystore2/src/database.rs b/keystore2/src/database.rs
+--- a/keystore2/src/database.rs
++++ b/keystore2/src/database.rs
+@@ -3125,7 +3125,7 @@
+     /// Retrieve a database PRAGMA config value.
+     pub fn pragma<T: FromSql>(&mut self, name: &str) -> Result<T> {
+         self.conn
+-            .query_row(&format!("PRAGMA persistent.{name}"), (), |row| row.get(0))
++            .query_row(&{ let mut sql = "PRAGMA persistent.".to_owned(); sql.push_str(name); sql }, (), |row| row.get(0))
+             .context(format!("failed to read pragma {name}"))
+     }
+ }
